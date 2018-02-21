@@ -227,7 +227,19 @@
 					echo '<option value="'.$row['employee_status_id'].'" >'.$row['employee_status_desc'].'</option>';
 				}
 			}
+		}
 
+		public function populateWorkStatus($value = NULL){
+			$query = "SELECT * FROM work_status ORDER BY work_status_id ASC";
+			$this->set($query);
+			$this->execute();
+			foreach($this->returnSet() as $row){
+				if($row['work_status_id'] == $value){
+					echo '<option value="'.$row['work_status_id'].'" selected="SELECTED">'.$row['work_status_desc'].'</option>';
+				}else{
+					echo '<option value="'.$row['work_status_id'].'">'.$row['work_status_desc'].'</option>';
+				}
+			}
 		}
 
 		public function populateWorkYears($value = NULL){

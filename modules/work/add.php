@@ -115,6 +115,14 @@ require_once($_SERVER["DOCUMENT_ROOT"].'/lib/class/class.work.php');
 				
 				<div class="col-md-6">
 					<div class="form-group row">
+						<label for="status" class="col-2 col-form-label">Status: </label>
+						<div class="col-10">
+							<select name="status" id="status" class="form-control">
+								<?php echo $helper->populateWorkStatus(2); ?>
+							</select>
+						</div>
+					</div>
+					<div class="form-group row">
 						<label for="work_p_decision" class="col-2 col-form-label">Setup P: </label>
 						<div class="col-10">
 					    	<select name="work_p_decision" id="work_p_decision" class="form-control">
@@ -231,8 +239,9 @@ require_once($_SERVER["DOCUMENT_ROOT"].'/lib/class/class.work.php');
 					$("#success").show(); 
 					var id = data.info;
 					//var url = 'view.php?id='+id;
+					var url = 'index.php';
 					//Redirect
-					//window.location.replace(url);
+					window.location.replace(url);
 				}
 			})
 		});

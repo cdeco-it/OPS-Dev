@@ -119,7 +119,7 @@ require_once($_SERVER["DOCUMENT_ROOT"].'/lib/class/class.work.php');
 						<label for="work_client_display" class="col-2 col-form-label">Client:</label>
 						<div class="col-10">
 					    	<input class="form-control" id="work_client_display" name="work_client_display" value="<?php echo $helper->defineOrganizationName($work->getClient()); ?>" REQUIRED>
-					    	<input type="hidden" id="work_client" name="work_client" value="<? echo $work->getClient(); ?>">
+					    	<input type="hidden" id="work_client" name="work_client" value="<?php echo $work->getClient(); ?>">
 						</div>
 					</div>
 					<div class="form-group row">
@@ -137,15 +137,28 @@ require_once($_SERVER["DOCUMENT_ROOT"].'/lib/class/class.work.php');
 					    	</select>
 						</div>
 					</div>
+					<div class="form-group row">
+						<div class="col-10">
+					    	
+						</div>
+					</div>
 				</div>
 				
 				<div class="col-md-6">
+					<div class="form-group row">
+						<label for="status" class="col-2 col-form-label">Status: </label>
+						<div class="col-10">
+							<select name="status" id="status" class="form-control">
+								<?php echo $helper->populateWorkStatus($work->getStatus()); ?>
+							</select>
+						</div>
+					</div>
 					<?php
 						if(!is_null($work->getPID())){
 							echo '<div class="form-group row">
 								<label for="work_p_decision" class="col-2 col-form-label">Setup P: </label>
 								<div class="col-10">
-							    	<select name="work_p_decision" id="work_p_decision" class="form-control" READONLY DISABLED>';
+							    	<select name="work_p_decision" id="work_p_decision" class="form-control" READONLY>';
 							    		echo $helper->populateYesNo($work->getPID());
 							echo '</select>
 								</div>
@@ -166,7 +179,7 @@ require_once($_SERVER["DOCUMENT_ROOT"].'/lib/class/class.work.php');
 							echo '<div class="form-group row">
 								<label for="work_j_decision" class="col-2 col-form-label">Setup J: </label>
 								<div class="col-10">
-							    	<select name="work_j_decision" id="work_j_decision" class="form-control" READONLY DISABLED>';
+							    	<select name="work_j_decision" id="work_j_decision" class="form-control" READONLY>';
 							    		echo $helper->populateYesNo($work->getJID());
 							echo '</select>
 								</div>
@@ -187,7 +200,7 @@ require_once($_SERVER["DOCUMENT_ROOT"].'/lib/class/class.work.php');
 							echo '<div class="form-group row">
 								<label for="work_b_decision" class="col-2 col-form-label">Setup B: </label>
 								<div class="col-10">
-							    	<select name="work_b_decision" id="work_b_decision" class="form-control" READONLY DISABLED>';
+							    	<select name="work_b_decision" id="work_b_decision" class="form-control" READONLY>';
 							    		echo $helper->populateYesNo($work->getBID());
 							echo '</select>
 								</div>
@@ -208,7 +221,7 @@ require_once($_SERVER["DOCUMENT_ROOT"].'/lib/class/class.work.php');
 							echo '<div class="form-group row">
 								<label for="work_c_decision" class="col-2 col-form-label">Setup C: </label>
 								<div class="col-10">
-							    	<select name="work_c_decision" id="work_c_decision" class="form-control" READONLY DISABLED>';
+							    	<select name="work_c_decision" id="work_c_decision" class="form-control" READONLY>';
 							    		echo $helper->populateYesNo($work->getCID());
 							echo '</select>
 								</div>
@@ -229,10 +242,9 @@ require_once($_SERVER["DOCUMENT_ROOT"].'/lib/class/class.work.php');
 							echo '<div class="form-group row">
 								<label for="work_s_decision" class="col-2 col-form-label">Setup S: </label>
 								<div class="col-10">
-							    	<select name="work_s_decision" id="work_s_decision" class="form-control" READONLY DISABLED>';
+							    	<select name="work_s_decision" id="work_s_decision" class="form-control" READONLY>';
 							    		echo $helper->populateYesNo($work->getSID());
 							echo '</select>
-								</div>
 							</div>';
 
 						}else{
@@ -305,7 +317,7 @@ require_once($_SERVER["DOCUMENT_ROOT"].'/lib/class/class.work.php');
 			$('#insertButton').attr("disabled", "DISABLED");
 			$('#waitDialog').modal('show');
 			$.ajax({
-				url: "insert.php",
+				url: "update.php",
 				method: "POST",
 				data: $("#entry").serialize(),
 				dataType: "json"
@@ -324,7 +336,8 @@ require_once($_SERVER["DOCUMENT_ROOT"].'/lib/class/class.work.php');
 					$('#success').html(data.message);
 					$("#success").show(); 
 					var id = data.updateInfo;
-					var url = 'view.php?id='+id;
+					//var url = 'view.php?id='+id;
+					var url = 'index.php';
 					//Redirect
 					window.location.replace(url);
 				}

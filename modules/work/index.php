@@ -132,61 +132,61 @@
 					if($count > 0){
 
 						foreach ($result as $row){
-				 		$formalID = $work->generateFormalNumber($row['work_year'], $row['work_number']);
-				 		echo '
-				 		<tr>
+					 		$formalID = $work->generateFormalNumber($row['work_year'], $row['work_number']);
+					 		echo '
+					 		<tr>
 				 			<td>'.$formalID.'</td>
 							<td>'.$row['addr_orgs_name'].'</td>
 							<td>'.$row['work_title'].'</td>';
-						if(!is_null($row['work_status_desc']) || !empty($row['work_status_desc'])){
-							echo '<td align="center">'.$row['work_status_desc'].'</td>';
-						}else{
-							echo '<td align="center">Undefined</td>';
-						}
-
-						if($row['work_db']){
-							echo '<td align="center"><i class="fas fa-check"></i></td>';
-						}else{
-							echo '<td align="center"></td>';
-						}
-
-						if(!is_null($row['work_p_id'])){
-							echo '<td align="center"><a href="view.php?mode=p&id='.$row['work_p_id'].'"><i class="fas fa-check"></i></a></td>';
-						}else{
-							echo '<td align="center"></td>';
-						}
-
-						if(!is_null($row['work_j_id'])){
-							echo '<td align="center"><a href="view.php?mode=j&id='.$row['work_j_id'].'"><i class="fas fa-check"></i></a></td>';
-						}else{
-							echo '<td align="center"></td>';
-						}
-
-						if(!is_null($row['work_b_id'])){
-							echo '<td align="center"><a href="view.php?mode=b&id='.$row['work_b_id'].'"><i class="fas fa-check"></i></a></td>';
-						}else{
-							echo '<td align="center"></td>';
-						}
-
-						if(!is_null($row['work_c_id'])){
-							echo '<td align="center"><a href="view.php?mode=c&id='.$row['work_c_id'].'"><i class="fas fa-check"></i></a></td>';
-						}else{
-							echo '<td align="center"></td>';
-						}
-
-						if(!is_null($row['work_s_id'])){
-							echo '<td align="center"><a href="view.php?mode=s&id='.$row['work_s_id'].'"><i class="fas fa-check"></i></a></td>';
-						}else{
-							echo '<td align="center"></td>';
-						}
-
-						echo '	
-							<td align="center">
-								<!-- <button type="button" id="viewButton'.$i.'" class="viewButton btn btn-primary btn-xs" value='.$row['work_id'].'>View</button> -->';
-							if($level <= 2){
-								echo'
-								<button type="button" id="editButton'.$i.'" class="editButton btn btn-info btn-xs" value='.$row['work_id'].'>Edit</button>';
+							if(!is_null($row['work_status_desc']) || !empty($row['work_status_desc'])){
+								echo '<td align="center">'.$row['work_status_desc'].'</td>';
+							}else{
+								echo '<td align="center">Undefined</td>';
 							}
+
+							if($row['work_db']){
+								echo '<td align="center"><i class="fas fa-check"></i></td>';
+							}else{
+								echo '<td align="center"></td>';
+							}
+
+							if(!is_null($row['work_p_id'])){
+								echo '<td align="center"><a href="view.php?mode=p&id='.$row['work_p_id'].'"><i class="fas fa-check"></i></a></td>';
+							}else{
+								echo '<td align="center"></td>';
+							}
+
+							if(!is_null($row['work_j_id'])){
+								echo '<td align="center"><a href="view.php?mode=j&id='.$row['work_j_id'].'"><i class="fas fa-check"></i></a></td>';
+							}else{
+								echo '<td align="center"></td>';
+							}
+
+							if(!is_null($row['work_b_id'])){
+								echo '<td align="center"><a href="view.php?mode=b&id='.$row['work_b_id'].'"><i class="fas fa-check"></i></a></td>';
+							}else{
+								echo '<td align="center"></td>';
+							}
+
+							if(!is_null($row['work_c_id'])){
+								echo '<td align="center"><a href="view.php?mode=c&id='.$row['work_c_id'].'"><i class="fas fa-check"></i></a></td>';
+							}else{
+								echo '<td align="center"></td>';
+							}
+
+							if(!is_null($row['work_s_id'])){
+								echo '<td align="center"><a href="view.php?mode=s&id='.$row['work_s_id'].'"><i class="fas fa-check"></i></a></td>';
+							}else{
+								echo '<td align="center"></td>';
+							}
+
+							echo '	
+								<td align="center">
+									<!-- <button type="button" id="viewButton'.$i.'" class="viewButton btn btn-primary btn-xs" value='.$row['work_id'].'>View</button> -->';
+								if($level <= 2){
+									echo'
+									<button type="button" id="editButton'.$i.'" class="editButton btn btn-info btn-xs" value='.$row['work_id'].'>Edit</button>';
+								}
 						echo'
 							</td>
 					 		</tr>

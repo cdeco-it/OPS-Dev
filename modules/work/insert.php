@@ -26,6 +26,7 @@ if(!empty($_POST) || $level <= 2){
 	$work->setClient($_POST['work_client']);
 	$work->setClientRep($_POST['work_poc']);
 	$work->setDb($_POST['work_db']);
+	$work->setStatus($_POST['status']);
 	$work->setJID();
 	$work->setPID();
 	$work->setBID();
