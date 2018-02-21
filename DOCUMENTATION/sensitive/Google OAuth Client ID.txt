@@ -1,0 +1,5 @@
+Google OAuth Client ID
+236589955379-qbevnbplj4kepn2i232l9j1rh2i6ml6o.apps.googleusercontent.com
+
+Client Secret
+9xnWdhCTsh_vTxNJqtHyd0Pe

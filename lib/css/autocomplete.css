@@ -1,0 +1,16 @@
+.ui-autocomplete {
+    position: absolute;
+    z-index: 1000;
+    padding: 0;
+    list-style: none;
+}
+
+.ui-autocomplete > li {
+  padding: 3px 20px;
+}
+.ui-autocomplete > li.ui-state-focus {
+  background-color: #DDD;
+}
+.ui-helper-hidden-accessible {
+  display: none !important;
+}

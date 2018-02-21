@@ -1,0 +1,85 @@
+PERM REF
+
+        <!-- <link rel="stylesheet" href="https://cdn.datatables.net/1.10.16/css/dataTables.bootstrap4.min.css"> -->
+
+        <!-- <link rel="stylesheet" href="http://code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css"> -->
+
+        <!-- <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.6.4/css/bootstrap-datepicker.standalone.min.css"> -->
+
+        <!-- <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/v/bs4/dt-1.10.16/datatables.min.css"/> -->
+
+        <!-- <script type="text/javascript" src="https://cdn.datatables.net/v/bs4/jq-3.2.1/jq-3.2.1/dt-1.10.16/datatables.min.js"></script> -->
+
+        <!-- <script src="http://code.jquery.com/ui/1.12.1/jquery-ui.min.js" integrity="sha256-VazP97ZCwtekAsvgPBSUwPFKdrwD3unUfSGVYrahUqU=" crossorigin="anonymous"></script> -->
+
+        <!-- <script type="text/javascript" src="https://cdn.datatables.net/v/bs4/dt-1.10.16/datatables.min.js"></script> -->
+
+        <!-- <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/jquery.devbridge-autocomplete/1.4.7/jquery.autocomplete.min.js"></script> -->
+
+        <!-- <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.6.4/js/bootstrap-datepicker.min.js"></script> -->
+
+OPS TODOS
+
+TASK																			ENTERED			COMPLETE
+************************************************************************************************************
+Employee ADD function doesn't return action buttons correctly after submit. 	(10/6/17)		(10/10/17)
+Employee TOGGLE function doesn't reutrn action buttons correctly after submit.	(10/9/17)		(10/10/17)
+Create LOGOUT function in class.acl.php and create logout.php in root 			(10/6/17)		(10/9/17)
+	//NOTE: Finish up failsafes on line 177-181
+	//Ensure that authenticateSession validates active employees!!!
+
+Finish Employee/View model														(10/6/17)		(10/10/17) - COULD USE MORE BEAUTIFYING
+Add username return to ACL Authentication										(10/6/17)		(10/9/17)
+
+Finish EDIT/UPDATE series on Addressbook										(10/23/17)		(10/24/17)
+Finish DELETE sequence on Addressbook											(10/24/17)		(10/25/17)
+Add Static Map generator to Google class 										(10/24/17)		(10/26/17)
+Revise VIEW in Addressbook														(10/24/17)		(10/26/17)
+
+
+Update/Review SQL Model in Workbench (DO AFTER ADDRESS BOOK)					ONGOING
+Generate CRON script to clear out SESSIONS table 								(10/6/17)
+
+
+NEED TO UPDATE all ref links to FontAwesome using:								(02/01/18)
+<script defer 
+src="https://use.fontawesome.com/releases/v5.0.6/js/all.js"></script>
+Modules that need update:
+AddressBook, Employees
+
+
+
+
+QUERIES
+***********************************************************************************************************
+
+>>>>Employee/View query
+
+SELECT 
+employee.employee_id, 
+employee.employee_fname,
+employee.employee_mname,
+employee.employee_lname,
+employee.employee_prefix,
+employee.employee_suffix,
+employee.employee_dob,
+employee.employee_addr_1,
+employee.employee_addr_2,
+employee.employee_city,
+common_usstates.common_usstates_full,
+common_countries.common_countries_full,
+employee.employee_postcode,
+employee.employee_home_phone,
+employee.employee_mobile_phone,
+employee_status.employee_status_desc,
+employee.employee_modified
+FROM employee
+LEFT JOIN employee_status 
+	ON employee.employee_status = employee_status.employee_status_id
+LEFT JOIN common_usstates 
+	ON employee.employee_state = common_usstates.common_usstates_id
+LEFT JOIN common_countries 
+	ON employee.employee_country = common_countries.common_countries_id
+WHERE employee.employee_id = 1
+
+>>>>
