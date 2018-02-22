@@ -32,6 +32,11 @@ class googleTools{
 				return($coords);
 			}else{
 				print_r($status);
+				$coords = array(
+					"lat" => 0,
+					"lng" => 0
+				);
+				return($coords);
 			}
 
 			/* THIS IS FOR XML OUTPUT...JSON is preferred

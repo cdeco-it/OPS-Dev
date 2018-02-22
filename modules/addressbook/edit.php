@@ -73,7 +73,7 @@ require_once($_SERVER["DOCUMENT_ROOT"].'/lib/class/class.address.php');
 	</div>
 	
 	<div class="container-fluid" id="entryForm">
-		<form method="post" id="entry" data-toggle="validator" role="form">
+		<form method="post" id="entry" data-toggle="validator" role="form" action="update.php">
 			<div class="row container-fluid">
 				<div class="col-md-6">
 					<div class="form-group row">
@@ -297,7 +297,7 @@ require_once($_SERVER["DOCUMENT_ROOT"].'/lib/class/class.address.php');
 		});
 	});
 
-	$(document).ready(function(){
+	/*$(document).ready(function(){
 		$('#entry').on("submit", function(e){
 			e.preventDefault();
 			$('#insertButton').attr("disabled", "DISABLED");
@@ -324,7 +324,7 @@ require_once($_SERVER["DOCUMENT_ROOT"].'/lib/class/class.address.php');
 				}
 			})
 		});
-	});
+	});*/
 </script>
 
 <?php 

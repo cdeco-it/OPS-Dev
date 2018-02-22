@@ -271,21 +271,28 @@ class Address extends Db{
 	 * @param string $last   Last Name
 	 */
 	public function setName($value = NULL){
-		if(!empty($value['fname']) && !empty($value['lname'])){
-			$this->setFirstName($value['fname']);
-			$this->setLastName($value['lname']);
+		if(!empty($value['prefix'])){
+			$this->setPrefix($value['prefix']);
+		}
+		if(!empty($value['first']) && !empty($value['last'])){
+			$this->setFirstName($value['first']);
+			$this->setLastName($value['last']);
 		}
 
-		if(!empty($value['mname']) || !is_null($value['mname'])){
-			$this->setMiddleName($value['mname']);
+		if(!empty($value['middle']) || !is_null($value['middle'])){
+			$this->setMiddleName($value['middle']);
+		}else{
+			$this->setMiddleName(NULL);
+		}
+
+		if(!empty($value['nickname']) || !is_null($value['nickname'])){
+			$this->setNickName($value['nickname']);
 		}else{
 			$this->setNickName(NULL);
 		}
 
-		if(!empty($value['nname']) || !is_null($value['nname'])){
-			$this->setNickName($value['nname']);
-		}else{
-			$this->setNickName(NULL);
+		if(!empty($value['suffix'])){
+			$this->setSuffix($value['suffix']);
 		}
 	}
 
@@ -350,7 +357,7 @@ class Address extends Db{
 		if(empty($value) || is_null($value)){
 			$this->org = NULL;
 		}else{
-			$this->org = ucwords(strtolower($value));
+			$this->org = $value;
 		}
 
 	}
@@ -596,13 +603,15 @@ class Address extends Db{
 			$result = $this->returnSingle();
 			$this->setFetchId($result['addr_id']);
 			$name = array(
-				"fname" => $result['addr_fname'], 
-				"mname" => $result['addr_mname'], 
-				"lname" => $result['addr_lname'], 
-				"nname" => $result['addr_nname']);
+				"prefix" => $result['addr_prefix'],
+				"first" => $result['addr_fname'], 
+				"middle" => $result['addr_mname'], 
+				"last" => $result['addr_lname'], 
+				"nickname" => $result['addr_nname'],
+				"suffix" => $result['addr_suffix']);
 			$this->setName($name);
-			$this->setPrefix($result['addr_prefix']);
-			$this->setSuffix($result['addr_suffix']);
+			// $this->setPrefix($result['addr_prefix']);
+			// $this->setSuffix($result['addr_suffix']);
 			$this->setTitle($result['addr_title']);
 
 			//Now get the associated information from the addr_orgs table
@@ -642,6 +651,7 @@ class Address extends Db{
 			unset($orgs);
 			$this->retData['success'] = true;
 			$this->retData['message'] = SUCCESS;
+			return($this->retData);
 		}else{
 			$this->retData['success'] = false;
 			$this->retData['message'] = E_NO_ID;
@@ -708,10 +718,12 @@ class Address extends Db{
 			//If there is a valid set...let's set it up
 			if($this->rowCount() >= 1){
 				$name = array(
-					"fname"=>$result['addr_fname'],
-					"mname"=>$result['addr_mname'],
-					"lname"=>$result['addr_lname'],
-					"nname"=>$result['addr_nname']
+					"prefix"=>$result['common_prefix_abbr'],
+					"first"=>$result['addr_fname'],
+					"middle"=>$result['addr_mname'],
+					"last"=>$result['addr_lname'],
+					"nickname"=>$result['addr_nname'],
+					"suffix"=>$result['common_suffix_abbr']
 				);
 
 				$contact = array(
@@ -738,8 +750,8 @@ class Address extends Db{
 				$this->setContactInfo($contact);
 				$this->setOrganization($result['addr_org']);
 				$this->setTitle($result['addr_title']);
-				$this->setPrefix($result['common_prefix_abbr']);
-				$this->setSuffix($result['common_suffix_abbr']);
+				// $this->setPrefix($result['common_prefix_abbr']);
+				// $this->setSuffix($result['common_suffix_abbr']);
 				$this->setGetCalendar($result['addr_admin_calendars']);
 				$this->setGetGifts($result['addr_admin_gifts']);
 				$this->setGetNewsletter($result['addr_admin_newsletter']);

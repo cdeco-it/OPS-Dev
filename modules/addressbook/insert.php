@@ -15,16 +15,18 @@ if(!empty($_POST) || $level <= 2){
 	$helper = new Helper();
 
 	$name = array(
-		"fname"=>$_POST['fname'], 
-		"mname"=>$_POST['mname'], 
-		"lname"=>$_POST['lname'], 
-		"nname"=>$_POST['nname']
+		"prefix"=>$_POST['prefix'],
+		"first"=>$_POST['fname'], 
+		"middle"=>$_POST['mname'], 
+		"last"=>$_POST['lname'], 
+		"nickname"=>$_POST['nname'],
+		"suffix"=>$_POST['suffix']
 	);
 
 	$addr->setName($name);
 
-	$addr->setPrefix($_POST['prefix']);
-	$addr->setSuffix($_POST['suffix']);
+	//$addr->setPrefix($_POST['prefix']);
+	//$addr->setSuffix($_POST['suffix']);
 	
 	//Set Organziation MUST GO FIRST!!!
 	$addr->setOrganization($_POST['org']);
