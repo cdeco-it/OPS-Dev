@@ -297,7 +297,7 @@ require_once($_SERVER["DOCUMENT_ROOT"].'/lib/class/class.address.php');
 		});
 	});
 
-	/*$(document).ready(function(){
+	$(document).ready(function(){
 		$('#entry').on("submit", function(e){
 			e.preventDefault();
 			$('#insertButton').attr("disabled", "DISABLED");
@@ -324,7 +324,7 @@ require_once($_SERVER["DOCUMENT_ROOT"].'/lib/class/class.address.php');
 				}
 			})
 		});
-	});*/
+	});
 </script>
 
 <?php 

@@ -20,9 +20,17 @@ class googleTools{
 				$value['addr1'].', '.$value['city'].', '.$this->helper->defineStateAbbr($value['state']).' '.$value['postcode'].' '.$this->helper->defineCountryAbbr($value['country'])
 			);
 			echo $encAddr;
-			$url = 'https://'.$this->host.'/maps/api/geocode/json?sensor=false&address='.$encAddr;
+			$url = 'https://'.$this->host.'/maps/api/geocode/json?sensor=false&address='.$encAddr.'&key='.$this->apikey;
+
+			echo'<hr /><br />'.$url.'< hr /><br />';
 			$json = json_decode(file_get_contents($url), true);
+
+			echo '<pre>';
+			print_r($json);
+			echo '</pre><br /><br /><br />';
+
 			$status = $json['status'];
+			echo '<h2>'.$status.'</h2>';
 
 			if(strcmp($status, "OK") == 0){
 				$coords = array(

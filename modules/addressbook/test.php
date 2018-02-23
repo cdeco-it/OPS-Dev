@@ -5,11 +5,24 @@ require_once($_SERVER["DOCUMENT_ROOT"].'/lib/class/class.helper.php');
 require_once($_SERVER["DOCUMENT_ROOT"].'/lib/class/class.google.php');
 require_once($_SERVER["DOCUMENT_ROOT"].'/lib/class/class.orgs.php');
 
+$google = new googleTools();
 
-$addr = new Address();
+$address = array(
+	"addr1"=>"1150 St. George Rd.",
+	"addr2"=>NULL,
+	"city"=>"Merritt Island",
+	"state"=>9,
+	"postcode"=>32952,
+	"country"=>237
+);
 
+$coords = $google->getGeoCode($address);
+
+
+//$addr = new Address();
+/*
 $addr->setOrganization("Test Kappa");
-$addr->setOrganizationId(NULL);
+$addr->setOrganizationId(NULL);*/
 /*
 $orgs = new Orgs();
 $orgs->setOrgName("Alphax");
