@@ -57,8 +57,8 @@ require_once($_SERVER["DOCUMENT_ROOT"].'/lib/includes/inc.authenticator.php');
 <div class="container-fluid">
     <div class="row">
         
-		<!-- <main role="main" class="col-sm-9 ml-sm-auto "> -->
-        <main role="main" class="">
+		 <main role="main" class="p-2">
+        <!--<main role="main" class=""> -->
         	<h1>YY-XXX-J ::: Project Title</h1>
           	<section class="row placeholders">
             	<div class=" col-sm-2 placeholder text-center">
