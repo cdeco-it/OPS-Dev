@@ -139,9 +139,27 @@
 							<td>'.$row['addr_orgs_name'].'</td>
 							<td>'.$row['work_title'].'</td>';
 							if(!is_null($row['work_status_desc']) || !empty($row['work_status_desc'])){
-								echo '<td align="center">'.$row['work_status_desc'].'</td>';
+
+								switch($row['work_status']){
+									case(1):
+										echo '<td align="center" class="text-danger">'.$row['work_status_desc'].'</td>';
+										break;
+									case(2):
+										echo '<td align="center" class="text-success">'.$row['work_status_desc'].'</td>';
+										break;
+									case(3):
+										echo '<td align="center" class="text-primary">'.$row['work_status_desc'].'</td>';
+										break;
+									case(4):
+										echo '<td align="center" class="text-warning">'.$row['work_status_desc'].'</td>';
+										break;
+									default:
+										echo '<td align="center" class="text-secondary">Undefined</td>';
+										break;
+								}
+								
 							}else{
-								echo '<td align="center">Undefined</td>';
+								echo '<td align="center"  class="text-secondary">Undefined</td>';
 							}
 
 							if($row['work_db']){
@@ -151,7 +169,7 @@
 							}
 
 							if(!is_null($row['work_p_id'])){
-								echo '<td align="center"><a href="view.php?mode=p&id='.$row['work_p_id'].'"><i class="fas fa-check"></i></a></td>';
+								echo '<td align="center"><a href="/p/view.php?mode=p&id='.$row['work_p_id'].'"><i class="fas fa-check"></i></a></td>';
 							}else{
 								echo '<td align="center"></td>';
 							}

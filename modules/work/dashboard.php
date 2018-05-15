@@ -40,7 +40,6 @@
 	<div class="container-fluid no-gutters pt-2 pb-2">
 -->
 
-
 <div class="container-fluid">
     <div class="row">
     	<nav class="col-md-2 d-none d-md-block bg-light sidebar">
@@ -51,29 +50,29 @@
 		            </h6>
               		<li class="nav-item">
 		                <a class="nav-link active" href="#">
-		                	<i class="fas fa-angle-double-up"></i> :: Go To Top
+		                	<i class="fas fa-angle-double-up"></i> ::: Go To Top
 		                </a>
               		</li>
               		<li class="nav-item">
 		                <a class="nav-link" href="#">
-		                	<i class="far fa-file-alt"></i> :: Scope
+		                	<i class="far fa-file-alt"></i> ::: Scope
 		                </a>
 		              </li>
 		            <li class="nav-item">
 		                <a class="nav-link" href="#">
-		                 	<i class="far fa-compass"></i> :: Current Status
+		                 	<i class="far fa-compass"></i> ::: Current Status
 		                </a>
 		            </li>
 		            <li class="nav-item">
 		                <a class="nav-link" href="#">
-		                	<i class="fas fa-cogs"></i> :: Details 
+		                	<i class="fas fa-cogs"></i> ::: Details 
 		                </a>
 		            </li>
             	</ul>
         	</div>
         </nav>
 
-        <main role="main" class="col-md-9 ml-sm-auto col-lg-10 px-4">
+        <main role="main" class="col-md-10 ml-sm-auto col-lg-10 px-4">
         	<div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom">
             	<h2>YY-XXX ::: Title</h2>
             	<div class="btn-toolbar mb-2 mb-md-0">
