@@ -149,8 +149,8 @@
 							work_j_common_milestones_id,
 							work_j_milestones_value,
 							work_j_milestones_created,
-							work_j_milestones_updated)
-							VALUES {
+							work_j_milestones_updated )
+							VALUES (
 							NULL,
 							:work_j_id,
 							:work_id,
@@ -171,21 +171,19 @@
 					$this->endTransaction();
 					$this->retData['success'] = TRUE;
 					$this->retData['message'] = SUCCESS;
-					$this->retData['updateInfo'] = var_dump(debug_backtrace());
 					return($this->retData);
 				}else{
 					$this->cancelTransaction();
 					$this->retData['success'] = FALSE;
-					$this->retData['message'] = FAIL_TRANSACTION;
-					$this->retData['updateInfo'] = var_dump(debug_backtrace());
+					$this->retData['message'] = FAIL_TRANSACTION.' - '.$this->getError();
+					$this->retData['updateInfo'] = $this->getError();
 					return($this->retData);
 				}
 
 			}catch(Exception $e){
 				$this->cancelTransaction();
 				$this->retData['success'] = FALSE;
-				$this->retData['message'] = FAIL_TRANSACTION.' '.$e->getMessage();
-				$this->retData['updateInfo'] = var_dump(debug_backtrace());
+				$this->retData['message'] = FAIL_TRANSACTION.' *** '.$e->getMessage();
 				return($this->retData);
 			}
 		}
@@ -195,7 +193,7 @@
 			try{
 				$query = "UPDATE work_j_milestones SET
 					work_j_common_milestones_id = :work_j_common_milestones_id,
-					work_j_milestones_value =:work_j_milestones_value,
+					work_j_milestones_value = :work_j_milestones_value
 					WHERE work_j_milestones_id = :id";
 
 				$this->set($query);
@@ -207,13 +205,12 @@
 					$this->endTransaction();
 					$this->retData['success'] = true;
 					$this->retData['message'] = SUCCESS;
-					$this->retData['updateInfo'] = var_dump(debug_backtrace());
 					return($this->retData);
 				}else{
 					$this->cancelTransaction();
 					$this->retData['success'] = FALSE;
-					$this->retData['message'] = FAIL_TRANSACTION;
-					$this->retData['updateInfo'] = var_dump(debug_backtrace());
+					$this->retData['message'] = FAIL_TRANSACTION.' - '.$this->getError();
+					$this->retData['updateInfo'] = $this->getError();
 					return($this->retData);
 				}
 			}catch(Exception $e){
@@ -225,7 +222,30 @@
 		}
 
 		public function deleteEntry($id){
-			
+			$this->startTransaction();
+			try{
+				$query = "DELETE FROM work_j_milestones WHERE work_j_milestones_id =:id";
+				$this->set($query);
+				$this->bindParam(":id", $id);
+				$result = $this->execute();
+				if($result){
+					$this->endTransaction();
+					$this->retData['success'] = TRUE;
+					$this->retData['message'] = SUCCESS;
+					return($this->retData);
+				}else{
+					$this->cancelTransaction();
+					$this->retData['success'] = FALSE;
+					$this->retData['message'] = FAIL_TRANSACTION.' - '.$this->getError();
+					$this->retData['updateInfo'] = $this->getError();
+					return($this->retData);
+				}
+			}catch(Exception $e){
+				$this->cancelTransaction();
+				$this->retData['success'] = false;
+				$this->retData['message'] = CRITICAL_ERROR.' '.$e->getMessage();
+				return($this->retData);
+			}
 		}
-}
+	}
 ?>

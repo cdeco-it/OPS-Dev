@@ -985,7 +985,7 @@ class Address extends Db{
 			}else{
 				$this->cancelTransaction();
 				$this->retData['success'] = false;
-				$this->retData['message'] = FAIL_TRANSACTION.' '.$e->getMessage();
+				$this->retData['message'] = FAIL_TRANSACTION;
 				$this->retData['updateInfo'] = var_dump(debug_backtrace());
 				return($this->retData);
 			}
@@ -1014,7 +1014,7 @@ class Address extends Db{
 			}else{
 				$this->cancelTransaction();
 				$this->retData['success'] = false;
-				$this->retData['message'] = FAIL_TRANSACTION.' '.$e->getMessage();
+				$this->retData['message'] = FAIL_TRANSACTION;
 				$this->retData['updateInfo'] = var_dump(debug_backtrace());
 				return($this->retData);
 			}

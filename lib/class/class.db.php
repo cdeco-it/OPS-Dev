@@ -169,5 +169,10 @@
 	  	public function cancelTransaction(){
 	  		$this->connection->rollBack();
 	  	}
+
+	  	public function getError(){
+	  		$err = $this->statement->errorInfo();
+	  		return($err[0].' - '.$err[2]);
+	  	}
 	}
 ?>
