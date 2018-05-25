@@ -51,7 +51,7 @@
                             <a class="dropdown-item" href="/modules/work/">Listing</a>
                             <a class="dropdown-item" href="/modules/work/dashboard.php">Dashboard Temp</a>
                             <a class="dropdown-item" href="#">Another action</a>
-                            <a class="dropdown-item" href="#">Something else here</a>
+                            <a class="dropdown-item" href="/modules/work/admin/">Administration</a>
                         </div>
                     </li>
                 </ul>

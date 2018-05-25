@@ -21,10 +21,8 @@ require_once($_SERVER["DOCUMENT_ROOT"].'/lib/includes/inc.authenticator.php');
 <?php 
 	include_once($_SERVER["DOCUMENT_ROOT"].'/lib/includes/inc.navigation.php');
 	require_once($_SERVER["DOCUMENT_ROOT"].'/lib/class/class.db.php');
-
 	//Instantiate a new Db connector
 	$db = new Db();
-
 	//Define the query
 	$query = "SELECT 
 				addr_id, 
@@ -56,16 +54,12 @@ require_once($_SERVER["DOCUMENT_ROOT"].'/lib/includes/inc.authenticator.php');
 			LEFT JOIN common_suffix
 				ON addr_suffix = common_suffix_id
 			ORDER BY addr_lname ASC";
-
 	//Set the query in PDO
 	$db->set($query);
-
 	//Execute a single quuery
 	$db->execute();
-
 	//Get all results as a set array
 	$result = $db->returnSet();
-
 	//Get a count of results
 	$count = $db->rowCount();
 ?>
@@ -131,23 +125,18 @@ require_once($_SERVER["DOCUMENT_ROOT"].'/lib/includes/inc.authenticator.php');
 							<td><strong>'.$row['addr_org'].'</strong>'.$address.'</td>
 							<td>
 								<ul>';
-
 								if(!empty($row['addr_org_phone']) || !is_null($row['addr_org_phone'])){
 									echo'<li><strong>Office: </strong>'.$row['addr_org_phone'].'</li>';
 								}
-
 								if(!empty($row['addr_org_phone_ext']) || !is_null($row['addr_org_phone_ext'])){
 									echo'<li><strong>Ext: </strong>'.$row['addr_org_phone_ext'].'</li>';
 								}
-
 								if(!empty($row['addr_org_fax']) || !is_null($row['addr_org_fax'])){
 									echo'<li><strong>Fax: </strong>'.$row['addr_org_fax'].'</li>';
 								}
-
 								if(!empty($row['addr_direct']) || !is_null($row['addr_direct'])){
 									echo'<li><strong>Direct: </strong>'.$row['addr_direct'].'</li>';
 								}
-
 								if(!empty($row['addr_mobile']) || !is_null($row['addr_mobile'])){
 									echo'<li><strong>Mobile: </strong>'.$row['addr_mobile'].'</li>';
 								}
@@ -180,6 +169,5 @@ require_once($_SERVER["DOCUMENT_ROOT"].'/lib/includes/inc.authenticator.php');
 
 <?php 
 	include_once($_SERVER["DOCUMENT_ROOT"].'/lib/includes/inc.footer.php'); 
-
 	unset($db);
 ?>

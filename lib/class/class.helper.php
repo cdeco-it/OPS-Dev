@@ -156,6 +156,19 @@
 
 /****	POPULATE METHODS 	*****/
 
+		public function populateEngineeringMilestones($value = NULL){
+			$query = "SELECT * FROM common_eng_milestones ORDER BY common_eng_milestones_id ASC";
+			$this->set($query);
+			$this->execute();
+			foreach($this->returnSet() as $row){
+				if($row['common_eng_milestones_id'] == $value){
+					echo'<option value="'.$row['common_eng_milestones_id'].'" selected="SELECTED">'.$row['common_eng_milestones_desc'].'</option>';
+				}else{
+					echo'<option value="'.$row['common_eng_milestones_id'].'">'.$row['common_eng_milestones_desc'].'</option>';
+				}
+			}
+		}
+
 		public function populateYesNo($value = NULL){
 			if($value == 0 || is_null($value)){
 				echo '<option value="0" selected=SELECTED>No</option><option value="1">Yes</option>';
