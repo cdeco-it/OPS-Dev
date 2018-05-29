@@ -40,7 +40,7 @@ require_once($_SERVER["DOCUMENT_ROOT"].'/lib/includes/inc.authenticator.php');
 	    </div>
 		
 		<div class="col-8">
-			<h4>Project Administration</h4>
+			<h4>Project Administration Options</h4>
 		</div>
 
 		<div class="col-4" align="right">
@@ -100,6 +100,9 @@ require_once($_SERVER["DOCUMENT_ROOT"].'/lib/includes/inc.authenticator.php');
 					<h5 class="card-title">Construction Milestones</h5>
 					<p class="card-text">Unique to C phase projects only.</p>
 					<select name="c-milestones" size="10" class="form-control">
+						<?php
+							$helper->populateConstructionMilestones();
+						?>
 					</select>
 					<br />
 					<center>
@@ -133,15 +136,15 @@ require_once($_SERVER["DOCUMENT_ROOT"].'/lib/includes/inc.authenticator.php');
 				<div class="card-body">
 					<h5 class="card-title">Project Status</h5>
 					<p class="card-text">Common and available to all projects.</p>
-					<select name="j-milestones" size="10" class="form-control">
+					<select name="work-status" size="10" class="form-control">
 						<?php
-							$helper->populateEngineeringMilestones();
+							$helper->populateWorkStatus();
 						?>
 					</select>
 					<br />
 					<center>
-						<a href="#" name="J-add" id="J-add" data-toggle="modal" data-target="#addJ" class="btn btn-success">Add Milestone</a>
-						<a href="#" name="editJ" id="EditJ" data-toggle="modal" data-target="#editJ" class="btn btn-primary" class="btn btn-primary">Edit Selected</a>
+						<a href="#" name="ws-add" id="ws-add" data-toggle="modal" data-target="#addJ" class="btn btn-success">Add Status</a>
+						<a href="#" name="editWS" id="EditWS" data-toggle="modal" data-target="#editWS" class="btn btn-primary" class="btn btn-primary">Edit Selected</a>
 					</center>
 			  	</div>
 			</div>
