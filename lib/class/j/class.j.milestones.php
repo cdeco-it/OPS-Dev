@@ -1,8 +1,6 @@
  <?php
-
-	require_once('class.db.php');
+  	require_once($_SERVER["DOCUMENT_ROOT"].'/lib/class/class.db.php');
 	require_once($_SERVER["DOCUMENT_ROOT"].'/lib/includes/inc.messages.php');
-
 
 	/**
 	 * Class handles j Milestones
@@ -10,7 +8,6 @@
 	 * By: S. Mized 
 	 */
 	class j_WorkMilestones extends Db{
-
 
 		private $work_j_id;
 		private $work_id;
@@ -245,6 +242,30 @@
 				$this->retData['success'] = false;
 				$this->retData['message'] = CRITICAL_ERROR.' '.$e->getMessage();
 				return($this->retData);
+			}
+		}
+
+		public function getMilestones($value = NULL){
+			if(!empty($value) && !is_null($value)){
+				$query = "SELECT 
+							work_j_milestones.work_j_milestones_id AS 'UID',
+							common_eng_milestones.common_eng_milestones_desc AS 'DESCRIPTION',
+							common_eng_milestones.common_eng_milestones_group AS 'GROUPING',
+							work_j_milestones.work_j_milestones_value AS 'VALUE',
+							work_j_milestones.work_j_milestones_created AS 'CREATED',
+							work_j_milestones.work_j_milestones_updated AS ' UPDATED'
+						FROM work_j_milestones 
+						LEFT JOIN common_eng_milestones
+							ON work_j_milestones.work_j_common_milestones_id = common_eng_milestones.common_eng_milestones_id
+						WHERE work_j_id = :value ORDER BY common_eng_milestones.common_eng_milestones_group, common_eng_milestones.common_eng_milestones_desc ASC";
+				$this->set($query);
+				$this->bindParam(':value', $value);
+				$result = $this->returnSet();
+				if($this->rowCount() > 0){
+					return($result);
+				}else{
+					return('No milestones set.');
+				}
 			}
 		}
 	}

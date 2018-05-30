@@ -1,5 +1,6 @@
 <?php require_once($_SERVER["DOCUMENT_ROOT"].'/lib/includes/inc.authenticator.php'); ?>
 
+
 <!doctype html>
 
 <html lang="en">
@@ -32,6 +33,9 @@
 	require_once($_SERVER["DOCUMENT_ROOT"].'/lib/class/class.db.php');
 	require_once($_SERVER["DOCUMENT_ROOT"].'/lib/class/class.helper.php');
 	require_once($_SERVER["DOCUMENT_ROOT"].'/lib/class/class.work.php');
+	require_once($_SERVER["DOCUMENT_ROOT"].'/lib/class/j/class.j.milestones.php');
+
+	$jM = new j_WorkMilestones();
 ?>
 
 <!-- BODY -->
@@ -104,6 +108,7 @@
 				<ul class="nav nav-tabs">
 					<li class="nav-item">
 				 		<a class="nav-link active" data-toggle="tab" role="tab" href="#milestones">Milestones</a>
+
 				  	</li>
 				  	<li class="nav-item">
 						<a class="nav-link" data-toggle="tab" role="tab" href="#discussions">Discussions</a>
@@ -121,6 +126,17 @@
 						<a class="nav-link" data-toggle="tab" role="tab" href="#accounting">Accounting</a>
 				  	</li>
 				</ul>
+
+				<div class="tab-content">
+					<div class="tab-pane active" id="milestones" role="tabpanel">
+						<div class="row">
+							<div class="col-sm-11 pt-2 pb-2">
+								<h4>Milestones</h4>
+								<?php print_r($jM->getMilestones(1)); ?>
+							</div>
+						</div>
+					</div>
+				</div>
 			</div>
         </main>
     </div>

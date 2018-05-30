@@ -1,6 +1,5 @@
 <?php
 
-	//require_once('../../lib/includes/inc.messages.php');
 	require_once($_SERVER["DOCUMENT_ROOT"].'/lib/includes/inc.messages.php');
 
 	class Db{

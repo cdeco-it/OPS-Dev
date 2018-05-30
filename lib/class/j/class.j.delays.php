@@ -175,21 +175,22 @@
 			}
 		}
 
-/**
- * @TODO - 
- * @return [type] [description]
- */
 		public function updateEntry(){
 			$this->startTransaction();
 			try{
-				$query = "UPDATE work_j_milestones SET
-					work_j_common_milestones_id = :work_j_common_milestones_id,
-					work_j_milestones_value = :work_j_milestones_value
-					WHERE work_j_milestones_id = :id";
+				$query = "UPDATE work_j_delays SET
+					work_j_milestones_id = :milestone,
+					work_j_delays_reason = :reason,
+					work_j_delays_finalized_date = :finalized,
+					work_j_delays_cause = :cause,
+					work_j_delays_updated = NOW()
+					WHERE work_j_delays_id = :id";
 
 				$this->set($query);
-				$this->bindParam(':work_j_common_milestones_id', $this->getMilestone());
-				$this->bindParam(':work_j_milestones_value', $this->getMilestoneValue());
+				$this->bindParam(':milestone', $this->getParentMilestone());
+				$this->bindParam(':reasons', $this->getReason());
+				$this->bindParam(':finalized', $this->getFinalizedDate());
+				$this->bindParam(':cause', $this->getCause());
 				$this->bindParam(':id', $this->getFetchId());
 				$result = $this->execute();
 				if($result){
@@ -212,15 +213,10 @@
 			}
 		}
 
-/**
- * @TODO
- * @param  [type] $id [description]
- * @return [type]     [description]
- */
 		public function deleteEntry($id){
 			$this->startTransaction();
 			try{
-				$query = "DELETE FROM work_j_milestones WHERE work_j_milestones_id =:id";
+				$query = "DELETE FROM work_j_delays WHERE work_j_delays_id =:id";
 				$this->set($query);
 				$this->bindParam(":id", $id);
 				$result = $this->execute();
@@ -241,6 +237,29 @@
 				$this->retData['success'] = false;
 				$this->retData['message'] = CRITICAL_ERROR.' '.$e->getMessage();
 				return($this->retData);
+			}
+		}
+//@TODO - Finalize the delay show....
+		public function getDelays($value = NULL){
+			if(!empty($value) && !is_null($value)){
+				$query = "SELECT 
+							work_j_delays.work_j_delays_id AS 'UID',
+							work_j_delays.work_j_milestones_id AS 'PARENT',
+							work_j_delays.work_j_delays_reasons AS 'VALUE',
+							work_j_delays.work_j_delays_finazlied_date AS 'FINALIZED',
+							work_j_delays.work_j_delays_cause AS ' CAUSE'
+						FROM work_j_delays
+						LEFT JOIN common_eng_milestones
+							ON work_j_delays.work_j_milestones_id = work_j_milestones.work_j_milestones_id
+						WHERE work_j_id = :value ORDER BY work_j_delays.work_j_delays_updated DESC";
+				$this->set($query);
+				$this->bindParam(':value', $value);
+				$result = $this->returnSet();
+				if($this->rowCount() > 0){
+					return($result);
+				}else{
+					return('No milestones set.');
+				}
 			}
 		}
 	}
