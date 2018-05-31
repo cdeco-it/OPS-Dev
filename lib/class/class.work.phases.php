@@ -16,6 +16,7 @@
 		private $parent_id;
 		private $phase_id;
 		private $status;
+		private $status_desc;
 		private $percentComplete;
 		private $sow;
 		private $created;
@@ -53,6 +54,10 @@
 			return($this->status);
 		}
 
+		public function getStatusDesc(){
+			return($this->status_desc);
+		}
+
 		public function getPercentComplete(){
 			return($this->percentComplete);
 		}
@@ -76,7 +81,7 @@
 
 /***** SETTER METHODS *****/
 
-		public function setRecord($value = NULL){
+		public function setRecordId($value = NULL){
 			$this->record_id = $value;
 		}
 
@@ -94,6 +99,10 @@
 			}else{
 				$this->status = $value;
 			}
+		}
+
+		public function setStatusDesc($value = NULL){
+			$this->status_desc = $value;
 		}
 
 		public function setPercentComplete($value = NULL){
@@ -246,23 +255,23 @@
 				//Select query by base.
 				switch(strtolower($phase)){
 					case "j":
-						$query = "SELECT * FROM work_j WHERE work_j_id = :id";
+						$query = "SELECT * FROM work_j LEFT JOIN work_status ON work_j.work_status_id = work_status.work_status_id WHERE work_j_id = :id";
 						break;
 
 					case "p":
-						$query = "SELECT * FROM work_p WHERE work_p_id = :id";
+						$query = "SELECT * FROM work_p LEFT JOIN work_status ON work_p.work_status_id = work_status.work_status_id WHERE work_p_id = :id";
 						break;
 
 					case "c":
-						$query = "SELECT * FROM work_c WHERE work_c_id = :id";
+						$query = "SELECT * FROM work_c LEFT JOIN work_status ON work_c.work_status_id = work_status.work_status_id WHERE work_c_id = :id";
 						break;
 
 					case "b":
-						$query = "SELECT * FROM work_b WHERE work_b_id = :id";
+						$query = "SELECT * FROM work_b LEFT JOIN work_status ON work_b.work_status_id = work_status.work_status_id WHERE work_b_id = :id";
 						break;
 
 					case "p":
-						$query = "SELECT * FROM work_p WHERE work_p_id = :id";
+						$query = "SELECT * FROM work_p LEFT JOIN work_status ON work_p.work_status_id = work_status.work_status_id WHERE work_p_id = :id";
 						break;
 
 					default:
@@ -290,22 +299,24 @@
 							$this->setParentId($result['work_id']);
 							$this->setPhaseId($result['work_j_number']);
 							$this->setStatus($result['work_status_id']);
+							$this->setStatusDesc($result['work_status_desc']);
 							$this->setPercentComplete($result['work_j_percentcomp']);
 							$this->setSOW($result['work_j_sow']);
 							$this->setDateCreated($result['work_j_created']);
-							$this->setDateModified($result['work_j_modified']);
+							$this->setDateModified($result['work_j_updated']);
 							break;
 
 						case "p":
 							//Process as P
-							$this->setRecordId($result['work_j_id']);
+							$this->setRecordId($result['work_p_id']);
 							$this->setParentId($result['work_id']);
-							$this->setPhaseId($result['work_j_number']);
+							$this->setPhaseId($result['work_p_number']);
 							$this->setStatus($result['work_status_id']);
-							$this->setPercentComplete($result['work_j_percentcomp']);
-							$this->setSOW($result['work_j_sow']);
-							$this->setDateCreated($result['work_j_created']);
-							$this->setDateModified($result['work_j_modified']);
+							$this->setStatusDesc($result['work_status_desc']);
+							$this->setPercentComplete($result['work_p_percentcomp']);
+							$this->setSOW($result['work_p_sow']);
+							$this->setDateCreated($result['work_p_created']);
+							$this->setDateModified($result['work_p_updated']);
 							break;
 
 						case "c":
@@ -314,6 +325,7 @@
 							$this->setParentId($result['work_id']);
 							$this->setPhaseId($result['work_c_number']);
 							$this->setStatus($result['work_status_id']);
+							$this->setStatusDesc($result['work_status_desc']);
 							$this->setPercentComplete($result['work_c_percentcomp']);
 							$this->setSOW($result['work_c_sow']);
 							$this->setDateCreated($result['work_c_created']);
@@ -326,6 +338,7 @@
 							$this->setParentId($result['work_id']);
 							$this->setPhaseId($result['work_b_number']);
 							$this->setStatus($result['work_status_id']);
+							$this->setStatusDesc($result['work_status_desc']);
 							$this->setPercentComplete($result['work_b_percentcomp']);
 							$this->setSOW($result['work_b_sow']);
 							$this->setDateCreated($result['work_b_created']);
@@ -338,6 +351,7 @@
 							$this->setParentId($result['work_id']);
 							$this->setPhaseId($result['work_s_number']);
 							$this->setStatus($result['work_status_id']);
+							$this->setStatusDesc($result['work_status_desc']);
 							$this->setPercentComplete($result['work_s_percentcomp']);
 							$this->setSOW($result['work_s_sow']);
 							$this->setDateCreated($result['work_s_created']);

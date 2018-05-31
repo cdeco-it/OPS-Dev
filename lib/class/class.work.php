@@ -18,6 +18,7 @@
 		private $work_client_rep;
 		private $work_db;
 		private $work_status;
+		private $work_status_desc;
 		private $work_j_id;
 		private $work_c_id;
 		private $work_p_id;
@@ -66,6 +67,10 @@
 
 		public function getStatus(){
 			return($this->work_status);
+		}
+
+		public function getStatusDesc(){
+			return($this->work_status_desc);
 		}
 
 		public function getJID(){
@@ -164,6 +169,10 @@
 			}
 		}
 
+		public function setStatusDesc($value = NULL){
+			$this->work_status_desc = $value;
+		}
+
 		public function setJID($value = NULL){
 			if(is_numeric($value)){
 				$this->work_j_id = $value;
@@ -216,7 +225,7 @@
 
 		public function loadEntry($id = NULL){
 			if(is_numeric($id)){
-				$query = "SELECT * FROM work WHERE work.work_id = :id";
+				$query = "SELECT * FROM work LEFT JOIN work_status ON work.work_status = work_status.work_status_id WHERE work.work_id = :id";
 				$this->set($query);
 				$this->bindParam(':id', $id);
 				$result = $this->returnSingle();
@@ -230,6 +239,7 @@
 					$this->setClientRep($result['work_client_rep']);
 					$this->setDb($result['work_db']);
 					$this->setStatus($result['work_status']);
+					$this->setStatusDesc($result['work_status_desc']);
 					$this->setJID($result['work_j_id']);
 					$this->setPID($result['work_p_id']);
 					$this->setBID($result['work_b_id']);

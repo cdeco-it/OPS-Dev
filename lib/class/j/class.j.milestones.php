@@ -252,6 +252,7 @@
 							common_eng_milestones.common_eng_milestones_desc AS 'DESCRIPTION',
 							common_eng_milestones.common_eng_milestones_group AS 'GROUPING',
 							work_j_milestones.work_j_milestones_value AS 'VALUE',
+							DATEDIFF(work_j_milestones.work_j_milestones_value, NOW()) AS 'REMAINING',
 							work_j_milestones.work_j_milestones_created AS 'CREATED',
 							work_j_milestones.work_j_milestones_updated AS ' UPDATED'
 						FROM work_j_milestones 
@@ -264,7 +265,7 @@
 				if($this->rowCount() > 0){
 					return($result);
 				}else{
-					return('No milestones set.');
+					return(NULL);
 				}
 			}
 		}

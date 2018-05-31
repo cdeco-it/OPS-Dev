@@ -5,19 +5,18 @@
 
 
 	/**
-	 * Class handles j Work Delays
-	 * Writte: 5/29/2018
+	 * Class handles j Work Team
+	 * Writte: 5/31/2018
 	 * By: S. Mized 
 	 */
-	class j_WorkDelays extends Db{
+	class j_WorkTeam extends Db{
 
 
 		private $work_j_id;
 		private $work_id;
-		private $parentMilestone;
-		private $reasonText;
-		private $finalizedDate;
-		private $cause;
+		private $employee_id;
+		private $employee_name;
+		private $leader;
 		private $dateCreated;
 		private $dateModified;
 		private $fetchid;
@@ -51,20 +50,16 @@
 			return($this->work_id);
 		}
 
-		public function getReason(){
-			return($this->reasonText);
+		public function getEmployeeId(){
+			return($this->employee_id);
 		}
 
-		public function getFinalizedDate(){
-			return($this->finalizedDate);
+		public function getEmployeeName(){
+			return($this->employee_name);
 		}
 
-		public function getCause(){
-			return($this->cause);
-		}
-
-		public function getParentMilestone(){
-			return($this->parentMilestone);
+		public function getLeader(){
+			return($this->leader);
 		}
 
 /***** SETTER METHODS *****/
@@ -88,27 +83,24 @@
 			$this->work_id = $value;
 		}
 
-		public function setReason($value = NULL){
-			$this->reasonText = $value;
+		public function setEmployeeId($value = NULL){
+			$this->employee_id = $value;
 		}
 
-		public function setFinalizedDate($value = NULL){
-			$this->finalizedDate = $value;
+		public function setEmployeeName($value = NULL){
+			$this->employee_name;
 		}
 
-		public function setCause($value = NULL){
-			$this->cause = $value;
+		public function setLeader($value = NULL){
+			$this->leader;
 		}
 
-		public function setParentMilestone($value = NULL){
-			$this->parentMilestone = $value;
-		}
 
 /***** TRANSACTIONAL METHODS *****/
 
 		public function getEntry($id){
 			if(!empty($id) && !is_null($id)){
-				$query = "SELECT * FROM work_j_delays WHERE work_j_delays.work_j_delays_id = :id";
+				$query = "SELECT * FROM work_j_team WHERE work_j_team.work_j_team_id = :id";
 				
 				$this->set($query);
 				$this->bindParam(":id", $id);
@@ -126,32 +118,29 @@
 		public function addEntry(){
 			$this->startTransaction();
 			try{
-				$query = "INSERT INTO work_j_delays (
-							work_j_delays_id,
+				$query = "INSERT INTO work_j_team (
+							work_j_team_id,
 							work_j_id,
-							work_j_milestones_id,
-							work_j_delays_reason,
-							work_j_delays_finalized_date,
-							work_j_delays_cause,
-							work_j_delays_created,
-							work_j_delays_updated)
+							work_id,
+							employee_id,
+							work_j_team_leader,
+							work_j_team_created,
+							work_j_team_updated)
 						VALUES (
 							NULL,
 							:work_j_id,
-							:work_j_milesteone_id,
-							:work_j_delays_reason,
-							:work_j_delays_finalized_date,
-							:work_j_delays_cause,
+							:work_id,
+							:employee_id,
+							:work_j_team_leader,
 							NOW(),
 							NOW()
 						)";
 
 				$this->set($query);
 				$this->bindParam(':work_j_id', $this->getWorkJID());
-				$this->bindParam(':work_j_milestones_id', $this->getParentMilestone());
-				$this->bindParam(':work_j_delays_reason', $this->getReason());
-				$this->bindParam(':work_j_delays_finalized_date', $this->getFinalizedDate());
-				$this->bindParam(':work_j_delays_cause', $this->getCause());
+				$this->bindParam(':work_id', $this->getWorkID());
+				$this->bindParam(':employee_id', $this->getEmployeeId());
+				$this->bindParam(':work_j_team_leader', $this->getLeader());
 				$result = $this->execute();
 
 				if($result){
@@ -178,19 +167,12 @@
 		public function updateEntry(){
 			$this->startTransaction();
 			try{
-				$query = "UPDATE work_j_delays SET
-					work_j_milestones_id = :milestone,
-					work_j_delays_reason = :reason,
-					work_j_delays_finalized_date = :finalized,
-					work_j_delays_cause = :cause,
-					work_j_delays_updated = NOW()
-					WHERE work_j_delays_id = :id";
+				$query = "UPDATE work_j_team SET
+					work_j_team_leader = :leader,
+					WHERE work_j_team_id = :id";
 
 				$this->set($query);
-				$this->bindParam(':milestone', $this->getParentMilestone());
-				$this->bindParam(':reasons', $this->getReason());
-				$this->bindParam(':finalized', $this->getFinalizedDate());
-				$this->bindParam(':cause', $this->getCause());
+				$this->bindParam(':leader', $this->getLeader());
 				$this->bindParam(':id', $this->getFetchId());
 				$result = $this->execute();
 				if($result){
@@ -216,7 +198,7 @@
 		public function deleteEntry($id){
 			$this->startTransaction();
 			try{
-				$query = "DELETE FROM work_j_delays WHERE work_j_delays_id =:id";
+				$query = "DELETE FROM work_j_team WHERE work_j_team_id =:id";
 				$this->set($query);
 				$this->bindParam(":id", $id);
 				$result = $this->execute();
@@ -240,23 +222,18 @@
 			}
 		}
 
-		public function getDelays($value = NULL){
+		public function getTeam($value = NULL){
 			if(!empty($value) && !is_null($value)){
-				$query = "SELECT 
-							work_j_delays.work_j_delays_id AS 'DELAY_ID',
-							work_j_delays.work_j_milestones_id AS 'MILESTONE_ID',
-							work_j_delays.work_j_delays_reason AS 'REASON',
-							view_work_j_milestones.common_eng_milestones_desc AS 'DESCRIPTION',
-							view_work_j_milestones.work_j_milestones_value AS 'ORIG_DATE',
-							DATEDIFF(view_work_j_milestones.work_j_milestones_value, work_j_delays.work_j_delays_finalized_date) AS DIFF,
-							work_j_delays.work_j_delays_reason,
-							work_j_delays.work_j_delays_finalized_date AS 'ACT_DATE',
-							work_j_delays.work_j_delays_cause AS 'CAUSE'
-							FROM work_j_delays 
-							LEFT JOIN  view_work_j_milestones
-							ON work_j_delays.work_j_milestones_id = view_work_j_milestones.work_j_milestones_id
-							WHERE work_j_delays.work_j_id = :value
-							ORDER BY view_work_j_milestones.common_eng_milestones_desc ASC";
+				$query = 'SELECT	
+							work_j_team.work_j_team_id AS "ID",
+							work_j_team.employee_id AS "EID",
+							CONCAT_WS(" ", employee.employee_fname, employee.employee_lname) AS "NAME",
+							work_j_team.work_j_team_leader AS "LEADER"
+							FROM work_j_team
+							LEFT JOIN employee
+							ON work_j_team.employee_id = employee.employee_id
+							WHERE work_j_team.work_j_id = :value
+							ORDER BY work_j_team.work_j_team_leader DESC';
 				$this->set($query);
 				$this->bindParam(':value', $value);
 				$result = $this->returnSet();

@@ -190,6 +190,14 @@
 			}
 		}
 
+		public function populateDelayCause($value = NULL){
+			if($value == 0 || is_null($value)){
+				echo '<option value="0" selected=SELECTED>Internal Issues</option><option value="1">External Issues</option>';
+			}else{
+				echo '<option value="0">Internal Issues</option><option value="1" selected=SELECTED>External Issues</option>';
+			}
+		}
+
 		public function populatePrefix($value = NULL){
 			$query = "SELECT * FROM common_prefix ORDER BY common_prefix_id ASC";
 			$this->set($query);

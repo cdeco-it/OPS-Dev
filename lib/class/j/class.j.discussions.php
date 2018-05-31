@@ -1,23 +1,17 @@
  <?php
-
-	require_once($_SERVER["DOCUMENT_ROOT"].'/lib/class/class.db.php');
+  	require_once($_SERVER["DOCUMENT_ROOT"].'/lib/class/class.db.php');
 	require_once($_SERVER["DOCUMENT_ROOT"].'/lib/includes/inc.messages.php');
 
-
 	/**
-	 * Class handles j Work Delays
-	 * Writte: 5/29/2018
+	 * Class handles j Discussions
+	 * Writte: 5/31/2018
 	 * By: S. Mized 
 	 */
-	class j_WorkDelays extends Db{
-
+	class j_WorkDiscussions extends Db{
 
 		private $work_j_id;
 		private $work_id;
-		private $parentMilestone;
-		private $reasonText;
-		private $finalizedDate;
-		private $cause;
+		private $entry;
 		private $dateCreated;
 		private $dateModified;
 		private $fetchid;
@@ -35,6 +29,18 @@
 			return($this->fetchid);
 		}
 
+		public function getWorkJID(){
+			return($this->work_j_id);
+		}
+
+		public function getWorkID(){	
+			return($this->work_id);
+		}
+
+		public function getDiscussion(){
+			return($this->entry);
+		}
+
 		public function getDateModified(){
 			return($this->dateModified);
 		}
@@ -43,41 +49,9 @@
 			return($this->dateCreated);
 		}
 
-		public function getWorkJID(){
-			return($this->work_j_id);
-		}
-
-		public function getWorkID(){
-			return($this->work_id);
-		}
-
-		public function getReason(){
-			return($this->reasonText);
-		}
-
-		public function getFinalizedDate(){
-			return($this->finalizedDate);
-		}
-
-		public function getCause(){
-			return($this->cause);
-		}
-
-		public function getParentMilestone(){
-			return($this->parentMilestone);
-		}
-
 /***** SETTER METHODS *****/
 		public function setFetchId($value = NULL){
 			$this->fetchid = $value;
-		}
-
-		public function setDateCreated($value = NULL){
-			$this->dateCreated = $value;
-		}
-
-		public function setDateUpdated($value = NULL){
-			$this->dateModified = $value;
 		}
 
 		public function setWorkJID($value = NULL){
@@ -88,31 +62,34 @@
 			$this->work_id = $value;
 		}
 
-		public function setReason($value = NULL){
-			$this->reasonText = $value;
+		public function setDiscussion($value = NULL){
+			$this->entry = $value;
 		}
 
-		public function setFinalizedDate($value = NULL){
-			$this->finalizedDate = $value;
+		public function setDateCreated($value = NULL){
+			$this->dateCreated = $value;
 		}
 
-		public function setCause($value = NULL){
-			$this->cause = $value;
-		}
-
-		public function setParentMilestone($value = NULL){
-			$this->parentMilestone = $value;
+		public function setDateModified($value = NULL){
+			$this->dateModified = $value;
 		}
 
 /***** TRANSACTIONAL METHODS *****/
 
 		public function getEntry($id){
 			if(!empty($id) && !is_null($id)){
-				$query = "SELECT * FROM work_j_delays WHERE work_j_delays.work_j_delays_id = :id";
-				
+				$query = "SELECT * FROM 
+				work_j_discussions 
+				WHERE work_j_discussions_id = :id";
 				$this->set($query);
 				$this->bindParam(":id", $id);
 				$result = $this->returnSingle();
+				$this->setFetchId($result['work_j_discussions_id']);
+				$this->setWorkJID($result['work_j_id']);
+				$this->setWorkID($result['work_id']);
+				$this->setDiscussion($result['work_j_discussions_entry']);
+				$this->setDateCreated($result['work_j_discussions_created']);
+				$this->setDateModified($result['work_j_discussions_updated']);
 				$this->retData['success'] = true;
 				$this->retData['message'] = SUCCESS;
 				return($this->retData);
@@ -120,38 +97,32 @@
 				$this->retData['success'] = false;
 				$this->retData['message'] = E_NO_ID;
 				return($this->retData);
-			}	
+			}
 		}
 
 		public function addEntry(){
 			$this->startTransaction();
 			try{
-				$query = "INSERT INTO work_j_delays (
-							work_j_delays_id,
+				$query = "INSERT INTO work_j_discussions (
+							work_j_discussions_id,
 							work_j_id,
-							work_j_milestones_id,
-							work_j_delays_reason,
-							work_j_delays_finalized_date,
-							work_j_delays_cause,
-							work_j_delays_created,
-							work_j_delays_updated)
-						VALUES (
+							work_id,
+							work_j_discussions_entry,
+							work_j_milestones_created,
+							work_j_milestones_updated )
+							VALUES (
 							NULL,
 							:work_j_id,
-							:work_j_milesteone_id,
-							:work_j_delays_reason,
-							:work_j_delays_finalized_date,
-							:work_j_delays_cause,
+							:work_id,
+							:work_j_discussions_entry,
 							NOW(),
-							NOW()
+							NULL
 						)";
-
 				$this->set($query);
 				$this->bindParam(':work_j_id', $this->getWorkJID());
-				$this->bindParam(':work_j_milestones_id', $this->getParentMilestone());
-				$this->bindParam(':work_j_delays_reason', $this->getReason());
-				$this->bindParam(':work_j_delays_finalized_date', $this->getFinalizedDate());
-				$this->bindParam(':work_j_delays_cause', $this->getCause());
+				$this->bindParam(':work_id', $this->getWorkID());
+				$this->bindParam(':work_j_discussions_entry', $this->getDiscussion());
+
 				$result = $this->execute();
 
 				if($result){
@@ -178,19 +149,13 @@
 		public function updateEntry(){
 			$this->startTransaction();
 			try{
-				$query = "UPDATE work_j_delays SET
-					work_j_milestones_id = :milestone,
-					work_j_delays_reason = :reason,
-					work_j_delays_finalized_date = :finalized,
-					work_j_delays_cause = :cause,
-					work_j_delays_updated = NOW()
-					WHERE work_j_delays_id = :id";
+				$query = "UPDATE work_j_discussions SET
+					work_j_discussions_entry = :work_j_discussions_entry,
+					work_j_discussions_updated = NOW()
+					WHERE work_j_discussion_id = :id";
 
 				$this->set($query);
-				$this->bindParam(':milestone', $this->getParentMilestone());
-				$this->bindParam(':reasons', $this->getReason());
-				$this->bindParam(':finalized', $this->getFinalizedDate());
-				$this->bindParam(':cause', $this->getCause());
+				$this->bindParam(':work_j_discussions_entry', $this->getDiscussion());
 				$this->bindParam(':id', $this->getFetchId());
 				$result = $this->execute();
 				if($result){
@@ -216,7 +181,7 @@
 		public function deleteEntry($id){
 			$this->startTransaction();
 			try{
-				$query = "DELETE FROM work_j_delays WHERE work_j_delays_id =:id";
+				$query = "DELETE FROM work_j_discussions WHERE work_j_discussions_id =:id";
 				$this->set($query);
 				$this->bindParam(":id", $id);
 				$result = $this->execute();
@@ -240,23 +205,9 @@
 			}
 		}
 
-		public function getDelays($value = NULL){
+		public function getDiscussions($value = NULL){
 			if(!empty($value) && !is_null($value)){
-				$query = "SELECT 
-							work_j_delays.work_j_delays_id AS 'DELAY_ID',
-							work_j_delays.work_j_milestones_id AS 'MILESTONE_ID',
-							work_j_delays.work_j_delays_reason AS 'REASON',
-							view_work_j_milestones.common_eng_milestones_desc AS 'DESCRIPTION',
-							view_work_j_milestones.work_j_milestones_value AS 'ORIG_DATE',
-							DATEDIFF(view_work_j_milestones.work_j_milestones_value, work_j_delays.work_j_delays_finalized_date) AS DIFF,
-							work_j_delays.work_j_delays_reason,
-							work_j_delays.work_j_delays_finalized_date AS 'ACT_DATE',
-							work_j_delays.work_j_delays_cause AS 'CAUSE'
-							FROM work_j_delays 
-							LEFT JOIN  view_work_j_milestones
-							ON work_j_delays.work_j_milestones_id = view_work_j_milestones.work_j_milestones_id
-							WHERE work_j_delays.work_j_id = :value
-							ORDER BY view_work_j_milestones.common_eng_milestones_desc ASC";
+				$query = "SELECT * FROM work_j_discussions ORDER BY work_j_discussions_created DESC";
 				$this->set($query);
 				$this->bindParam(':value', $value);
 				$result = $this->returnSet();
