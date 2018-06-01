@@ -544,4 +544,5 @@
 
 <?php 
 	include_once($_SERVER["DOCUMENT_ROOT"].'/lib/includes/inc.footer.php'); 
+	unset($work, $helper, $db, $jM, $jD, $jDi, $jT, $jC, $jA);
 ?>
