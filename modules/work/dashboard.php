@@ -240,7 +240,7 @@
 				              			foreach($result as $row){
 				              				echo '<tr>
 			              						<td>'.$row['NAME'].'</td>';
-			              						if(!is_null($row['LEADER']) && $row['LEADER'] === 1){
+			              						if(!is_null($row['LEADER']) && $row['LEADER'] == 1){
 			              							echo '<td><i class="fas fa-check"></i></td>';
 			              						}else{
 			              							echo '<td></td>';
