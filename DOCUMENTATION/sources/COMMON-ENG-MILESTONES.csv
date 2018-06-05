@@ -1,22 +1,115 @@
-1,30% Design Review
-2,30% QC Review
-3,30% Design Stop
-4,45% Design Review
-5,45% QC Review
-6,45% Design Stop
-7,50% Design Review
-8,50% QC Review
-9,50% Design Stop
-10,60% Design Review
-11,60% QC Review
-12,60% Design Stop
-13,90% Design Review
-14,90% QC Review
-15,90% Design Stop
-16,100% Design Review
-17,100% QC Review
-18,100% Design Stop
-19,Final Design Review
-20,Final QC Review
-21,Project Turnover
-22,Closeout Documents Due
+1,Notice to Proceed,0
+2,15% Redlines Due,15
+3,15% All stop for QC,15
+4,15% QC Completion Date,15
+5,15% Due to Client,15
+6,15% Design Review Meeting,15
+7,Schematic Redlines Due,17
+8,Schematic All stop for QC,17
+9,Schematic QC Completion Date,17
+10,Schematic Due to Client,17
+11,Schematic Design Review Meeting,17
+12,30% Redlines Due,30
+13,30% All stop for QC,30
+14,30% QC Completion Date,30
+15,30% Due to Client,30
+16,30% Design Review Meeting,30
+17,35% Redlines Due,35
+18,35% All stop for QC,35
+19,35% QC Completion Date,35
+20,35% Due to Client,35
+21,35% Design Review Meeting,35
+22,40% Redlines Due,40
+23,40% All stop for QC,40
+24,40% QC Completion Date,40
+25,40% Due to Client,40
+26,40% Design Review Meeting,40
+27,45% Redlines Due,45
+28,45% All stop for QC,45
+29,45% QC Completion Date,45
+30,45% Due to Client,45
+31,45% Design Review Meeting,45
+32,50% Redlines Due,50
+33,50% All stop for QC,50
+34,50% QC Completion Date,50
+35,50% Due to Client,50
+36,50% Design Review Meeting,50
+37,55% Redlines Due,55
+38,55% All stop for QC,55
+39,55% QC Completion Date,55
+40,55% Due to Client,55
+41,55% Design Review Meeting,55
+42,60% Redlines Due,60
+43,60% All stop for QC,60
+44,60% QC Completion Date,60
+45,60% Due to Client,60
+46,60% Design Review Meeting,60
+47,65% Redlines Due,65
+48,65% All stop for QC,65
+49,65% QC Completion Date,65
+50,65% Due to Client,65
+51,65% Design Review Meeting,65
+52,70% Redlines Due,70
+53,70% All stop for QC,70
+54,70% QC Completion Date,70
+55,70% Due to Client,70
+56,70% Design Review Meeting,70
+57,75% Redlines Due,75
+58,75% All stop for QC,75
+59,75% QC Completion Date,75
+60,75% Due to Client,75
+61,75% Design Review Meeting,75
+62,80% Redlines Due,80
+63,80% All stop for QC,80
+64,80% QC Completion Date,80
+65,80% Due to Client,80
+66,80% Design Review Meeting,80
+67,85% Redlines Due,85
+68,85% All stop for QC,85
+69,85% QC Completion Date,85
+70,85% Due to Client,85
+71,85% Design Review Meeting,85
+72,90% Redlines Due,90
+73,90% All stop for QC,90
+74,90% QC Completion Date,90
+75,90% Due to Client,90
+76,90% Design Review Meeting,90
+77,90% for Review Redlines Due,90
+78,90% for Review All stop for QC,90
+79,90% for Review QC Completion Date,90
+80,90% for Review Due to Client,90
+81,90% for Review Design Review Meeting,90
+82,95% Redlines Due,95
+83,95% All stop for QC,95
+84,95% QC Completion Date,95
+85,95% Due to Client,95
+86,95% Design Review Meeting,95
+87,100% Redlines Due,100
+88,100% All stop for QC,100
+89,100% QC Completion Date,100
+90,100% Due to Client,100
+91,100% Design Review Meeting,100
+92,100% for Review Redlines Due,100
+93,100% for Review All stop for QC,100
+94,100% for Review QC Completion Date,100
+95,100% for Review Due to Client,100
+96,100% for Review Design Review Meeting,100
+97,Bid Set Redlines Due,110
+98,Bid Set All stop for QC,110
+99,Bid Set QC Completion Date,110
+100,Bid Set Due to Client,110
+101,Bid Set Design Review Meeting,110
+102,Permit Set Redlines Due,110
+103,Permit Set All stop for QC,110
+104,Permit Set QC Completion Date,110
+105,Permit Set Due to Client,110
+106,Permit Set Design Review Meeting,110
+107,Final Redlines Due,120
+108,Final All stop for QC,120
+109,Final QC Completion Date,120
+110,Final Due to Client,120
+111,Final Design Review Meeting,120
+112,Revision Redlines Due,130
+113,Revision All stop for QC,130
+114,Revision QC Completion Date,130
+115,Revision Due to Client,130

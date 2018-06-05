@@ -39,6 +39,7 @@
 	require_once($_SERVER["DOCUMENT_ROOT"].'/lib/class/j/class.j.team.php');
 	require_once($_SERVER["DOCUMENT_ROOT"].'/lib/class/j/class.j.consultants.php');
 	require_once($_SERVER["DOCUMENT_ROOT"].'/lib/class/j/class.j.actions.php');
+	require_once($_SERVER["DOCUMENT_ROOT"].'/lib/class/j/class.j.subsrfi.php');
 	$helper = new Helper();
 	$w = new Work();
 	$j = new workPhases();
@@ -48,6 +49,7 @@
 	$jT = new j_WorkTeam();
 	$jC = new j_WorkConsultants();
 	$jA = new j_WorkActions();
+	$jSr = new j_WorkSubsRfis();
 
 	$w->loadEntry(1);
 
@@ -94,8 +96,6 @@
 				</div>
 			</div>
 			
-          	
-
 			<div name="details">
 				<ul class="nav nav-tabs">
 					<li class="nav-item">
@@ -450,6 +450,67 @@
 			              		</div>
 			            	</div>
 			          	</div>
+			          	<?php
+			          		$result = $jSr->getAllEntries(1);
+			          		if(!is_null($result)){
+			          			echo '
+								<div class="table-responsive">
+			        				<table class="table table-striped">
+			          					<thead>
+					                		<tr>
+							                  	<th width="10%">Type</th>
+							                  	<th width="10%">Internal #</th>
+							                  	<th width="10%">External #</th>
+							                  	<th width="35%">Subject</th>
+							                  	<th widht="10%">Status</th>
+							                  	<th width="10%">Due Date</th>
+							                  	<th width="15%">Action</th>
+							                </tr>
+					              		</thead>
+					              		<tbody>';
+					    		 $i = 1;
+			              		foreach($result as $row){
+		              				echo '<tr>
+		              						<td>';
+		              						if($row['TYPE'] == 0){
+		              							echo 'Submittal';
+		              						}elseif($row['TYPE'] == 1){
+		              							echo 'RFI';
+		              						}elseif($row['TYPE'] == 2){
+		              							echo 'Pay Application';
+		              						}
+		              				echo '	</td>
+		              						<td>'.$row['INT_TRACK'].'</td>
+		              						<td>'.$row['EXT_TRACK'].'</td>
+											<td>'.$row['SUBJECT'].'</td>
+		              						<td>';
+		              						if($row['STATUS'] == 0){
+		              							echo 'Closed';
+		              						}else{
+		              							echo 'Open';
+		              						}
+		              				echo '	</td>
+		              						<td>'.$helper->date_toStandard($row['DUE_DATE']).'</td>
+		              						<td>';
+		              						if($level <= 1){
+		              							echo '
+												<button type="button" id="rfi_viewButton'.$i.'" class="rfi_viewButton btn btn-dark btn-xs" value='.$row['ID'].'>View</button>
+		              							<button type="button" id="rfi_editButton'.$i.'" class="rfi_editButton btn btn-info btn-xs" value='.$row['ID'].'>Edit</button> 
+			              						<button type="button" id="rfi_delButton'.$i.'" class="rfi_delButton btn btn-danger btn-xs" value='.$row['ID'].'>Delete</button>';
+		              						}
+				              		echo '			
+			              					</td>
+			              				</tr>';
+			              			$i++;	
+			              		}
+			              		echo '</tbody>
+			              			</table>
+			              		</div>';
+
+			          		}else{
+			          			echo 'No entries found.';
+			          		}
+			          	?>
 					</div>
 <!-- END SUBSRFI -->
 <!-- DELAYS -->
@@ -544,5 +605,5 @@
 
 <?php 
 	include_once($_SERVER["DOCUMENT_ROOT"].'/lib/includes/inc.footer.php'); 
-	unset($work, $helper, $db, $jM, $jD, $jDi, $jT, $jC, $jA);
+	unset($work, $helper, $db, $jM, $jD, $jDi, $jT, $jC, $jAm, $jSr);
 ?>

@@ -231,6 +231,7 @@
 							work_j_rfisub_log_external_track,
 							work_j_rfisub_log_receivedby,
 							work_j_rfisub_log_date_received,
+							work_j_rfisub_log_qty_received
 							work_j_rfisub_log_due_date,
 							work_j_rfisub_log_subject,
 							work_j_rfisub_log_disposition,
@@ -249,6 +250,7 @@
 							:work_j_rfisub_log_external_track,
 							:work_j_rfisub_log_receivedby,
 							:work_j_rfisub_log_date_received,
+							:work_j_rfisub_log_qty_received,
 							:work_j_rfisub_log_due_date,
 							:work_j_rfisub_log_subject,
 							:work_j_rfisub_log_disposition,
@@ -268,12 +270,13 @@
 				$this->bindParam(':work_j_rfisub_log_external_track', $this->getExternalTrackingNumber());
 				$this->bindParam(':work_j_rfisub_log_receivedby', $this->getReceivedBy());
 				$this->bindParam(':work_j_rfisub_log_date_received', $this->getDateReceived());
+				$this->bindParam(':work_j_rfisub_log_qty_received', $this->getQuantityReceived());
 				$this->bindParam(':work_j_rfisub_log_due_date', $this->getDueDate());
 				$this->bindParam(':work_j_rfisub_log_subject', $this->getSubject());
 				$this->bindParam(':work_j_rfisub_log_disposition', NULL);
 				$this->bindParam(':work_j_rfisub_log_notes', NULL);
 				$this->bindParam(':work_j_rfisub_log_date_returned', NULL);
-				$this->bindParam(':work_j_rfisub_log_qty_returned', NULL)
+				$this->bindParam(':work_j_rfisub_log_qty_returned', NULL);
 				$result = $this->execute();
 
 				if($result){
@@ -300,17 +303,36 @@
 		public function updateEntry(){
 			$this->startTransaction();
 			try{
-				$query = "UPDATE work_j_subrfi_log SET
-						
-						
-
-
-
-
+				$query = "UPDATE work_j_rfisub_log SET
+					work_j_rfisub_log_type = :work_j_rfisub_log_type,
+					work_j_rfisub_log_status = :work_j_rfisub_log_status,
+					work_j_rfisub_log_internal_track = :work_j_rfisub_log_internal_track,
+					work_j_rfisub_log_external_track = :work_j_rfisub_log_external_track,
+					work_j_rfisub_log_receivedby = :work_j_rfisub_log_receivedby,
+					work_j_rfisub_log_date_received = :work_j_rfisub_log_date_received,
+					work_j_rfisub_log_qty_received = :work_j_rfisub_log_qty_received,
+					work_j_rfisub_log_due_date = :work_j_rfisub_log_due_date,
+					work_j_rfisub_log_subject = :work_j_rfisub_log_subject,
+					work_j_rfisub_log_disposition = :work_j_rfisub_log_disposition,
+					work_j_rfisub_log_notes = :work_j_rfisub_log_notes,
+					work_j_rfisub_log_date_returned = :work_j_rfisub_log_date_returned,
+					work_j_rfisub_log_qty_returned = :work_j_rfisub_log_qty_returned
 					WHERE :work_j_rfisub_log_id = :id";
 
 				$this->set($query);
-				$this->bindParam(':role', $this->getConsultantRole());
+				$this->bindParam(':work_j_rfisub_log_type', $this->getLogType());
+				$this->bindParam(':work_j_rfisub_log_status', $this->getStatus());
+				$this->bindParam(':work_j_rfisub_log_internal_track', $this->getInternalTrackingNUmber());
+				$this->bindParam(':work_j_rfisub_log_external_track', $this->getExternalTrackingNumber());
+				$this->bindParam(':work_j_rfisub_log_receivedby', $this->getReceivedBy());
+				$this->bindParam(':work_j_rfisub_log_date_received', $this->getDateReceived());
+				$this->bindParam(':work_j_rfisub_log_qty_received', $this->getQuantityReceived());
+				$this->bindParam(':work_j_rfisub_log_due_date', $this->getDueDate());
+				$this->bindParam(':work_j_rfisub_log_subject', $this->getSubject());
+				$this->bindParam(':work_j_rfisub_log_disposition', $this->getDisposition());
+				$this->bindParam(':work_j_rfisub_log_notes', $this->getNotes());
+				$this->bindParam(':work_j_rfisub_log_date_returned', $this->getDateReturned());
+				$this->bindParam(':work_j_rfisub_log_qty_returned', $this->getQuantityReturned());
 				$this->bindParam(':id', $this->getFetchId());
 				$result = $this->execute();
 				if($result){
@@ -336,7 +358,7 @@
 		public function deleteEntry($id){
 			$this->startTransaction();
 			try{
-				$query = "DELETE FROM work_j_consultants WHERE work_j_consultants_id =:id";
+				$query = "DELETE FROM work_j_rfisub_log WHERE work_j_rfisub_log_id =:id";
 				$this->set($query);
 				$this->bindParam(":id", $id);
 				$result = $this->execute();
@@ -360,31 +382,50 @@
 			}
 		}
 
-		public function getActions($value = NULL){
+		public function getAllEntries($value = NULL){
 			if(!empty($value) && !is_null($value)){
-				$query = 'SELECT	
-							work_j_actions.work_j_actions_id AS "ACT_ID",
-							work_J_actions.work_j_actions_assignedTo AS "EMP_ID",
-							CONCAT_WS(" ", employee.employee_fname, employee.employee_lname) AS "EMP_NAME",
-							work_j_actions.work_j_actions_assigned AS "DATE_ASSIGNED",
-							work_j_actions.work_j_actions_due AS "DATE_DUE",
-							work_j_actions.work_j_actions_date_completed AS "DATE_COMP",
-							DATEDIFF(work_j_actions.work_j_actions_due, NOW()) AS "REMAIN",
-							work_j_actions.work_j_actions_task AS "TASK",
-							work_j_actions.work_j_actions_comments AS "COMMENTS",
-							work_j_actions.work_j_actions_is_complete AS "COMPLETE"
-							FROM work_j_actions
+				$query = 'SELECT
+							work_j_rfisub_log.work_j_rfisub_log_id AS "ID",
+							work_j_rfisub_log.work_j_rfisub_log_type AS "TYPE",
+							work_j_rfisub_log.work_j_rfisub_log_status AS "STATUS",
+							work_j_rfisub_log.work_j_rfisub_log_internal_track AS "INT_TRACK",
+							work_j_rfisub_log.work_j_rfisub_log_external_track AS "EXT_TRACK",
+							work_j_rfisub_log.work_j_rfisub_log_receivedby AS "RCV_ID",
+							CONCAT_WS(" ", employee.employee_fname, employee_lname) AS "RCV_NAME",
+							work_j_rfisub_log.work_j_rfisub_log_date_received AS "RCV_DATE",
+							work_j_rfisub_log.work_j_rfisub_log_qty_received AS "QTY_RCV",
+							work_j_rfisub_log.work_j_rfisub_log_due_date AS "DUE_DATE",
+							DATEDIFF(work_j_rfisub_log.work_j_rfisub_log_due_date, NOW()) AS "REMAIN",
+							work_j_rfisub_log.work_j_rfisub_log_subject AS "SUBJECT",
+							work_j_rfisub_log.work_j_rfisub_log_disposition AS "DISPOSITION",
+							common_rfisub_responses.common_rfisub_responses_value AS "DESCRIPTION",
+							work_j_rfisub_log.work_j_rfisub_log_notes AS "NOTES",
+							work_j_rfisub_log.work_j_rfisub_log_date_returned AS "RT_DATE",
+							work_j_rfisub_log.work_j_rfisub_log_qty_returned AS "QTY_RT",
+							work_j_rfisub_log.work_j_rfisub_log_updated AS "UPDATED"
+							FROM work_j_rfisub_log
 							LEFT JOIN employee
-							ON work_j_actions.work_j_actions_assignedTo = employee.employee_id
-							WHERE work_j_actions.work_j_id = :value';
+							ON work_j_rfisub_log.work_j_rfisub_log_receivedby = employee.employee_id
+							LEFT JOIN common_rfisub_responses
+							ON work_j_rfisub_log.work_j_rfisub_log_disposition = common_rfisub_responses.common_rfisub_responses_id
+							WHERE work_j_rfisub_log.work_j_id = :value';
 				$this->set($query);
 				$this->bindParam(':value', $value);
 				$result = $this->returnSet();
+
+				//REVAMP TO HANDLE PROBLEMATIC INPUTS
+				//
+				//
+				//
+				//
+				//
 				if($this->rowCount() > 0){
 					return($result);
 				}else{
 					return(NULL);
 				}
+			}else{
+				return(NULL);
 			}
 		}
 	}
