@@ -97,8 +97,8 @@ h1 {
 }
 .progress .progress-right .progress-bar{
     left: -100%;
-    border-top-left-radius: 80px;
-    border-bottom-left-radius: 80px;
+    border-top-left-radius: 90px;
+    border-bottom-left-radius: 90px;
     border-right: 0;
     -webkit-transform-origin: center right;
     transform-origin: center right;

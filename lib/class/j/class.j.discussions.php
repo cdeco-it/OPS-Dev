@@ -210,12 +210,30 @@
 				$query = "SELECT * FROM work_j_discussions ORDER BY work_j_discussions_created DESC";
 				$this->set($query);
 				$this->bindParam(':value', $value);
-				$result = $this->returnSet();
-				if($this->rowCount() > 0){
-					return($result);
+				$result = $this->execute();
+				if($result){
+					if($this->rowCount() > 0){
+						$this->retData['success'] = true;
+						$this->retData['message'] = SUCCESS;
+						$this->retData['updateInfo'] = $this->returnSet();
+						return($this->retData);
+					}else{
+						$this->retData['success'] = true;
+						$this->retData['message'] = NO_RECORD;
+						$this->retData['updateInfo'] = NO_RECORD;
+						return($this->retData);
+					}
 				}else{
-					return(NULL);
+					$this->retData['success'] = FALSE;
+					$this->retData['message'] = FAIL_TRANSACTION.' - '.$this->getError();
+					$this->retData['updateInfo'] = $this->getError();
+					return($this->retData);
 				}
+			}else{
+				$this->retData['success'] = FALSE;
+				$this->retData['message'] = E_NO_ID;
+				$this->retData['updateInfo'] = NULL;
+				return($this->retData);
 			}
 		}
 	}

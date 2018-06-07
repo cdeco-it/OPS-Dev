@@ -15,6 +15,7 @@
 		private $record_id;
 		private $parent_id;
 		private $phase_id;
+		private $assoc_num;
 		private $status;
 		private $status_desc;
 		private $percentComplete;
@@ -48,6 +49,10 @@
 
 		public function getPhaseId(){
 			return($this->phase_id);
+		}
+
+		public function getAssocNum(){
+			return($this->assoc_num);
 		}
 
 		public function getStatus(){
@@ -91,6 +96,10 @@
 
 		public function setPhaseId($value = NULL){
 			$this->phase_id = $value;
+		}
+
+		public function setAssocNum($value = NULL){
+			$this->assoc_num = $value;
 		}
 
 		public function setStatus($value = NULL){
@@ -299,6 +308,7 @@
 							$this->setParentId($result['work_id']);
 							$this->setPhaseId($result['work_j_number']);
 							$this->setStatus($result['work_status_id']);
+							$this->setAssocNum($result['work_j_assoc_num']);
 							$this->setStatusDesc($result['work_status_desc']);
 							$this->setPercentComplete($result['work_j_percentcomp']);
 							$this->setSOW($result['work_j_sow']);
@@ -412,6 +422,7 @@
 							work_j_id,
 							work_id,
 							work_j_number,
+							work_j_assoc_num,
 							work_status_id,
 							work_j_percentcomp,
 							work_j_sow,
@@ -421,6 +432,7 @@
 							NULL,
 							:work_id,
 							:work_number,
+							:work_j_assoc_num,
 							:work_status_id,
 							:work_percentcomp,
 							NULL,
@@ -537,6 +549,7 @@
 				$this->set($query);
 				$this->bindParam(':work_id', $this->getParentId());
 				$this->bindParam(':work_number', $this->getPhaseId());
+				$this->bindParam('work_assoc_num', $this->getAssocNum());
 				$this->bindParam(':work_status_id', $this->getStatus());
 				$this->bindParam(':work_percentcomp', $this->getPercentComplete());
 
@@ -585,6 +598,7 @@
 							work_j.work_status_id = :work_status,
 							work_j.work_j_percentcomp = :work_percentcomp,
 							work_j.work_j_sow = :work_sow,
+							work_j.work_j_assoc_num = :assoc_num,
 							work_j.work_j_updated = NOW()
 							WHERE work_j.work_j_id = :work_number";
 						break;
@@ -594,6 +608,7 @@
 							work_c.work_status_id = :work_status,
 							work_c.work_c_percentcomp = :work_percentcomp,
 							work_c.work_c_sow = :work_sow,
+							work_c.work_c_assoc_num = :assoc_num,
 							work_c.work_c_updated = NOW()
 							WHERE work_c.work_c_id = :work_number";
 						break;
@@ -603,6 +618,7 @@
 							work_b.work_status_id = :work_status,
 							work_b.work_b_percentcomp = :work_percentcomp,
 							work_b.work_b_sow = :work_sow,
+							work_b.work_b_assoc_num = :assoc_num,
 							work_b.work_b_updated = NOW()
 							WHERE work_b.work_b_id = :work_number";
 						break;
@@ -612,6 +628,7 @@
 							work_p.work_status_id = :work_status,
 							work_p.work_p_percentcomp = :work_percentcomp,
 							work_p.work_p_sow = :work_sow,
+							work_p.work_p_assoc_num = :assoc_num,
 							work_p.work_p_updated = NOW()
 							WHERE work_p.work_p_id = :work_number";
 						break;
@@ -621,6 +638,7 @@
 							work_s.work_status_id = :work_status,
 							work_s.work_s_percentcomp = :work_percentcomp,
 							work_s.work_s_sow = :work_sow,
+							work_s.work_s_assoc_num = :assoc_num,
 							work_s.work_s_updated = NOW()
 							WHERE work_s.work_s_id = :work_number";
 						break;
@@ -635,8 +653,9 @@
 
 				$this->set($query);
 				$this->bindParam(':work_status', $this->getStatus());
-				$this->bindParam(':work_p_percentcomp', $this->getPercentComplete());
+				$this->bindParam(':work_percentcomp', $this->getPercentComplete());
 				$this->bindParam(':work_number', $this->getPhaseId());
+				$this->bindPara(':work_assoc_num', $this->getAssocNum());
 
 				try{
 

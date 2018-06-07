@@ -81,17 +81,33 @@
 
 			
 			<div class="row mb-3 bottom-border">
-				<div class="col-2">
+				<div class="col-1 border-right">
 					<h5>Status</h5>
 					<div>
 						<?php echo $j->getStatusDesc(); ?>
 					</div>
 				</div>
+				<div class="col-2 border-right">
+					<h5>Associated Numbers</h5>
+					<div>
+						<?php 
+							if(!is_null($j->getAssocNum())){
+								echo $j->getAssocNum();
+							}else{
+								echo "None defined";
+							}
+						?>
+					</div>
+				</div>
 				
-				<div class="col-10">
+				<div class="col-9">
 					<h5>Percent Complete</h5>
-					<div class="progress">
-						<div class="progress-bar progress-bar-striped progress-bar-animated" role="progressbar" style="width: 75%;" aria-valuenow="75" aria-valuemin="0" aria-valuemax="100" style="width: 75%">75%</div>
+					<div class="progress" style="height: 30px;">
+						<?php
+						$percent = ($j->getPercentComplete() * 100);
+							echo '<div class="progress-bar progress-bar-striped progress-bar-animated" role="progressbar" style="width:'.$percent.'%;" aria-valuenow="'.$percent.'" aria-valuemin="0" aria-valuemax="100" style="width: '.$percent.';">'.$percent.'%</div>
+							';
+						?>
 					</div>
 				</div>
 			</div>
@@ -162,46 +178,52 @@
 			          	</div>
 						<?php
 							$result = $jM->getMilestones(1);
-							if(!is_null(($result))){
-								echo '
-								<div class="table-responsive">
-			        				<table class="table table-striped">
-			          					<thead>
-					                		<tr>
-							                  	<th width="60%">Event</th>
-							                  	<th width="10%">Due Date</th>
-							                  	<th width="10%">Days Remaining</th>
-							                  	<th width="20%">Action</th>
-							                </tr>
-					              		</thead>
-				              		<tbody>';
-					            $i = 1;
-		              			foreach($result as $row){
-		              				echo '<tr>
-		              						<td>'.$row['DESCRIPTION'].'</td>
-		              						<td>'.$helper->date_toStandard($row['VALUE']).'</td>';
-		              				
-		              				if($row['REMAINING'] < 0){
-		              					echo '<td> Deadline past </td>';
-		              				}else{
-		              					echo '<td>'.$row['REMAINING'].' days remain</td>';
-		              				}
+							if($result['success']){
+			          			if($result['message'] === SUCCESS){
+			          				echo '
+									<div class="table-responsive">
+			    	     				<table class="table table-striped">
+			    	       					<thead>
+							             		<tr>
+								                  	<th width="60%">Event</th>
+								                  	<th width="10%">Due Date</th>
+								                   	<th width="10%">Days Remaining</th>
+								                  	<th width="20%">Action</th>
+								                 </tr>
+					 	             		</thead>
+				   	            		<tbody>';
+					     			$i = 1;	
+			          				foreach($result['updateInfo'] as $row){
+			          					echo '<tr>
+		    	          						<td>'.$row['DESCRIPTION'].'</td>
+		       		       						<td>'.$helper->date_toStandard($row['VALUE']).'</td>';
 
-		              				echo '<td>
-		              						<button type="button" id="m_editButton'.$i.'" class="m_editButton btn btn-info btn-xs" value='.$row['UID'].'>Edit</button> 
-		              						<button type="button" id="m_delButton'.$i.'" class="m_delButton btn btn-danger btn-xs" value='.$row['UID'].'>Delete</button>
-		              					</td>
-		              					</tr>';
-		              				$i++;	
-		              			}
+			              				if($row['REMAINING'] < 0){
+			              					echo '<td> Deadline past </td>';
+			              				}else{
+			              					echo '<td>'.$row['REMAINING'].' days remain</td>';
+			              				}
 
-		              			echo '
-			              				</tbody>
-		        					</table>
-	        					</div>';
-							}else{
-								echo 'No milestones defined.';
-							}							
+			              				echo '<td>';
+
+		              						if($level <= 1){
+		              							echo '
+												<button type="button" id="m_editButton'.$i.'" class="m_editButton btn btn-info btn-xs" value='.$row['UID'].'>Edit</button> 
+			              						<button type="button" id="m_delButton'.$i.'" class="m_delButton btn btn-danger btn-xs" value='.$row['UID'].'>Delete</button>';
+			              					}
+					              		echo '</td>
+				              				</tr>';
+				              			$i++;	
+			              			}
+			              		echo '</tbody>
+			              			</table>
+			              		</div>';
+			          			}else{
+			          				echo $result['message'];
+			          			}
+			          		}else{
+			          			echo $result['message'];
+			          		}		
 						?>
 					</div>
 <!-- END MILESTONES -->
@@ -224,44 +246,47 @@
 								
 									<?php
 									$result = $jT->getTeam(1);
-									if(!is_null($result)){
-										echo '
-										<div class="table-responsive">
-					        				<table class="table table-striped">
-					          					<thead>
-							                		<tr>
-									                  	<th width="10%">Employee</th>
-									                  	<th width="25%">Team Leader</th>
-									                  	<th width="10%">Action</th>
-									                </tr>
-							              		</thead>
-							              		<tbody>';
-							    		$i = 1;
-				              			foreach($result as $row){
-				              				echo '<tr>
-			              						<td>'.$row['NAME'].'</td>';
-			              						if(!is_null($row['LEADER']) && $row['LEADER'] == 1){
-			              							echo '<td><i class="fas fa-check"></i></td>';
-			              						}else{
-			              							echo '<td></td>';
-			              						}
-			              					echo '<td>';
-			              						if($level <= 1){
-			              							echo '<button type="button" id="t_editButton'.$i.'" class="t_editButton btn btn-info btn-xs" value='.$row['ID'].'>Edit</button> 
-				              						<button type="button" id="t_delButton'.$i.'" class="t_delButton btn btn-danger btn-xs" value='.$row['ID'].'>Delete</button>';
-				              					}
-					              			echo '			
-				              						</td>
-				              					</tr>';
-				              				$i++;	
-				              			}
-				              			echo '
-				              					</tbody>
-			        						</table>
-			        					</div>';
-									}else{
-										echo 'No internal team defined.';
-									}
+									if($result['success']){
+					          			if($result['message'] === SUCCESS){
+					          				echo '
+											<div class="table-responsive">
+						        				<table class="table table-striped">
+						           					<thead>
+									               		<tr>
+										                   	<th width="10%">Employee</th>
+										                  	<th width="25%">Team Leader</th>
+										                   	<th width="10%">Action</th>
+										                </tr>
+								               		</thead>
+								  	         		<tbody>';
+							     			$i = 1;	
+					          				foreach($result['updateInfo'] as $row){
+					          					echo '<tr>
+				      	         						<td>'.$row['NAME'].'</td>';
+				              						if(!is_null($row['LEADER']) && $row['LEADER'] == 1){
+				              							echo '<td><i class="fas fa-check"></i></td>';
+				              						}else{
+				              							echo '<td></td>';
+				              						}
+				              					echo '<td>';
+				              						if($level <= 1){
+				              							echo '<button type="button" id="t_editButton'.$i.'" class="t_editButton btn btn-info btn-xs" value='.$row['ID'].'>Edit</button> 
+					              						<button type="button" id="t_delButton'.$i.'" class="t_delButton btn btn-danger btn-xs" value='.$row['ID'].'>Delete</button>';
+					              					}
+						              			echo '			
+					              						</td>
+					              					</tr>';
+					              				$i++;
+					              			}
+					              		echo '</tbody>
+					              			</table>
+					              		</div>';
+					          			}else{
+					          				echo $result['message'];
+					          			}
+					          		}else{
+					          			echo $result['message'];
+					          		}		
 								?>
 							</div>
 
@@ -281,25 +306,27 @@
 								
 								<?php
 									$result = $jC->getConsultants(1);
-									if(!is_null($result)){
-										echo '
-										<div class="table-responsive">
-					        				<table class="table table-striped">
-					          					<thead>
-							                		<tr>
-									                  	<th width="20%">Firm</th>
-									                  	<th width="30%">Consultant</th>
-									                  	<th width="30%">Role</th>
-									                  	<th width="20%">Action</th>
-									                </tr>
-							              		</thead>
-							              		<tbody>';
-							    		$i = 1;
-				              			foreach($result as $row){
-				              				echo '<tr>
-			              						<td>'.$row['ORG'].'</td>
-			              						<td>'.$row['NAME'].'</td>
-			              						<td>'.$row['ROLE'].'</td>';
+									if($result['success']){
+					          			if($result['message'] === SUCCESS){
+					          				echo '
+											<div class="table-responsive">
+						        				<table class="table table-striped">
+						          					<thead>
+								                		<tr>
+										                  	<th width="20%">Firm</th>
+										                  	<th width="30%">Consultant</th>
+										                  	<th width="30%">Role</th>
+										                  	<th width="20%">Action</th>
+										                </tr>
+								              		</thead>
+								              		<tbody>';
+							     			$i = 1;	
+					          				foreach($result['updateInfo'] as $row){
+					          					echo '
+					          					<tr>
+			              							<td>'.$row['ORG'].'</td>
+			              							<td>'.$row['NAME'].'</td>
+			              							<td>'.$row['ROLE'].'</td>';
 			              						
 			              					echo '<td>';
 			              						if($level <= 1){
@@ -310,14 +337,16 @@
 				              						</td>
 				              					</tr>';
 				              				$i++;	
-				              			}
-				              			echo '
-				              					</tbody>
-			        						</table>
-			        					</div>';
-									}else{
-										echo 'No external consultants defined.';
-									}
+					              			}
+					              		echo '</tbody>
+					              			</table>
+					              		</div>';
+					          			}else{
+					          				echo $result['message'];
+					          			}
+					          		}else{
+					          			echo $result['message'];
+					          		}	
 								?>
 							</div>
 						</div>
@@ -339,21 +368,23 @@
 			          	</div>
 						<?php 
 							$result = $jDi->getDiscussions(1);
-							if(!is_null($result)){
-								echo '	
-								<div class="table-responsive">
-			        				<table class="table table-striped">
-			          					<thead>
-					                		<tr>
-							                  	<th width="80%">Notes</th>
-							                  	<th width="10%">Date</th>
-							                  	<th width="10%">Action</th>
-							                </tr>
-					              		</thead>
-					              		<tbody>';
-		         				$i = 1;
-		              			foreach($result as $row){
-		              				echo '<tr>
+							if($result['success']){
+			          			if($result['message'] === SUCCESS){
+			          				echo '
+									<div class="table-responsive">
+				        				<table class="table table-striped">
+				          					<thead>
+						                		<tr>
+								                  	<th width="80%">Notes</th>
+								                  	<th width="10%">Date</th>
+								                  	<th width="10%">Action</th>
+								                </tr>
+						              		</thead>
+						              		<tbody>';
+					     			$i = 1;	
+			          				foreach($result['updateInfo'] as $row){
+			          					echo '
+			          					<tr>
 		              						<td>'.$row['work_j_discussions_entry'].'</td>
 		              						<td>'.$helper->date_toStandard($row['work_j_discussions_created']).'</td>
 		              						<td>';
@@ -363,14 +394,16 @@
 		              				echo '	</td>
 		              					</tr>';
 		              				$i++;	
-		              			}
-		              			echo '
-		              					</tbody>
-	        						</table>
-	        					</div>';
-	              			}else{
-	              				echo 'No discussions entered.';
-	              			}
+			              			}
+				              		echo '</tbody>
+				              			</table>
+				              		</div>';
+			          			}else{
+			          				echo $result['message'];
+			          			}
+			          		}else{
+			          			echo $result['message'];
+			          		}	
 				        ?>
 					</div>
 <!-- END DISCUSSIONS -->
@@ -390,26 +423,28 @@
 			          	</div>
 						<?php
 							$result = $jA->getActions(1);
-							if(!is_null($result)){
-								echo '
-								<div class="table-responsive">
-			        				<table class="table table-striped">
-			          					<thead>
-					                		<tr>
-							                  	<th width="20%">Task</th>
-							                  	<th width="10%">Assigned To</th>
-							                  	<th widht="10%">Date Assigned</th>
-							                  	<th width="10%">Date Due</th>
-							                  	<th width="10%">Days Remaining</th>
-							                  	<th width="10%">Date Completed</th>
-							                  	<th width="20%">Comments</th>
-							                  	<th width="10%">Action</th>
-							                </tr>
-					              		</thead>
-					              		<tbody>';
-					    		 $i = 1;
-			              		foreach($result as $row){
-		              				echo '<tr>
+							if($result['success']){
+			          			if($result['message'] === SUCCESS){
+			          				echo '
+									<div class="table-responsive">
+				        				<table class="table table-striped">
+				          					<thead>
+						                		<tr>
+								                  	<th width="20%">Task</th>
+								                  	<th width="10%">Assigned To</th>
+								                  	<th widht="10%">Date Assigned</th>
+								                  	<th width="10%">Date Due</th>
+								                  	<th width="10%">Days Remaining</th>
+								                  	<th width="10%">Date Completed</th>
+								                  	<th width="20%">Comments</th>
+								                  	<th width="10%">Action</th>
+								                </tr>
+						              		</thead>
+						              		<tbody>';
+					     			$i = 1;	
+			          				foreach($result['updateInfo'] as $row){
+			          					echo '
+			          					<tr>
 		              						<td>'.$row['TASK'].'</td>
 		              						<td>'.$row['EMP_NAME'].'</td>
 		              						<td>'.$helper->date_toStandard($row['DATE_ASSIGNED']).'</td>
@@ -422,17 +457,20 @@
 		              							echo '<button type="button" id="act_editButton'.$i.'" class="act_editButton btn btn-info btn-xs" value='.$row['ACT_ID'].'>Edit</button> 
 			              						<button type="button" id="act_delButton'.$i.'" class="act_delButton btn btn-danger btn-xs" value='.$row['ACT_ID'].'>Delete</button>';
 		              						}
-				              		echo '			
-			              					</td>
-			              				</tr>';
-			              			$i++;	
-			              		}
-			              		echo '</tbody>
-			              			</table>
-			              		</div>';
-					        }else{
-								echo $result;
-							}
+					              		echo '			
+				              					</td>
+				              				</tr>';
+				              			$i++;
+			              			}
+				              		echo '</tbody>
+				              			</table>
+				              		</div>';
+			          			}else{
+			          				echo $result['message'];
+			          			}
+			          		}else{
+			          			echo $result['message'];
+			          		}	
 						?>
 					</div>
 <!-- END ACTIONS -->
@@ -452,63 +490,67 @@
 			          	</div>
 			          	<?php
 			          		$result = $jSr->getAllEntries(1);
-			          		if(!is_null($result)){
-			          			echo '
-								<div class="table-responsive">
-			        				<table class="table table-striped">
-			          					<thead>
-					                		<tr>
-							                  	<th width="10%">Type</th>
-							                  	<th width="10%">Internal #</th>
-							                  	<th width="10%">External #</th>
-							                  	<th width="35%">Subject</th>
-							                  	<th widht="10%">Status</th>
-							                  	<th width="10%">Due Date</th>
-							                  	<th width="15%">Action</th>
-							                </tr>
-					              		</thead>
+			          		if($result['success']){
+			          			if($result['message'] === SUCCESS){
+			          				echo '
+									<div class="table-responsive">
+			     						<table class="table table-striped">
+			    	     					<thead>
+							              		<tr>
+								                  	<th width="10%">Type</th>
+								                  	<th width="10%">Internal #</th>
+									               	<th width="10%">External #</th>
+								                  	<th width="35%">Subject</th>
+								                  	<th widht="10%">Status</th>
+								                  	<th width="10%">Due Date</th>
+								                  	<th width="15%">Action</th>
+								                </tr>
+					  		           		</thead>
 					              		<tbody>';
-					    		 $i = 1;
-			              		foreach($result as $row){
-		              				echo '<tr>
-		              						<td>';
-		              						if($row['TYPE'] == 0){
-		              							echo 'Submittal';
-		              						}elseif($row['TYPE'] == 1){
-		              							echo 'RFI';
-		              						}elseif($row['TYPE'] == 2){
-		              							echo 'Pay Application';
-		              						}
-		              				echo '	</td>
-		              						<td>'.$row['INT_TRACK'].'</td>
-		              						<td>'.$row['EXT_TRACK'].'</td>
-											<td>'.$row['SUBJECT'].'</td>
-		              						<td>';
-		              						if($row['STATUS'] == 0){
-		              							echo 'Closed';
-		              						}else{
-		              							echo 'Open';
-		              						}
-		              				echo '	</td>
-		              						<td>'.$helper->date_toStandard($row['DUE_DATE']).'</td>
-		              						<td>';
-		              						if($level <= 1){
-		              							echo '
-												<button type="button" id="rfi_viewButton'.$i.'" class="rfi_viewButton btn btn-dark btn-xs" value='.$row['ID'].'>View</button>
-		              							<button type="button" id="rfi_editButton'.$i.'" class="rfi_editButton btn btn-info btn-xs" value='.$row['ID'].'>Edit</button> 
-			              						<button type="button" id="rfi_delButton'.$i.'" class="rfi_delButton btn btn-danger btn-xs" value='.$row['ID'].'>Delete</button>';
-		              						}
-				              		echo '			
-			              					</td>
-			              				</tr>';
-			              			$i++;	
-			              		}
+					     			$i = 1;	
+			          				foreach($result['updateInfo'] as $row){
+			          					echo '
+			          						<tr>
+		     	    							<td>';
+			              						if($row['TYPE'] == 0){
+			              							echo 'Submittal';
+			              						}elseif($row['TYPE'] == 1){
+			              							echo 'RFI';
+			              						}elseif($row['TYPE'] == 2){
+			              							echo 'Pay Application';
+			              						}
+		              					echo '	</td>
+		              							<td>'.$row['INT_TRACK'].'</td>
+		              							<td>'.$row['EXT_TRACK'].'</td>
+												<td>'.$row['SUBJECT'].'</td>
+		              							<td>';
+		              							if($row['STATUS'] == 0){
+		              								echo 'Closed';
+		              							}else{
+		              								echo 'Open';
+		              							}
+		              					echo '	</td>
+		              							<td>'.$helper->date_toStandard($row['DUE_DATE']).'</td>
+		              							<td>';
+			              						if($level <= 1){
+			              							echo '
+													<button type="button" id="rfi_viewButton'.$i.'" class="rfi_viewButton btn btn-dark btn-xs" value='.$row['ID'].'>View</button>
+			              							<button type="button" id="rfi_editButton'.$i.'" class="rfi_editButton btn btn-info btn-xs" value='.$row['ID'].'>Edit</button> 
+				              						<button type="button" id="rfi_delButton'.$i.'" class="rfi_delButton btn btn-danger btn-xs" value='.$row['ID'].'>Delete</button>';
+			              						}
+					              		echo '			
+				              					</td>
+				              				</tr>';
+				              			$i++;	
+			              			}
 			              		echo '</tbody>
 			              			</table>
 			              		</div>';
-
+			          			}else{
+			          				echo $result['message'];
+			          			}
 			          		}else{
-			          			echo 'No entries found.';
+			          			echo $result['message'];
 			          		}
 			          	?>
 					</div>
@@ -529,38 +571,42 @@
 			          	</div>
 						<?php
 							$result = $jD->getDelays(1);
-							if(!is_null($result)){
-								echo '
-								<div class="table-responsive">
-			        				<table class="table table-striped">
-			          					<thead>
-					                		<tr>
-							                  	<th width="10%">Cause</th>
-							                  	<th width="25%">Event</th>
-							                  	<th widht="25%">Justification</th>
-							                  	<th width="10%">Original Date</th>
-							                  	<th width="10%">Actual Date</th>
-							                  	<th width="10%">Delay Total</th>
-							                  	<th width="10%">Action</th>
-							                </tr>
-					              		</thead>
-					              		<tbody>';
-					    		 $i = 1;
-			              		foreach($result as $row){
-		              				echo '<tr>
+							if($result['success']){
+			          			if($result['message'] === SUCCESS){
+			          				echo '
+									<div class="table-responsive">
+				        				<table class="table table-striped">
+				          					<thead>
+						                		<tr>
+								                  	<th width="10%">Cause</th>
+								                  	<th width="25%">Event</th>
+								                  	<th widht="25%">Justification</th>
+								                  	<th width="10%">Original Date</th>
+								                  	<th width="10%">Actual Date</th>
+								                  	<th width="10%">Delay Total</th>
+								                  	<th width="10%">Action</th>
+								                </tr>
+						              		</thead>
+						              		<tbody>';
+					     			$i = 1;	
+			          				foreach($result['updateInfo'] as $row){
+			          					echo '
+			          					<tr>
 		              						<td>';
 		              						if($row['CAUSE'] = 0){
 		              							echo 'Interal Issue';
 		              						}else{
 		              							echo 'External Issue';
 		              						}
-		              				echo '	</td>	
+		              					echo '
+		              						</td>	
 		              						<td>'.$row['DESCRIPTION'].'</td>
 		              						<td>'.$row['REASON'].'</td>
 		              						<td>'.$helper->date_toStandard($row['ORIG_DATE']).'</td>
 		              						<td>'.$helper->date_toStandard($row['ACT_DATE']).'</td>
 		              						<td>'.$row['DIFF'].' days</td>
 		              						<td>';
+
 		              						if($level <= 1){
 		              							echo '<button type="button" id="d_editButton'.$i.'" class="d_editButton btn btn-info btn-xs" value='.$row['DELAY_ID'].'>Edit</button> 
 			              						<button type="button" id="d_delButton'.$i.'" class="d_delButton btn btn-danger btn-xs" value='.$row['DELAY_ID'].'>Delete</button>';
@@ -568,14 +614,17 @@
 				              		echo '			
 			              					</td>
 			              				</tr>';
-			              			$i++;	
-			              		}
-			              		echo '</tbody>
-			              			</table>
-			              		</div>';
-					        }else{
-								echo $result;
-							}
+			              			$i++;
+			              			}
+				              		echo '</tbody>
+				              			</table>
+				              		</div>';
+			          			}else{
+			          				echo $result['message'];
+			          			}
+			          		}else{
+			          			echo $result['message'];
+			          		}		
 						?>
 					</div>
 <!-- END DELAYS -->
