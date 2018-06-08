@@ -630,17 +630,59 @@
 <!-- END DELAYS -->
 <!-- ACCOUNTING -->
 					<div class="tab-pane" id="accounting" role="tabpanel">
-						<div class="d-flex justify-content-between flex-wrap  align-items-center pt-3 pb-2 mb-2 ">
+						<div class="d-flex justify-content-between flex-wrap  align-items-center pt-3 pb-2 mb-2 border-bottom">
 			            	<h5>Accounting</h5>
 			            	<div class="btn-toolbar mb-2 mb-md-0">
 			              		<div class="btn-group">
 			                		<?php
 									if($level <= 1){
-										echo '<a href="#" name="add_milestone" id="add_milestone" data-toggle="modal" data-target="#addMilestone" class="btn btn-success ">Add</a>';
+										echo '<a href="#" name="add_milestone" id="add_milestone" data-toggle="modal" data-target="#addMilestone" class="btn btn-success ">Edit</a>';
 									}
 									?>
 			              		</div>
 			            	</div>
+			          	</div>
+
+			          	<div class="row">
+							<div class="col-sm">
+								<h6>Contract Amount: $000,000,000.00</h6>
+							</div>
+							<div class="col-sm">
+								<h5>T & M: No</h5>
+							</div>
+			          	</div>
+			          	
+			          	
+			          	<div class="row">
+			          		<div class="col-sm">
+			          			<div class="d-flex justify-content-between flex-wrap  align-items-center pt-3 pb-2 mb-2 border-bottom">
+					            	<h5>Client Invoicing</h5>
+					            	<div class="btn-toolbar mb-2 mb-md-0">
+					              		<div class="btn-group">
+					                		<?php
+											if($level <= 1){
+												echo '<a href="#" name="add_clientinv" id="add_clientinv" data-toggle="modal" data-target="#addClientInv" class="btn btn-success ">Add</a>';
+											}
+											?>
+					              		</div>
+					            	</div>
+					          	</div>
+			          		</div>
+
+			          		<div class="col-sm">
+			          			<div class="d-flex justify-content-between flex-wrap  align-items-center pt-3 pb-2 mb-2 border-bottom">
+					            	<h5>Subconsultant Invoicing</h5>
+					            	<div class="btn-toolbar mb-2 mb-md-0">
+					              		<div class="btn-group">
+					                		<?php
+											if($level <= 1){
+												echo '<a href="#" name="add_subinv" id="add_subinv" data-toggle="modal" data-target="#addSubInv" class="btn btn-success ">Add</a>';
+											}
+											?>
+					              		</div>
+					            	</div>
+					          	</div>
+			          		</div>
 			          	</div>
 					</div>
 <!-- END ACCOUNTING -->

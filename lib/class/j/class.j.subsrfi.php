@@ -437,5 +437,43 @@
 				return($this->retData);
 			}
 		}
+
+		public function getCounts($value = NULL){
+			if(!empty($value) && !is_null($value)){
+				$query = "SELECT 
+							COUNT(*) TOTAL, 
+							SUM(CASE WHEN `work_j_rfisub_log_type` = 0 THEN 1 ELSE 0 END) AS SUBMITTALS, 
+							SUM(CASE WHEN `work_j_rfisub_log_type` = 1 THEN 1 ELSE 0 END) AS RFIS, 
+							SUM(CASE WHEN `work_j_rfisub_log_type` = 2 THEN 1 ELSE 0 END) AS PAYAPPS 
+							FROM work_j_rfisub_log
+							WHERE work_j_id = :value";
+				$this->set($query);
+				$this->bindParam(':value', $value);
+				$result = $this->execute();
+				if($result){
+					if($this->rowCount() > 0){
+						$this->retData['success'] = true;
+						$this->retData['message'] = SUCCESS;
+						$this->retData['updateInfo'] = $this->returnSet();
+						return($this->retData);
+					}else{
+						$this->retData['success'] = true;
+						$this->retData['message'] = NO_RECORD;
+						$this->retData['updateInfo'] = NO_RECORD;
+						return($this->retData);
+					}
+				}else{
+					$this->retData['success'] = FALSE;
+					$this->retData['message'] = FAIL_TRANSACTION.' - '.$this->getError();
+					$this->retData['updateInfo'] = $this->getError();
+					return($this->retData);
+				}
+			}else{
+				$this->retData['success'] = FALSE;
+				$this->retData['message'] = E_NO_ID;
+				$this->retData['updateInfo'] = NULL;
+				return($this->retData);
+			}
+		}
 	}
 ?>
