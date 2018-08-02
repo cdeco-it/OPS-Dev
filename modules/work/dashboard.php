@@ -40,6 +40,7 @@
 	require_once($_SERVER["DOCUMENT_ROOT"].'/lib/class/j/class.j.consultants.php');
 	require_once($_SERVER["DOCUMENT_ROOT"].'/lib/class/j/class.j.actions.php');
 	require_once($_SERVER["DOCUMENT_ROOT"].'/lib/class/j/class.j.subsrfi.php');
+	require_once($_SERVER["DOCUMENT_ROOT"].'/lib/class/j/class.j.manhours.php');
 	$helper = new Helper();
 	$w = new Work();
 	$j = new workPhases();
@@ -50,6 +51,7 @@
 	$jC = new j_WorkConsultants();
 	$jA = new j_WorkActions();
 	$jSr = new j_WorkSubsRfis();
+	$jMan = new j_WorkManHours();
 
 	$w->loadEntry(1);
 
@@ -636,7 +638,7 @@
 			              		<div class="btn-group">
 			                		<?php
 									if($level <= 1){
-										echo '<a href="#" name="add_milestone" id="add_milestone" data-toggle="modal" data-target="#addMilestone" class="btn btn-success ">Edit</a>';
+										echo '<a href="#" name="add_milestone" id="add_milestone" data-toggle="modal" data-target="#addMilestone" class="btn btn-info ">Edit</a>';
 									}
 									?>
 			              		</div>
@@ -648,15 +650,50 @@
 								<h6>Contract Amount: $000,000,000.00</h6>
 							</div>
 							<div class="col-sm">
-								<h5>T & M: No</h5>
+								<h6>T & M: No</h6>
 							</div>
 			          	</div>
-			          	
+
+
+			          	<div class="d-flex justify-content-between flex-wrap  align-items-center pt-3 pb-2 mb-2 border-bottom">
+			            	<h5>Hour Programming</h5>
+			            	<div class="btn-toolbar mb-2 mb-md-0">
+			              		<div class="btn-group">
+			                		<?php
+									if($level <= 1){
+										echo '<a href="#" name="add_manhours" id="add_manhours" data-toggle="modal" data-target="#addManhours" class="btn btn-success ">Add</a>';
+									}
+									?>
+			              		</div>
+			            	</div>
+			          	</div>
+
+						<?php
+							$result = $jMan->getManHours(1);
+							if($result['success']){
+			          			if($result['message'] === SUCCESS){
+
+			          			}else{
+			          				echo $result['message'];
+			          			}
+			          		}else{
+			          			echo $result['message'];
+			          		}		
+						?>
+
+						<div class="d-flex justify-content-between flex-wrap  align-items-center pt-3 pb-2 mb-2 border-bottom">
+			            	<h5>Invoicing Information</h5>
+			            	<div class="btn-toolbar mb-2 mb-md-0">
+			              		<div class="btn-group">
+			                	
+			              		</div>
+			            	</div>
+			          	</div>
 			          	
 			          	<div class="row">
 			          		<div class="col-sm">
 			          			<div class="d-flex justify-content-between flex-wrap  align-items-center pt-3 pb-2 mb-2 border-bottom">
-					            	<h5>Client Invoicing</h5>
+					            	<h6>Client Invoicing</h6>
 					            	<div class="btn-toolbar mb-2 mb-md-0">
 					              		<div class="btn-group">
 					                		<?php
@@ -671,7 +708,7 @@
 
 			          		<div class="col-sm">
 			          			<div class="d-flex justify-content-between flex-wrap  align-items-center pt-3 pb-2 mb-2 border-bottom">
-					            	<h5>Subconsultant Invoicing</h5>
+					            	<h6>Subconsultant Invoicing</h6>
 					            	<div class="btn-toolbar mb-2 mb-md-0">
 					              		<div class="btn-group">
 					                		<?php
