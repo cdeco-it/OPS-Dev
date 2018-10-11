@@ -41,6 +41,7 @@
 	require_once($_SERVER["DOCUMENT_ROOT"].'/lib/class/j/class.j.actions.php');
 	require_once($_SERVER["DOCUMENT_ROOT"].'/lib/class/j/class.j.subsrfi.php');
 	require_once($_SERVER["DOCUMENT_ROOT"].'/lib/class/j/class.j.manhours.php');
+	require_once($_SERVER["DOCUMENT_ROOT"].'/lib/class/j/class.j.accounting.php');
 	$helper = new Helper();
 	$w = new Work();
 	$j = new workPhases();
@@ -52,6 +53,7 @@
 	$jA = new j_WorkActions();
 	$jSr = new j_WorkSubsRfis();
 	$jMan = new j_WorkManHours();
+	$jAcct = new j_WorkAccounting();
 
 	$w->loadEntry(1);
 
@@ -645,9 +647,18 @@
 			            	</div>
 			          	</div>
 
+			          	<?php
+			          		$result = $jAcct->getEntry(1);
+			          		if($result['success']){
+
+			          		}else{
+			          			echo $result['message'];
+			          		}
+			          	?>
+
 			          	<div class="row">
 							<div class="col-sm">
-								<h6>Contract Amount: $000,000,000.00</h6>
+								<h6>Contract Amount:</h6> $000,000,000.00
 							</div>
 							<div class="col-sm">
 								<h6>T & M: No</h6>
@@ -672,6 +683,7 @@
 							$result = $jMan->getManHours(1);
 							if($result['success']){
 			          			if($result['message'] === SUCCESS){
+			          				
 
 			          			}else{
 			          				echo $result['message'];
@@ -733,5 +745,5 @@
 
 <?php 
 	include_once($_SERVER["DOCUMENT_ROOT"].'/lib/includes/inc.footer.php'); 
-	unset($work, $helper, $db, $jM, $jD, $jDi, $jT, $jC, $jAm, $jSr);
+	unset($work, $helper, $db, $jM, $jD, $jDi, $jT, $jC, $jAm, $jSr, $jAcct);
 ?>

@@ -217,15 +217,14 @@
 			}
 		}
 
-		public function getAcctInfo($value = NULL){
+		public function getAccountingInfo($value = NULL){
 			if(!empty($value) && !is_null($value)){
 				$query = "SELECT
 							work_j_acct_info.work_j_acct_info_id AS 'ID',
-							work_j_acct_info. AS 'ROLE',
-							common_roles.common_roles_desc AS 'DESC',
-							work_j_manhours.work_j_manhours_est AS 'EST',
-							work_j_manhours.work_j_manhours_act AS 'ACT'
-							FROM work_j_manhours
+							work_j_acct_info.work_j_id AS 'PARENT_ID',
+							work_j_acct_info.work_j_acct_info_istm AS 'ISTM',
+							work_j_acct_info.work_j_acct_infor_contract_value AS 'CONTRACT_VALUE'
+							FROM work_j_acct_info
 							LEFT JOIN common_roles
 							ON work_j_manhours.common_roles_id = common_roles.common_roles_id
 							WHERE work_j_manhours.work_j_id = :value
