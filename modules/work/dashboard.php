@@ -44,7 +44,7 @@
 	require_once($_SERVER["DOCUMENT_ROOT"].'/lib/class/j/class.j.accounting.php');
 	$helper = new Helper();
 	$w = new Work();
-	$j = new workPhases();
+	$j = new WorkPhases();
 	$jM = new j_WorkMilestones();
 	$jD = new j_WorkDelays();
 	$jDi = new j_WorkDiscussions();
@@ -57,7 +57,7 @@
 
 	$w->loadEntry(1);
 
-	$j->loadEntry($w->getJID(), 'j');
+	//$j->loadEntry($w->getJID(), 'j');
 ?>
 
 <!-- BODY -->
