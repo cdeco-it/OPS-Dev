@@ -432,7 +432,7 @@
 							NULL,
 							:work_id,
 							:work_number,
-							:work_j_assoc_num,
+							:work_assoc_num,
 							:work_status_id,
 							:work_percentcomp,
 							NULL,
@@ -447,6 +447,7 @@
 							work_c_id,
 							work_id,
 							work_c_number,
+							work_c_assoc_num,
 							work_status_id,
 							work_c_percentcomp,
 							work_c_sow,
@@ -456,6 +457,7 @@
 							NULL,
 							:work_id,
 							:work_number,
+							:work_assoc_num,
 							:work_status_id,
 							:work_percentcomp,
 							NULL,
@@ -470,6 +472,7 @@
 							work_p_id,
 							work_id,
 							work_p_number,
+							work_p_assoc_num,
 							work_status_id,
 							work_p_fcv,
 							work_p_percentcomp,
@@ -549,7 +552,7 @@
 				$this->set($query);
 				$this->bindParam(':work_id', $this->getParentId());
 				$this->bindParam(':work_number', $this->getPhaseId());
-				$this->bindParam('work_assoc_num', $this->getAssocNum());
+				$this->bindParam(':work_assoc_num', $this->getAssocNum());
 				$this->bindParam(':work_status_id', $this->getStatus());
 				$this->bindParam(':work_percentcomp', $this->getPercentComplete());
 

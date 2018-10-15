@@ -300,19 +300,22 @@
 				$this->startTransaction();
 				$result = $this->execute();
 				if($result){
+					echo "AAAA";
 					$this->endTransaction();
 					$this->retData['success'] = TRUE;
 					$this->retData['message'] = SUCCESS;
 					$this->retData['info'] = var_dump(debug_backtrace());
 					return($this->retData);
 				}else{
+					echo "BBBB";
 					$this->cancelTransaction();
 					$this->retData['success'] = FALSE;
 					$this->retData['message'] = FAIL_TRANSACTION;
-					$this->retData['info'] = var_dump(debug_backtrace());
+					$this->retData['info'] = "BBB ".var_dump(debug_backtrace());
 					return($this->retData);
 				}
 			}catch(Exception $e){
+				echo "CCCC";
 				$this->cancelTransaction();
 				$this->retData['success'] = FALSE;
 				$this->retData['message'] = ERROR;

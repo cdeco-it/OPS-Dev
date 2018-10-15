@@ -1,18 +1,11 @@
 <?php
 
-include_once($_SERVER["DOCUMENT_ROOT"].'/lib/class/class.helper.php');
+// include_once($_SERVER["DOCUMENT_ROOT"].'/lib/class/class.helper.php');
+include_once($_SERVER["DOCUMENT_ROOT"].'/lib/class/class.work.phases.php');
 
-$h = new Helper();
+$h = new WorkPhases();
 
-$number = "(321)6549870";
-$locale = 237;
-
-$x = $h->format_PhoneNumber($number, $locale);
-echo $x.'<br />';
-
-$n2 = "987-6546540";
-$y = $h->format_PhoneNumber($n2, $locale);
-echo $y.'<br />';
+$h->generateNextPhaseId(1, 'j');
 
 
 
