@@ -149,6 +149,7 @@ if(!empty($_POST) || $level <= 2){
 
 		//Let's process the changes...
 		$final = $work->updateEntry();
+		sleep(5);
 		unset($work);
 		ob_end_clean();
 		echo json_encode($final);

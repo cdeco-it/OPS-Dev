@@ -86,7 +86,13 @@ require_once($_SERVER["DOCUMENT_ROOT"].'/lib/class/class.work.php');
 					<div class="form-group row">
 						<label for="work_title" class="col-2 col-form-label">Title:</label>
 						<div class="col-10">
-					    	<input class="form-control" id="work_title" name="work_title" >
+					    	<input class="form-control" id="work_title" name="work_title" data-toggle="tooltip" data-placement="bottom" title="The title of the project" >
+						</div>
+					</div>
+					<div class="form-group row">
+						<label for="work_assoc_num" class="col-2 col-form-label">Ext. Numbers:</label>
+						<div class="col-10">
+					    	<input class="form-control" id="work_assoc_num" name="work_assoc_num" >
 						</div>
 					</div>
 					<div class="form-group row">
@@ -175,6 +181,8 @@ require_once($_SERVER["DOCUMENT_ROOT"].'/lib/class/class.work.php');
 
 <script>
 	$(function(){
+		 $('[data-toggle="tooltip"]').tooltip()
+
 		$("#work_client_display").autocomplete({
 			source: '/lib/assistants/asst.orglookup.php',
 		 	minLength: 1,

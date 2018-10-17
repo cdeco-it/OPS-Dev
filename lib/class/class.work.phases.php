@@ -322,6 +322,7 @@
 							$this->setParentId($result['work_id']);
 							$this->setPhaseId($result['work_p_number']);
 							$this->setStatus($result['work_status_id']);
+							$this->setAssocNum($result['work_p_assoc_num']);
 							$this->setStatusDesc($result['work_status_desc']);
 							$this->setPercentComplete($result['work_p_percentcomp']);
 							$this->setSOW($result['work_p_sow']);
@@ -335,6 +336,7 @@
 							$this->setParentId($result['work_id']);
 							$this->setPhaseId($result['work_c_number']);
 							$this->setStatus($result['work_status_id']);
+							$this->setAssocNum($result['work_c_assoc_num']);
 							$this->setStatusDesc($result['work_status_desc']);
 							$this->setPercentComplete($result['work_c_percentcomp']);
 							$this->setSOW($result['work_c_sow']);
@@ -348,6 +350,7 @@
 							$this->setParentId($result['work_id']);
 							$this->setPhaseId($result['work_b_number']);
 							$this->setStatus($result['work_status_id']);
+							$this->setAssocNum($result['work_b_assoc_num']);
 							$this->setStatusDesc($result['work_status_desc']);
 							$this->setPercentComplete($result['work_b_percentcomp']);
 							$this->setSOW($result['work_b_sow']);
@@ -361,6 +364,7 @@
 							$this->setParentId($result['work_id']);
 							$this->setPhaseId($result['work_s_number']);
 							$this->setStatus($result['work_status_id']);
+							$this->setAssocNum($result['work_s_assoc_num']);
 							$this->setStatusDesc($result['work_status_desc']);
 							$this->setPercentComplete($result['work_s_percentcomp']);
 							$this->setSOW($result['work_s_sow']);
@@ -483,6 +487,7 @@
 							NULL,
 							:work_id,
 							:work_number,
+							:work_assoc_num,
 							:work_status_id,
 							0,
 							:work_percentcomp,
@@ -498,6 +503,7 @@
 							work_b_id,
 							work_id,
 							work_b_number,
+							work_b_assoc_num,
 							work_status_id,
 							work_b_fcv,
 							work_b_percentcomp,
@@ -508,6 +514,7 @@
 							NULL,
 							:work_id,
 							:work_number,
+							:work_assoc_num,
 							:work_status_id,
 							0,
 							:work_percentcomp,
@@ -523,6 +530,7 @@
 							work_s_id,
 							work_id,
 							work_s_number,
+							work_s_assoc_num,
 							work_status_id,
 							work_s_percentcomp,
 							work_s_sow,
@@ -532,6 +540,7 @@
 							NULL,
 							:work_id,
 							:work_number,
+							:work_assoc_num,
 							:work_status_id,
 							:work_percentcomp,
 							NULL,
