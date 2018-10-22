@@ -42,6 +42,8 @@
 	require_once($_SERVER["DOCUMENT_ROOT"].'/lib/class/j/class.j.subsrfi.php');
 	require_once($_SERVER["DOCUMENT_ROOT"].'/lib/class/j/class.j.manhours.php');
 	require_once($_SERVER["DOCUMENT_ROOT"].'/lib/class/j/class.j.accounting.php');
+	require_once($_SERVER["DOCUMENT_ROOT"].'/lib/class/j/class.j.accounting.inv.php');
+	require_once($_SERVER["DOCUMENT_ROOT"].'/lib/class/j/class.j.accounting.subs.inv.php');
 	$helper = new Helper();
 	$w = new Work();
 	$j = new WorkPhases();
@@ -54,10 +56,12 @@
 	$jSr = new j_WorkSubsRfis();
 	$jMan = new j_WorkManHours();
 	$jAcct = new j_WorkAccounting();
+	$jAcctInv = new j_WorkAccountingInv();
+	$jAcctInv = new j_WorkAccountingSubsInv();
 
 	$w->loadEntry(1);
 
-	//$j->loadEntry($w->getJID(), 'j');
+	$j->loadEntry($w->getJID(), 'j');
 ?>
 
 <!-- BODY -->
@@ -658,11 +662,48 @@
 
 			          	<div class="row">
 							<div class="col-sm">
-								<h6>Contract Amount:</h6> $000,000,000.00
+								<h6>Contract Amount:
+								<?php  
+									if(is_null($jAcct->getContractValue())){
+										echo "Value not set";
+									}else{
+										echo "$".$jAcct->getContractValue();
+									}
+								?>
+								</h6>
 							</div>
 							<div class="col-sm">
-								<h6>T & M: No</h6>
+								<h6>T & M:
+								<?php
+									if(is_null($jAcct->getTimeMaterials())) {
+										echo "Not defined";
+									}elseif($jAcct->getTimeMaterials() == 0){
+										echo "No";
+									}else{
+										echo "Yes";
+									}
+								?>
+								</h6>
 							</div>
+			          	</div>
+				
+						<div class="d-flex justify-content-between flex-wrap  align-items-center pt-3 pb-2 mb-2 border-bottom">
+			            	<h5>Modifications</h5>
+			            	<div class="btn-toolbar mb-2 mb-md-0">
+			              		<div class="btn-group">
+			                		<?php
+									if($level <= 1){
+										echo '<a href="#" name="add_inv_milestone" id="add_inv_milestone" data-toggle="modal" data-target="#addInvMilestone" class="btn btn-success ">Add</a>';
+									}
+									?>
+			              		</div>
+			            	</div>
+			          	</div>
+
+			          	<div class="row">
+			          		<div class="col">
+								<!--content here -->
+			          		</div>
 			          	</div>
 
 
