@@ -1,5 +1,6 @@
 <?php
 define("SUCCESS", "<strong>OK!</strong> Operation completed successfully.");
+define("SUCCESS_DELETE", "<strong>OK!</strong> Deletion operation completed successfully.");
 define("ERROR", "<strong>ERROR: </strong> There was an error with the request.");
 define("FAIL_TRANSACTION", "<strong>FAILURE:</strong> The transaction has failed and a rollback has occured. Details regarding this transaction are as follows:");
 define("NO_RECORD", "There are no records to display.");

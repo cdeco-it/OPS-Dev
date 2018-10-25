@@ -666,12 +666,13 @@
 				$this->set($query);
 				$this->bindParam(':work_status', $this->getStatus());
 				$this->bindParam(':work_percentcomp', $this->getPercentComplete());
-				$this->bindParam(':work_number', $this->getPhaseId());
-				$this->bindPara(':work_assoc_num', $this->getAssocNum());
+				$this->bindParam(':work_sow', $this->getSOW());
+				$this->bindParam(':assoc_num', $this->getAssocNum());
+				$this->bindParam(':work_number', $this->getRecordId());				
 
 				try{
 
-					$this->beginTransaction();
+					$this->startTransaction();
 					$result = $this->execute();
 					
 					if($result){

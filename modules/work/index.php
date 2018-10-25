@@ -169,13 +169,13 @@
 							}
 
 							if(!is_null($row['work_p_id'])){
-								echo '<td align="center"><a href="/p/view.php?mode=p&id='.$row['work_p_id'].'"><i class="fas fa-check"></i></a></td>';
+								echo '<td align="center"><a href="p/view.php?mode=p&id='.$row['work_p_id'].'"><i class="fas fa-check"></i></a></td>';
 							}else{
 								echo '<td align="center"></td>';
 							}
 
 							if(!is_null($row['work_j_id'])){
-								echo '<td align="center"><a href="view.php?mode=j&id='.$row['work_j_id'].'"><i class="fas fa-check"></i></a></td>';
+								echo '<td align="center"><a href="j/view.php?pid='.$row['work_id'].'&jid='.$row['work_j_id'].'"><i class="fas fa-check"></i></a></td>';
 							}else{
 								echo '<td align="center"></td>';
 							}

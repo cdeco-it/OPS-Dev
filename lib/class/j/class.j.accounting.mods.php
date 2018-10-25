@@ -1,4 +1,4 @@
- <?php
+<?php
 
 	require_once($_SERVER["DOCUMENT_ROOT"].'/lib/class/class.db.php');
 	require_once($_SERVER["DOCUMENT_ROOT"].'/lib/includes/inc.messages.php');
@@ -9,13 +9,12 @@
 	 * Writte: 8/2/2018
 	 * By: S. Mized 
 	 */
-	class j_WorkAccounting extends Db{
+	class j_WorkAccountingMods extends Db{
 
 
-		private $istm;
-		private $contract_value;
-		private $work_j_id;
-		private $work_id;
+		private $parentId;
+		private $value;
+		private $notes;
 		private $dateCreated;
 		private $dateModified;
 		private $fetchid;
@@ -27,8 +26,19 @@
 		function __construct(){
 			parent::__construct();
 		}
-
 /***** GETTER METHODS *****/
+		public function getParentId(){
+			return $this->parentId;
+		}
+
+		public function getValue(){
+			return $this->value;
+		}
+
+		public function getNotes(){
+			return $this->notes;
+		}
+
 		public function getFetchId(){
 			return($this->fetchid);
 		}
@@ -40,25 +50,20 @@
 		public function getDateCreated(){
 			return($this->dateCreated);
 		}
+/***** SETTER METHOD *****/
 
-		public function getWorkJID(){
-			return($this->work_j_id);
+		public function setParentId($value = NULL){
+			$this->parentId = $value;
 		}
 
-		public function getWorkID(){
-			return($this->work_id);
+		public function setValue($value = NULL){
+			$this->value = $value;
 		}
 
-		public function getTimeMaterials(){
-			return($this->istm);
+		public function setNotes($value = NULL){
+			$this->notes = $value;
 		}
 
-		public function getContractValue(){
-			return($this->contract_value);
-		}
-
-
-/***** SETTER METHODS *****/
 		public function setFetchId($value = NULL){
 			$this->fetchid = $value;
 		}
@@ -71,33 +76,20 @@
 			$this->dateModified = $value;
 		}
 
-		public function setWorkJID($value = NULL){
-			$this->work_j_id = $value;
-		}
-
-		public function setWorkID($value = NULL){
-			$this->work_id = $value;
-		}
-
-		public function setTimeMaterials($value = NULL){
-			$this->istm = $value;
-		}
-
-		public function setContractValue($value = NULL){
-			$this->contract_value = $value;
-		}
-
-	
-
 /***** TRANSACTIONAL METHODS *****/
 
 		public function getEntry($id){
 			if(!empty($id) && !is_null($id)){
-				$query = "SELECT * FROM work_j_acct_info WHERE work_j_acct_info.work_j_acct_info_id = :id";
-				
+				$query = "SELECT * FROM work_j_acct_info_mods WHERE work_j_acct_info_mods.work_j_acct_info_mods_id = :id";
 				$this->set($query);
 				$this->bindParam(":id", $id);
 				$result = $this->returnSingle();
+				$this->setFetchId($result['work_j_acct_info_mods_id']);
+				$this->setParentId($result['work_j_acct_info_id']);
+				$this->setValue($result['work_j_acct_info_mods_value']);
+				$this->setNotes($result['work_j_acct_info_mods_notes']);
+				$this->setDateUpdated($result['work_j_acct_info_mods_updated']);
+				$tihs->setDateCreated($result['work_j_acct_info_mods_created']);
 				$this->retData['success'] = true;
 				$this->retData['message'] = SUCCESS;
 				return($this->retData);
@@ -111,29 +103,26 @@
 		public function addEntry(){
 			$this->startTransaction();
 			try{
-				$query = "INSERT INTO work_j_acct_info (
+				$query = "INSERT INTO work_j_acct_info_mods (
+							work_j_acct_info_mods_id,
 							work_j_acct_info_id,
-							work_j_id,
-							work_id,
-							work_j_acct_info_istm,
-							work_j_acct_info_contract_value,
-							work_j_acct_info_created,
-							work_j_acct_info_updated)
+							work_j_acct_info_mods_value,
+							work_j_acct_info_mods_notes,
+							work_j_acct_info_mods_created,
+							work_j_acct_info_mods_updated)
 						VALUES (
 							NULL,
-							:work_j_id,
-							:work_id,
-							:istm,
-							:contract_value,
+							:parentId,
+							:value,
+							:notes,
 							NOW(),
 							NOW()
 						)";
 
 				$this->set($query);
-				$this->bindParam(':work_j_id', $this->getWorkJID());
-				$this->bindParam(':work_id', $this->getWorkID());
-				$this->bindParam(':istm', $this->getTimeMaterials());
-				$this->bindParam(':contract_value', $this->getContractValue());
+				$this->bindParam(':parentId', $this->getParentId());
+				$this->bindParam(':value', $this->getValue());
+				$this->bindParam(':notes', $this->getNotes());
 				$result = $this->execute();
 
 				if($result){
@@ -160,14 +149,14 @@
 		public function updateEntry(){
 			$this->startTransaction();
 			try{
-				$query = "UPDATE work_j_acct_info SET
-					work_j_acct_info_istm = :istm,
-					work_j_acct_info_contract_value = :contract_value,
-					WHERE work_j_acct_info_id = :id";
+				$query = "UPDATE work_j_acct_info_mods SET
+					work_j_acct_info_mods_value = :value,
+					work_j_acct_info_mods_notes = :notes,
+					WHERE work_j_acct_info_mods_id = :id";
 
 				$this->set($query);
-				$$this->bindParam(':istm', $this->getTimeMaterials());
-				$this->bindParam(':contract_value', $this->getContractValue());
+				$this->bindParam(':value', $this->getValue());
+				$this->bindParam(':notes', $this->getNotes());
 				$this->bindParam(':id', $this->getFetchId());
 				$result = $this->execute();
 				if($result){
@@ -193,7 +182,7 @@
 		public function deleteEntry($id){
 			$this->startTransaction();
 			try{
-				$query = "DELETE FROM work_j_acct_info WHERE work_j_acct_info_id =:id";
+				$query = "DELETE FROM work_j_acct_info_mods WHERE work_j_acct_info_mods_id =:id";
 				$this->set($query);
 				$this->bindParam(":id", $id);
 				$result = $this->execute();
@@ -213,47 +202,6 @@
 				$this->cancelTransaction();
 				$this->retData['success'] = false;
 				$this->retData['message'] = CRITICAL_ERROR.' '.$e->getMessage();
-				return($this->retData);
-			}
-		}
-
-		public function getAccountingInfo($value = NULL){
-			if(!empty($value) && !is_null($value)){
-				$query = "SELECT
-							work_j_acct_info.work_j_acct_info_id AS 'ID',
-							work_j_acct_info.work_j_id AS 'PARENT_ID',
-							work_j_acct_info.work_j_acct_info_istm AS 'ISTM',
-							work_j_acct_info.work_j_acct_infor_contract_value AS 'CONTRACT_VALUE'
-							FROM work_j_acct_info
-							LEFT JOIN common_roles
-							ON work_j_manhours.common_roles_id = common_roles.common_roles_id
-							WHERE work_j_manhours.work_j_id = :value
-							ORDER BY work_j_manhours.work_j_manhours_id ASC";
-				$this->set($query);
-				$this->bindParam(':value', $value);
-				$result = $this->execute();
-				if($result){
-					if($this->rowCount() > 0){
-						$this->retData['success'] = true;
-						$this->retData['message'] = SUCCESS;
-						$this->retData['updateInfo'] = $this->returnSet();
-						return($this->retData);
-					}else{
-						$this->retData['success'] = true;
-						$this->retData['message'] = NO_RECORD;
-						$this->retData['updateInfo'] = NO_RECORD;
-						return($this->retData);
-					}
-				}else{
-					$this->retData['success'] = FALSE;
-					$this->retData['message'] = FAIL_TRANSACTION.' - '.$this->getError();
-					$this->retData['updateInfo'] = $this->getError();
-					return($this->retData);
-				}
-			}else{
-				$this->retData['success'] = FALSE;
-				$this->retData['message'] = E_NO_ID;
-				$this->retData['updateInfo'] = NULL;
 				return($this->retData);
 			}
 		}
