@@ -13,6 +13,7 @@ if(!empty($_POST) || $level > 1){
 	if(!empty($_POST['j_id'])){
 
 		$id = $_POST['j_id'];
+		$pid = $_POST['p_id'];
 		
 		//Get all imported vars...4 total...
 		$status = $_POST['j_status'];

@@ -1,14 +1,14 @@
-// //Activate date pickers
-// 	$(function() {
-// 		$( "#hiredate" ).datepicker({
-// 			format: "mm-dd-yyyy",
-// 		 	clearBtn: true
-// 		});
+//Activate date pickers
+	$(function() {
+		$( "#j_milestone_date" ).datepicker({
+			format: "mm-dd-yyyy",
+		 	clearBtn: true
+		});
 // 		$( "#dob" ).datepicker({
 // 			format: "mm-dd-yyyy",
 // 			clearBtn: true
 // 		});	
-// 	});
+	});
 
 	$(document).ready(function(){
 
@@ -23,17 +23,17 @@
 			})
 			.done(function(data){
 				if(!data.success){
-					alert("FAIL");
 					$('#j_edit').modal('hide');
 					$('#error').html(data.message + data.info);
 					$("#error").show();
 				}else{
-					alert("PASS");
-	                $('#j_edit').modal('hide');
-					$('#success').html(data.message);
-					$("#success").show().fadeTo(5000,500).slideUp(500, function(){
-	                	$('#success').hide();
-	                });
+					var url = window.location.href;
+	                window.location.href = url;
+	                //$('#j_edit').modal('hide');
+					//$('#success').html(data.message);
+					//$("#success").show().fadeTo(5000,500).slideUp(500, function(){
+	                //	$('#success').hide();
+	               // });
 				}
 			})
 		});

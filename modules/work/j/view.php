@@ -137,14 +137,14 @@
 					<h5>Percent Complete</h5>
 					<div class="progress" style="height: 30px;">
 						<?php
-						$percent = ($j->getPercentComplete() * 100);
+								$percent = ($j->getPercentComplete());
 							echo '<div class="progress-bar progress-bar-striped progress-bar-animated" role="progressbar" style="width:'.$percent.'%;" aria-valuenow="'.$percent.'" aria-valuemin="0" aria-valuemax="100" style="width: '.$percent.';">'.$percent.'%</div>
 							';
 						?>
 					</div>
 				</div>
 			</div>
-			
+
 			<div name="details">
 				<ul class="nav nav-tabs">
 					<li class="nav-item">
@@ -203,7 +203,7 @@
 			              		<div class="btn-group">
 			                		<?php
 										if($level <= 1){
-										echo '<a href="#" name="add_milestone" id="add_milestone" data-toggle="modal" data-target="#addMilestone" class="btn btn-success ">Add</a>';
+										echo '<a href="#" name="add_milestone" id="add_milestone" data-toggle="modal" data-target="#j_add_milestone" class="btn btn-success ">Add</a>';
 									}
 									?>
 			              		</div>
@@ -844,7 +844,7 @@
 
                       	<br /> 
 
-                      	<input type="hidden" name="j_id" id="j_id" value="<?php echo $jid; ?>"/>  
+                      	<input type="hidden" name="j_id" id="j_id" value="<?php echo $jid; ?>"/><input type="hidden" name="p_id" id="p_id" value="<?php echo $pid; ?>"/>  
                       	<input type="submit" name="j_update" id="j_update" value="Process Changes" class="btn btn-success" />
 
                      </form>  
@@ -853,6 +853,39 @@
       	</div>  
     </div>
     <!-- END BASE INFO MODAL -->
+
+    <!-- ADD MILESTONE MODAL -->
+	<div id="j_add_milestone" class="modal fade">
+    	<div class="modal-dialog">  
+           <div class="modal-content">  
+                <div class="modal-header">  
+                     <h4 class="modal-title">Add Milestone</h4>
+                     <a href="#" class="close" data-dismiss="modal">&times;</a>
+                </div>  
+
+                <div class="modal-body">  
+                    <form method="post" id="j_add_milestone_form" data-toggle="validator" role="form">
+
+                 		<label>Milestone</label>  
+                      	<select name="j_milestone" id="j_milestone" class="form-control">
+                      		<?php echo $helper->populateEngineeringMilestones(); ?>
+                      	</select>
+                      	<br />
+
+                      	<label>Date</label>  
+                      	<input type="text" name="j_milestone_date" id="j_milestone_date" class="form-control"  />  
+                      	<div class="help-block with-errors"></div>
+                      	<br />
+
+                      	<input type="hidden" name="j_id" id="j_id" value="<?php echo $jid; ?>"/><input type="hidden" name="p_id" id="p_id" value="<?php echo $pid; ?>"/>  
+                      	<input type="submit" name="j_ms_add" id="j_ms_add" value="Add Milestone" class="btn btn-success" />
+
+                     </form>  
+                </div>  
+        	</div>  
+      	</div>  
+    </div>
+    <!-- END ADD MILESTONE MODAL -->
 
 </div>
 
