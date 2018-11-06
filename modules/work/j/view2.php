@@ -101,10 +101,10 @@
 				<div class="btn-toolbar mb-2 mb-md-0">
 					<div class="btn-group">
 		        		<button class="btn btn-info">PDF</button> 
-		        		<button class="btn btn-warning">Print</button>
+		        		<button class="btn btn-warning"><i class="fas fa-print"></i></button>
 		        		<?php
 							if($level <= 1){
-								echo '<button class="btn btn-primary" name="edit_j" id="edit_j" data-toggle="modal" data-target="#j_edit">Edit</button>';
+								echo '<button class="btn btn-primary" name="edit_j" id="edit_j" data-toggle="modal" data-target="#j_edit"><i class="fas fa-edit"></i></button>';
 							}
 						?>
 		      		</div>
@@ -149,64 +149,54 @@
 	<div class="container-fluid">
 		<div class="row pt-3 mb-3">
 			<div class="col-2">
-				<div class="row">
-					<div class="col">
-						<h5>Milestones</h5>
-					</div>
-					<div class="col text-right">
-						<?php
-							if($level <= 1){
-							echo '<button" name="add_milestone" id="add_milestone" data-toggle="modal" data-target="#j_add_milestone" class="btn btn-success "><i class="fas fa-plus"></i></a>';
-							}
-						?>
-					</div>
+				<h5>Milestones</h5>
+				<div class="row" id="milestones">
+					<?php
+						$milestones = $jM->getMilestones($jid);
+						if($milestones['success']){
+					        if($milestones['message'] === SUCCESS){
+					        	echo '<table class="table table-sm table-hover">';
+					        	foreach($milestones['updateInfo'] as $row){
+					        		echo '
+					        			<tr>
+					        				<td width="60%" class="align-middle">'.$row['DESCRIPTION'].'</td>
+											<td width="30%"  class="align-middle"  title="'.$row['REMAINING'].' days remain">'.$helper->date_toStandard($row['VALUE']).'</td>';
+									if($level <= 1){
+										echo '
+										<td width="10%" class="align-middle"">
+											<button class="deleteMilestone btn btn-danger btn-xs" name="mid" value="'.$row['UID'].'" jid="'.$jid.'">
+												<i class="fas fa-ban"></i>
+											</button>
+										</td>';
+									}
+									echo '</tr>';
+					        	}
+					        	echo '</table>';
+					        }else{
+					        	echo '<div class="col">'.$milestones['message'].'</div>';
+					        }
+					    }else{
+					    	echo '<div class="col">'.$milestones['message'].'</div>';
+					    }
+					?>
 				</div>
 				<div class="row">
-					<div class="col">
-						<table>
-							<tr>
-								<td width="60%">XXX</td>
-								<td width="30%">Date</td>
-								<td width="10%"><button class="btn btn-warning">Delete</button></td>
-							</tr>
-								<tr>
-								<td width="60%">XXX</td>
-								<td width="30%">Date</td>
-								<td width="10%"><button class="btn btn-warning">Delete</button></td>
-							</tr>
-								<tr>
-								<td width="60%">XXX</td>
-								<td width="30%">Date</td>
-								<td width="10%"><button class="btn btn-warning">Delete</button></td>
-							</tr>
-								<tr>
-								<td width="60%">XXX</td>
-								<td width="30%">Date</td>
-								<td width="10%"><button class="btn btn-warning">Delete</button></td>
-							</tr>
-								<tr>
-								<td width="60%">XXX</td>
-								<td width="30%">Date</td>
-								<td width="10%"><button class="btn btn-warning">Delete</button></td>
-							</tr>
-								<tr>
-								<td width="60%">XXX</td>
-								<td width="30%">Date</td>
-								<td width="10%"><button class="btn btn-warning">Delete</button></td>
-							</tr>
-						</table>
-					</div>
-					
+					<?php
+						if($level <= 1){
+						echo '<button" name="add_milestone" id="add_milestone" data-toggle="modal" data-target="#j_add_milestone" class="btn btn-success btn-block ">Add Milestone</button>';
+						}
+					?>
 				</div>
 			</div>
 			
-			<div class="col">
+			<div class="col-10">
 				<ul class="nav nav-tabs">
-					<li class="nav-item">
-				 		<a class="nav-link active" data-toggle="tab" role="tab" href="#scope">Scope of Work</a>
+					
+				  	<li class="nav-item">
+				 		<a class="nav-link active" data-toggle="tab" role="tab" href="#team">Team</a>
 				  	</li>
 				  	<li class="nav-item">
-				 		<a class="nav-link" data-toggle="tab" role="tab" href="#team">Team</a>
+				 		<a class="nav-link" data-toggle="tab" role="tab" href="#scope">Scope of Work</a>
 				  	</li>
 				  	<li class="nav-item">
 						<a class="nav-link" data-toggle="tab" role="tab" href="#discussions">Discussions</a>
@@ -227,17 +217,9 @@
 
 				<!-- BEGIN CONTENT OF TABS -->
 				<div class="tab-content">
-				<!-- SCOPE --->
-					<div class="tab-pane active" id="scope" role="tabpanel">
-						<div class="row">
-							<div class="col">
-		      					<?php echo $j->getSOW(); ?>
-		      				</div>
-		      			</div>
-					</div>
-
+				
 				<!-- TEAM -->
-					<div class="tab-pane" id="team" role="tabpanel">
+					<div class="tab-pane active" id="team" role="tabpanel">
 						<div class="row">
 							<div class="col pt-2 pb-2">
 								<div class="row pt-2 pb-2">
@@ -360,6 +342,20 @@
 							</div>
 						</div>
 					</div>
+
+
+					<!-- SCOPE --->
+					<div class="tab-pane" id="scope" role="tabpanel">
+						<div class="row">
+							<div class="col">
+		      					<?php echo $j->getSOW(); ?>
+		      				</div>
+		      			</div>
+					</div>
+
+
+
+
 				</div>
 			</div>
 		</div>
@@ -405,7 +401,8 @@
 
                       	<br /> 
 
-                      	<input type="hidden" name="j_id" id="j_id" value="<?php echo $jid; ?>"/><input type="hidden" name="p_id" id="p_id" value="<?php echo $pid; ?>"/>  
+                      	<input type="hidden" name="j_id" id="j_id" value="<?php echo $jid; ?>"/><input type="hidden" name="p_id" id="p_id" value="<?php echo $pid; ?>"/>
+
                       	<input type="submit" name="j_update" id="j_update" value="Process Changes" class="btn btn-success" />
 
                      </form>  
@@ -438,7 +435,9 @@
                       	<div class="help-block with-errors"></div>
                       	<br />
 
-                      	<input type="hidden" name="j_id" id="j_id" value="<?php echo $jid; ?>"/><input type="hidden" name="p_id" id="p_id" value="<?php echo $pid; ?>"/>  
+                      	<input type="hidden" name="j_id" id="j_id" value="<?php echo $jid; ?>"/>
+                      	<input type="hidden" name="p_id" id="p_id" value="<?php echo $pid; ?>"/>  
+
                       	<input type="submit" name="j_ms_add" id="j_ms_add" value="Add Milestone" class="btn btn-success" />
 
                      </form>  

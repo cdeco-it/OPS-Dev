@@ -322,7 +322,13 @@
 
 		public function date_toSQL($value){
 			$da = array('Y' => NULL, 'M' => NULL, 'D' => NULL);
-			$valueX = explode("-", $value);
+
+			if(substr_count($value, '-') > 0){
+				$valueX = explode("-", $value);
+			}else if(substr_count($value, '/') > 0){
+				$valueX = explode("/", $value);
+			}
+			
 			$da['M'] = $valueX[0];
 			$da['D'] = $valueX[1];
 			$da['Y'] = $valueX[2];
