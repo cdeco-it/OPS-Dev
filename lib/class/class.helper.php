@@ -156,6 +156,32 @@
 
 /****	POPULATE METHODS 	*****/
 
+		public function populateCommonRoles($value = NULL){
+			$query = "SELECT * FROM common_roles ORDER BY common_roles_id ASC";
+			$this->set($query);
+			$this->execute();
+			foreach($this->returnSet() as $row){
+				if($row['employee_id'] == $value){
+					echo'<option value="'.$row['common_roles_id'].'" selected="SELECTED">'.$row['common_roles_desc'].'</option>';
+				}else{
+					echo'<option value="'.$row['common_roles_id'].'">'.$row['common_roles_desc'].'</option>';
+				}
+			}
+		}
+
+		public function populateEmployeeNames($value = NULL){
+			$query = "SELECT CONCAT(employee.employee_fname,' ', employee.employee_lname) AS 'name', employee_id FROM employee WHERE employee.employee_status = 1 ORDER BY employee.employee_lname ASC";
+			$this->set($query);
+			$this->execute();
+			foreach($this->returnSet() as $row){
+				if($row['employee_id'] == $value){
+					echo'<option value="'.$row['employee_id'].'" selected="SELECTED">'.$row['name'].'</option>';
+				}else{
+					echo'<option value="'.$row['employee_id'].'">'.$row['name'].'</option>';
+				}
+			}
+		}
+	
 		public function populateEngineeringMilestones($value = NULL){
 			$query = "SELECT * FROM common_eng_milestones ORDER BY common_eng_milestones_id ASC";
 			$this->set($query);
