@@ -83,6 +83,40 @@
 			}
 		});
 
+		//This function will duplicate the entire DIV #int_team_content, rename the name value and append to modal
+		var internal_team_count = 2;
+		$(document).on("click", ".expand_int_team", function(e){
+			e.preventDefault();
+			var fields = $('#int_team_content').eq(0).clone();
+			fields.find('select').each(function() {
+			 	this.name = this.name.replace('[1]', '['+internal_team_count+']');
+			});
+
+			$('.int_team').append(fields);
+			internal_team_count++;
+		});
+
+		Add internal team members to the database...
+		$('#j_edit_form').on("submit", function(e){
+			e.preventDefault();
+			$.ajax({
+				url: "addInternalTeam.php",
+				method: "POST",
+				data: $('#j_add_internal_team_form').serialize(),
+				dataType: "json"
+			})
+			.done(function(data){
+				if(!data.success){
+					alert(data);
+					$('#j_add_internal_team').modal('hide');
+					$('#error').html(data.message + data.info);
+					$("#error").show();
+				}else{
+					alert(data);
+				}
+			})
+
+		});
 		
 	});
 

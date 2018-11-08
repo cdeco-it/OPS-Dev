@@ -468,23 +468,30 @@
 
                 <div class="modal-body">  
                     <form method="post" id="j_add_internal_team_form" data-toggle="validator" role="form">
-
                  		<div class="int_team">
-	                 		<fieldset>
-								<legend>Team Member</legend>
-								<label>Employees</label>
-								<select name="j_team_employee[]" id="j_team_employee" class="form-control">
-	                      			<?php echo $helper->populateEmployeeNames(); ?>
-	                      		</select>
-	                      		<label>Role</label>
-	                      		<select name="j_team_employee_role[]" id="j_team_employee_role_0" class="form-control">
-	                      			<?php echo $helper->populateCommonRoles(); ?>
-	                      		</select>
-	                 		</fieldset> 
+                 			<div class="form-row" id="int_team_content">
+                 				<div class="form-group col-4">
+									<label for="j_team_employee">Employee</label>
+									<select name="j_int_team[1][name]" id="j_team_employee" class="form-control">
+		                      			<?php echo $helper->populateEmployeeNames(); ?>
+		                      		</select>
+		                      	</div>
+		                      	<div class="form-group col">
+		                      		<label for="j_team_employee_role">Role</label>
+		                      		<select name="j_int_team[1][role]" id="j_team_employee_role" class="form-control">
+		                      			<?php echo $helper->populateCommonRoles(); ?>
+		                      		</select>
+		                      	</div>
+		                      	<div class="form-group col-2">
+		                      		<label for="j_team_employee_lead">Lead</label>
+		                      		<select name="j_int_team[1][lead]" id="j_team_employee_lead" class="form-control">
+		                      			<?php echo $helper->populateYesNo(); ?>
+		                      		</select>
+		                      	</div>
+		                    </div>
 	                 	</div>
                       	
                       	<br />
-
                       	<div class="help-block with-errors"></div>
                       	<br />
 

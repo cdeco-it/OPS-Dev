@@ -15,6 +15,7 @@
 		private $work_id;
 		private $employee_id;
 		private $employee_name;
+		private $commonRole;
 		private $leader;
 		private $dateCreated;
 		private $dateModified;
@@ -39,6 +40,10 @@
 
 		public function getDateCreated(){
 			return($this->dateCreated);
+		}
+
+		public function getCommonRole(){
+			return($this->commonRole);
 		}
 
 		public function getWorkJID(){
@@ -68,6 +73,10 @@
 
 		public function setDateCreated($value = NULL){
 			$this->dateCreated = $value;
+		}
+
+		public function setCommonRole($value = NULL){
+			$this->commonRole = $value;
 		}
 
 		public function setDateUpdated($value = NULL){
@@ -123,6 +132,7 @@
 							work_id,
 							employee_id,
 							work_j_team_leader,
+							common_roles_id,
 							work_j_team_created,
 							work_j_team_updated)
 						VALUES (
@@ -131,6 +141,7 @@
 							:work_id,
 							:employee_id,
 							:work_j_team_leader,
+							:common_role,
 							NOW(),
 							NOW()
 						)";
@@ -140,6 +151,7 @@
 				$this->bindParam(':work_id', $this->getWorkID());
 				$this->bindParam(':employee_id', $this->getEmployeeId());
 				$this->bindParam(':work_j_team_leader', $this->getLeader());
+				$this->bindParam(':common_role', $this->getCommonRole());
 				$result = $this->execute();
 
 				if($result){
@@ -227,10 +239,13 @@
 							work_j_team.work_j_team_id AS "ID",
 							work_j_team.employee_id AS "EID",
 							CONCAT_WS(" ", employee.employee_fname, employee.employee_lname) AS "NAME",
+							common_roles.common_roles_id AS ROLE,
 							work_j_team.work_j_team_leader AS "LEADER"
 							FROM work_j_team
 							LEFT JOIN employee
 							ON work_j_team.employee_id = employee.employee_id
+							LEFT JOIN common_roles
+							ON work_j_team.common_roles_id = common_roles.common_roles_id
 							WHERE work_j_team.work_j_id = :value
 							ORDER BY work_j_team.work_j_team_leader DESC';
 				$this->set($query);
