@@ -100,7 +100,7 @@
 		}
 
 		public function setLeader($value = NULL){
-			$this->leader;
+			$this->leader = $value;
 		}
 
 
@@ -239,15 +239,15 @@
 							work_j_team.work_j_team_id AS "ID",
 							work_j_team.employee_id AS "EID",
 							CONCAT_WS(" ", employee.employee_fname, employee.employee_lname) AS "NAME",
-							common_roles.common_roles_id AS ROLE,
-							work_j_team.work_j_team_leader AS "LEADER"
+							common_roles.common_roles_desc AS ROLE,
+							work_j_team.work_j_team_leader AS "LEAD"
 							FROM work_j_team
 							LEFT JOIN employee
 							ON work_j_team.employee_id = employee.employee_id
 							LEFT JOIN common_roles
 							ON work_j_team.common_roles_id = common_roles.common_roles_id
 							WHERE work_j_team.work_j_id = :value
-							ORDER BY work_j_team.work_j_team_leader DESC';
+							ORDER BY work_j_team.employee_id, work_j_team.common_roles_id ASC';
 				$this->set($query);
 				$this->bindParam(':value', $value);
 				$result = $this->execute();

@@ -161,7 +161,7 @@
 			$this->set($query);
 			$this->execute();
 			foreach($this->returnSet() as $row){
-				if($row['employee_id'] == $value){
+				if($row['common_roles_id'] == $value){
 					echo'<option value="'.$row['common_roles_id'].'" selected="SELECTED">'.$row['common_roles_desc'].'</option>';
 				}else{
 					echo'<option value="'.$row['common_roles_id'].'">'.$row['common_roles_desc'].'</option>';

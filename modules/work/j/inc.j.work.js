@@ -4,14 +4,13 @@
 			format: "mm-dd-yyyy",
 		 	clearBtn: true
 		});
-// 		$( "#dob" ).datepicker({
-// 			format: "mm-dd-yyyy",
-// 			clearBtn: true
-// 		});	
 	});
 
 	$(document).ready(function(){
 
+/**
+ * START BASE INFOR EDIT
+ */
 		//Deal with editing of the base J info
 		$('#j_edit_form').on("submit", function(e){
 			e.preventDefault();
@@ -32,6 +31,11 @@
 				}
 			})
 		});
+
+/**
+ * END BASE INFO EDIT
+ * START MILESTONE
+ */
 
 		//Deal with the addition of a milestone
 		$('#j_add_milestone_form').on("submit", function(e){
@@ -54,8 +58,6 @@
 			})
 		});
 
-
-		
 		//Deal with the deletion of milestones
 		$(document).on("click",".deleteMilestone", function(e){
 			e.preventDefault();
@@ -83,7 +85,13 @@
 			}
 		});
 
-		//This function will duplicate the entire DIV #int_team_content, rename the name value and append to modal
+/**
+ * END MILESTONE
+ * BEGIN INTERNAL TEAM
+ */
+
+		//This function will duplicate the entire DIV #int_team_content, 
+		//rename the name value and append to modal
 		var internal_team_count = 2;
 		$(document).on("click", ".expand_int_team", function(e){
 			e.preventDefault();
@@ -96,28 +104,63 @@
 			internal_team_count++;
 		});
 
-		Add internal team members to the database...
-		$('#j_edit_form').on("submit", function(e){
+		//Add internal team members
+		$('#j_add_internal_team_form').on('submit', function(e){
 			e.preventDefault();
 			$.ajax({
-				url: "addInternalTeam.php",
-				method: "POST",
+				url: 'addInternalTeam.php',
+				method: 'POST',
 				data: $('#j_add_internal_team_form').serialize(),
-				dataType: "json"
+				dataType: 'json'
 			})
 			.done(function(data){
 				if(!data.success){
-					alert(data);
-					$('#j_add_internal_team').modal('hide');
 					$('#error').html(data.message + data.info);
 					$("#error").show();
 				}else{
-					alert(data);
+					$('#j_add_internal_team').modal('hide');
+					$('#j_add_internal_team_form')[0].reset(); 
+					$('#success').html(data.message);
+					$("#success").show().fadeTo(5000,500).slideUp(500, function(){
+	                	$('#success').hide();
+	            	});
+	            	$('#internal_team').html(data.updateInfo);
 				}
 			})
-
 		});
-		
+
+		//Delete internal team record
+		$(document).on("click", ".deleteInternalTeam", function(e){
+			e.preventDefault();
+			var tid = $(this).attr('value');
+			var jid = $(this).attr('jid');
+			if(confirm("Are you sure you want to delete this internal team member?")){
+				$.ajax({
+					url: "deleteInternalTeam.php",
+					method: "POST",
+					data: '&tid=' + tid + '&jid=' + jid,
+					dataType: "json"
+				})
+				.done(function(data){
+					if(!data.success){
+						$('#error').html(data.message + data.info);
+						$("#error").show();
+					}else{
+						$('#success').html(data.message);
+						$("#success").show().fadeTo(5000,500).slideUp(500, function(){
+		                	$('#success').hide();
+		            	});
+		            	$('#internal_team').html(data.updateInfo);
+					}
+				})
+			}
+		});
+
+	/**
+	 * END INTERNAL TEAM
+	 */
+
+
 	});
 
 	tinymce.init({ 

@@ -235,10 +235,10 @@
 		      			</div>
 					</div>
 
-				<!-- TEAM -->
+				<!-- INTERNAL TEAM -->
 					<div class="tab-pane" id="team" role="tabpanel">
 						<div class="row">
-							<div class="col pt-2 pb-2">
+							<div class="col-sm-6 pt-2 pb-2">
 								<div class="row pt-2 pb-2">
 									<div class="col">
 										<h5>Internal Team</h5>
@@ -251,35 +251,39 @@
 										?>
 									</div>
 								</div>
-								
+								<div id="internal_team">
 									<?php
-									$result = $jT->getTeam(1);
+									$result = $jT->getTeam($jid);
 									if($result['success']){
 					          			if($result['message'] === SUCCESS){
 					          				echo '
 											<div class="table-responsive">
-						        				<table class="table table-striped">
+						        				<table class="table table-sm table-hover">
 						           					<thead>
 									               		<tr>
-										                   	<th width="10%">Employee</th>
-										                  	<th width="25%">Team Leader</th>
-										                   	<th width="10%">Action</th>
-										                </tr>
+										                   	<th width="35%">Name</th>
+										                  	<th width="35%">Role</th>
+										                   	<th width="10%">Lead</th>';
+										    if($level <= 1){
+										    	echo '<th width="20%"></th>';
+										    }
+										    echo '</tr>
 								               		</thead>
 								  	         		<tbody>';
+
 							     			$i = 1;	
 					          				foreach($result['updateInfo'] as $row){
 					          					echo '<tr>
-				      	         						<td>'.$row['NAME'].'</td>';
-				              						if(!is_null($row['LEADER']) && $row['LEADER'] == 1){
-				              							echo '<td><i class="fas fa-check"></i></td>';
+				      	         						<td class="align-middle">'.$row['NAME'].'</td>
+				      	         						<td class="align-middle">'.$row['ROLE'].'</td>';
+				              						if(!is_null($row['LEAD']) && $row['LEAD'] == 1){
+				              							echo '<td class="align-middle"><i class="fas fa-check"></i></td>';
 				              						}else{
 				              							echo '<td></td>';
 				              						}
-				              					echo '<td>';
+				              					echo '<td class="align-middle" align="right">';
 				              						if($level <= 1){
-				              							echo '<button type="button" id="t_editButton'.$i.'" class="t_editButton btn btn-info btn-xs" value='.$row['ID'].'>Edit</button> 
-					              						<button type="button" id="t_delButton'.$i.'" class="t_delButton btn btn-danger btn-xs" value='.$row['ID'].'>Delete</button>';
+				              							echo '<button type="button" id="int_team_del_button'.$i.'" class="deleteInternalTeam btn btn-danger btn-xs" value='.$row['ID'].' jid="'.$jid.'"><i class="fas fa-ban"></i></button>';
 					              					}
 						              			echo '			
 					              						</td>
@@ -295,9 +299,10 @@
 					          		}else{
 					          			echo $result['message'];
 					          		}		
-								?>
+									?>
+								</div>
 							</div>
-
+				<!-- EXTERNAL TEAM -->
 							<div class="col-sm-6 pt-2 pb-2">
 								<div class="row pt-2 pb-2">
 									<div class="col">
@@ -324,7 +329,7 @@
 										                  	<th width="20%">Firm</th>
 										                  	<th width="30%">Consultant</th>
 										                  	<th width="30%">Role</th>
-										                  	<th width="20%">Action</th>
+										                  	<th width="20%"></th>
 										                </tr>
 								              		</thead>
 								              		<tbody>';
@@ -459,7 +464,7 @@
 
     <!-- ADD INTERNAL TEAM MODAL -->
 	<div id="j_add_internal_team" class="modal fade">
-    	<div class="modal-dialog">  
+    	<div class="modal-dialog modal-lg">  
            <div class="modal-content">  
                 <div class="modal-header">  
                      <h4 class="modal-title">Add Internal Team Member</h4>
@@ -476,7 +481,7 @@
 		                      			<?php echo $helper->populateEmployeeNames(); ?>
 		                      		</select>
 		                      	</div>
-		                      	<div class="form-group col">
+		                      	<div class="form-group col-4">
 		                      		<label for="j_team_employee_role">Role</label>
 		                      		<select name="j_int_team[1][role]" id="j_team_employee_role" class="form-control">
 		                      			<?php echo $helper->populateCommonRoles(); ?>
@@ -488,6 +493,10 @@
 		                      			<?php echo $helper->populateYesNo(); ?>
 		                      		</select>
 		                      	</div>
+		                      	<div class="form-group col-2">
+		                      		<label for="del_int_team_row">Action</label>
+									<button name="del_int_team_row" class="del_int_team_row btn btn-danger" id="del_int_team_row"><i class="fas fa-ban" value="1"></i></button>
+		                      	</div>
 		                    </div>
 	                 	</div>
                       	
@@ -498,7 +507,7 @@
                       	<input type="hidden" name="j_id" id="j_id" value="<?php echo $jid; ?>"/>
                       	<input type="hidden" name="p_id" id="p_id" value="<?php echo $pid; ?>"/>  
 						<div class="btn-group">
-	                      	<button name="expand_int_team" class="expand_int_team btn btn-warning">Expand</button>
+	                      	<button name="expand_int_team" class="expand_int_team btn btn-warning">Add More</button>
 	                      	<input type="submit" name="j_interal_team_add" id="j_internal_team_add" value="Add To Team" class="btn btn-success" />
 						</div>
                      </form>  
@@ -506,7 +515,7 @@
         	</div>  
       	</div>
     </div>
-    <!-- END ADD MILESTONE MODAL -->
+    <!-- END ADD INTERNAL MODAL -->
 
 
 <?php 
