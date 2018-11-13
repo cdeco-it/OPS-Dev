@@ -95,13 +95,31 @@
 		var internal_team_count = 2;
 		$(document).on("click", ".expand_int_team", function(e){
 			e.preventDefault();
-			var fields = $('#int_team_content').eq(0).clone();
+			var fields = $('#int_team_content_1').eq(0).clone();
+
+			//Rename the field with an incremental value
+			fields.attr('id', "int_team_content_"+internal_team_count);
+			fields.addClass('intTeamAddOn');
+
+			//Update select field names
 			fields.find('select').each(function() {
 			 	this.name = this.name.replace('[1]', '['+internal_team_count+']');
 			});
 
+			//Update row delete button values
+			fields.find('button').each(function() {
+				this.value = this.value.replace('1', internal_team_count);
+			});
+
 			$('.int_team').append(fields);
 			internal_team_count++;
+		});
+
+		//Delete added row
+		$(document).on("click", ".del_int_team_row", function(e){
+			e.preventDefault();
+			var cursor = this.value;
+			$('#int_team_content_'+cursor).remove();
 		});
 
 		//Add internal team members
@@ -125,6 +143,12 @@
 	                	$('#success').hide();
 	            	});
 	            	$('#internal_team').html(data.updateInfo);
+
+	            	//This will reset the form to having just ONE input if additional rows were added.
+	            	var x = $('.intTeamAddOn').length;
+	            	if(x > 0){
+	            		$('.intTeamAddOn').remove();
+	            	}
 				}
 			})
 		});
@@ -155,9 +179,15 @@
 				})
 			}
 		});
-
+		
 	/**
 	 * END INTERNAL TEAM
+	 * BEGIN EXTERNAL TEAM
+	 */
+	
+	/**
+	 * END EXTERNAL TEAM
+	 * 
 	 */
 
 
@@ -171,3 +201,7 @@
 		toolbar: 'undo redo | formatselect | bold italic underline strikethrough backcolor | alignleft aligncenter alignright alignjustify | bullist numlist outdent indent | removeformat',
 		plugins: ['wordcount'] 
 	});
+
+	function resetIntTeamForm(){
+		("div.intTeamAddOn").remove();
+	}

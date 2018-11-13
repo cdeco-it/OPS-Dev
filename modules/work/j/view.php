@@ -18,15 +18,6 @@
 
     <script src="https://cloud.tinymce.com/stable/tinymce.min.js?apiKey=s4dkk47wxltlkoe91dill48cz6m4a3ttnhpntfa3lt5gpjk0"></script> 
 
-    <!-- <style>
-		ul.ui-autocomplete.ui-menu {
- 			z-index: 1200;
-		}
-		table.dataTable tbody td {
-			vertical-align: middle;
-		}
-	</style> -->
-
     </head>
 	<body>
 <?php 
@@ -43,6 +34,7 @@
 
 	require_once($_SERVER["DOCUMENT_ROOT"].'/lib/class/class.db.php');
 	require_once($_SERVER["DOCUMENT_ROOT"].'/lib/class/class.helper.php');
+	require_once($_SERVER["DOCUMENT_ROOT"].'/lib/class/class.address.php');
 	require_once($_SERVER["DOCUMENT_ROOT"].'/lib/class/class.work.php');
 	require_once($_SERVER["DOCUMENT_ROOT"].'/lib/class/class.work.phases.php');
 	require_once($_SERVER["DOCUMENT_ROOT"].'/lib/class/j/class.j.milestones.php');
@@ -57,6 +49,7 @@
 	require_once($_SERVER["DOCUMENT_ROOT"].'/lib/class/j/class.j.accounting.inv.php');
 	require_once($_SERVER["DOCUMENT_ROOT"].'/lib/class/j/class.j.accounting.subs.inv.php');
 	$helper = new Helper();
+	$addr = new Address();
 	$w = new Work();
 	$j = new WorkPhases();
 	$jM = new j_WorkMilestones();
@@ -129,6 +122,29 @@
 							echo $j->getAssocNum();
 						}else{
 							echo "None defined";
+						}
+					?>
+				</div>
+			</div>
+			<div class="col-3 border-right">
+				<h5>Client/POC</h5>
+				<div>
+					<?php 
+						if(!is_null($w->getClient())){
+							$clientId = $w->getClient();
+							$addr->getEntry($clientId);
+							echo($addr->getOrganization()).'<br />';
+						}else{
+							echo "No client defined<br />";
+						}
+
+						if(!is_null($w->getClientRep())){
+							$pocId = $w->getClientRep();
+							$addr->getEntry($pocId);
+							$pocArray = $addr->getName();
+							echo $pocArray['first'].' '.$pocArray['last'];
+						}else{
+							echo "No Point of Contact defined";
 						}
 					?>
 				</div>
@@ -474,7 +490,7 @@
                 <div class="modal-body">  
                     <form method="post" id="j_add_internal_team_form" data-toggle="validator" role="form">
                  		<div class="int_team">
-                 			<div class="form-row" id="int_team_content">
+                 			<div class="form-row" id="int_team_content_1">
                  				<div class="form-group col-4">
 									<label for="j_team_employee">Employee</label>
 									<select name="j_int_team[1][name]" id="j_team_employee" class="form-control">
@@ -494,8 +510,8 @@
 		                      		</select>
 		                      	</div>
 		                      	<div class="form-group col-2">
-		                      		<label for="del_int_team_row">Action</label>
-									<button name="del_int_team_row" class="del_int_team_row btn btn-danger" id="del_int_team_row"><i class="fas fa-ban" value="1"></i></button>
+		                      		<label for="del_int_team_row">Action</label><br />
+									<button name="del_int_team_row" class="del_int_team_row btn btn-danger" id="del_int_team_row" value="1"><i class="fas fa-times"></i></button>
 		                      	</div>
 		                    </div>
 	                 	</div>
@@ -507,7 +523,7 @@
                       	<input type="hidden" name="j_id" id="j_id" value="<?php echo $jid; ?>"/>
                       	<input type="hidden" name="p_id" id="p_id" value="<?php echo $pid; ?>"/>  
 						<div class="btn-group">
-	                      	<button name="expand_int_team" class="expand_int_team btn btn-warning">Add More</button>
+	                      	<button name="expand_int_team" class="expand_int_team btn btn-warning">Add Additional Memeber</button>
 	                      	<input type="submit" name="j_interal_team_add" id="j_internal_team_add" value="Add To Team" class="btn btn-success" />
 						</div>
                      </form>  
@@ -520,5 +536,5 @@
 
 <?php 
 	include_once($_SERVER["DOCUMENT_ROOT"].'/lib/includes/inc.footer.php'); 
-	unset($work, $helper, $db, $jM, $jD, $jDi, $jT, $jC, $jAm, $jSr, $jAcct);
+	unset($work, $helper, $db, $jM, $jD, $jDi, $jT, $jC, $jAm, $jSr, $jAcct, $addr);
 ?>

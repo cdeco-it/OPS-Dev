@@ -20,19 +20,20 @@ if(!empty($_POST) || $level > 1){
 	$success = 0;
 
 	//Let's deal with the looping and processing. This will loop n amount of times. If an insert fails, break out of the loop and return the error.
-	for($i = 1; $i <= $count; $i++){
-		
+	//NOTE this is a revised verion!  This accounts for arrays that are do not have sequential keys.
+	foreach($input as $val){
 		//Create a new class
 		$t = new j_WorkTeam();
 
 		//Set the values
 		$t->setWorkJID($jid);
 		$t->setWorkID($pid);
-		$t->setEmployeeId($input[$i]['name']);
-		$t->setLeader($input[$i]['lead']);
-		$t->setCommonRole($input[$i]['role']);
+		$t->setEmployeeId($val['name']);
+		$t->setLeader($val['lead']);
+		$t->setCommonRole($val['role']);
 
 		//Add the entry
+		
 		$result = $t->addEntry();
 		if($result['success']){
 			if($result['message'] === SUCCESS){
