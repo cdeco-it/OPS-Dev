@@ -4,7 +4,35 @@
 			format: "mm-dd-yyyy",
 		 	clearBtn: true
 		});
+
+		$("#j_ext_name").autocomplete({
+			source: '/lib/assistants/asst.contactlookup.php',
+		 	minLength: 1,
+		 	select: function(event, ui){
+				event.preventDefault();
+				$("#j_ext_member_name_id").val(ui.item.id);
+				$("#j_ext_name").val(ui.item.value);
+				$("#j_ext_org_name_id").val(ui.item.org_id);
+				$("#j_ext_team_org").val(ui.item.org_name);
+				$("#j_external_team_add").removeAttr('disabled');
+			},
+			change: function(event, ui){
+				event.preventDefault();
+				if(ui.item == null){
+					$("#j_ext_team_org").val("");
+					$('#j_external_team_add').attr("disabled", "DISABLED");
+					alert("You must add this person to the master address book before assigning them to a team.");
+				}else{
+					$("#j_ext_member_name_id").val(ui.item.id);
+					$("#j_ext_name").val(ui.item.value);
+					$("#j_ext_org_name_id").val(ui.item.org_id);
+					$("#j_ext_team_org").val(ui.item.org_name);
+					$("j_external_team_add").removeAttr('disabled');
+				}
+			}
+		});
 	});
+
 
 	$(document).ready(function(){
 
@@ -184,7 +212,30 @@
 	 * END INTERNAL TEAM
 	 * BEGIN EXTERNAL TEAM
 	 */
-	
+		//Add internal team members
+		$('#j_add_external_team_form').on('submit', function(e){
+			e.preventDefault();
+			$.ajax({
+				url: 'addExternalTeam.php',
+				method: 'POST',
+				data: $('#j_add_external_team_form').serialize(),
+				dataType: 'json'
+			})
+			.done(function(data){
+				if(!data.success){
+					$('#error').html(data.message + data.info);
+					$("#error").show();
+				}else{
+					$('#j_add_external_team').modal('hide');
+					$('#j_add_external_team_form')[0].reset(); 
+					$('#success').html(data.message);
+					$("#success").show().fadeTo(5000,500).slideUp(500, function(){
+	                	$('#success').hide();
+	            	});
+	            	$('#external_team').html(data.updateInfo);
+				}
+			})
+		});
 	/**
 	 * END EXTERNAL TEAM
 	 * 
@@ -192,6 +243,7 @@
 
 
 	});
+
 
 	tinymce.init({ 
 		selector:'#j_sow',

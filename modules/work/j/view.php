@@ -19,6 +19,12 @@
     <script src="https://cloud.tinymce.com/stable/tinymce.min.js?apiKey=s4dkk47wxltlkoe91dill48cz6m4a3ttnhpntfa3lt5gpjk0"></script> 
 
     </head>
+
+    <style>
+    	ul.ui-autocomplete {
+		    z-index: 1100;
+		}
+	</style>
 	<body>
 <?php 
 	
@@ -327,24 +333,24 @@
 									<div class="col-12 col-md-auto">
 										<?php
 											if($level <= 1){
-												echo '<a href="#" name="add_consultant" id="add_consultant" data-toggle="modal" data-target="#addConsultant" class="btn btn-success ">Add</a>';
+												echo '<a href="#" name="add_ext_team" id="add_consultant" data-toggle="modal" data-target="#j_add_external_team" class="btn btn-success ">Add</a>';
 											}
 										?>
 									</div>
 								</div>
-								
-								<?php
-									$result = $jC->getConsultants(1);
+								<div id="external_team">
+									<?php
+									$result = $jC->getConsultants($jid);
 									if($result['success']){
 					          			if($result['message'] === SUCCESS){
 					          				echo '
 											<div class="table-responsive">
-						        				<table class="table table-striped">
+						        				<table class="table table-sm table-hover">
 						          					<thead>
 								                		<tr>
-										                  	<th width="20%">Firm</th>
-										                  	<th width="30%">Consultant</th>
-										                  	<th width="30%">Role</th>
+										                  	<th width="30%">Firm</th>
+										                  	<th width="30%">Name</th>
+										                  	<th width="20%">Role</th>
 										                  	<th width="20%"></th>
 										                </tr>
 								              		</thead>
@@ -357,10 +363,12 @@
 			              							<td>'.$row['NAME'].'</td>
 			              							<td>'.$row['ROLE'].'</td>';
 			              						
-			              					echo '<td>';
+			              					echo '<td class="align-middle" align="right">';
+			              							echo '<button type="button" id="ext_team_view" class="btn btn-info btn-xs" value='.$row['ADDR_ID'].'><i class="far fa-address-card"></i></button>';
+
 			              						if($level <= 1){
-			              							echo '<button type="button" id="c_editButton'.$i.'" class="c_editButton btn btn-info btn-xs" value='.$row['ID'].'>Edit</button> 
-				              						<button type="button" id="c_delButton'.$i.'" class="c_delButton btn btn-danger btn-xs" value='.$row['ID'].'>Delete</button>';
+			              							
+			              							echo '<button type="button" id="ext_team_del_button'.$i.'" class="deleteExternalTeam btn btn-danger btn-xs" value='.$row['ID'].' jid="'.$jid.'"><i class="fas fa-ban"></i></button>';
 				              					}
 					              			echo '			
 				              						</td>
@@ -376,7 +384,8 @@
 					          		}else{
 					          			echo $result['message'];
 					          		}	
-								?>
+									?>
+								</div>
 							</div>
 						</div>
 					</div>
@@ -532,6 +541,55 @@
       	</div>
     </div>
     <!-- END ADD INTERNAL MODAL -->
+
+    <!-- ADD EXTERNAL TEAM MODAL -->
+	<div id="j_add_external_team" class="modal fade">
+    	<div class="modal-dialog modal-lg">  
+           <div class="modal-content">  
+                <div class="modal-header">  
+                     <h4 class="modal-title">Add External Team Member</h4>
+                     <a href="#" class="close" data-dismiss="modal">&times;</a>
+                </div>  
+
+                <div class="modal-body">  
+                	<p><strong>NOTE:</strong> You MUST use a suggested name from the address book before adding the individual to the external team. As you type in the name, select the suggestion below to select the individual.</p>
+                    <form method="post" id="j_add_external_team_form" data-toggle="validator" role="form">
+                 		<div class="ext_team">
+                 			<div class="form-row" id="ext_team_content">
+                 				<div class="form-group col-4">
+									<label for="j_team_ext_member">Name</label>
+									<input type="text" name="j_ext_member_name" id="j_ext_name" class="form-control"></input>
+									<input type="hidden" name="j_ext_member_name_id" id="j_ext_member_name_id">
+		                      	</div>
+		                      	<div class="form-group col-4">
+									<label for="j_team_ext_org">Organization</label>
+									<input type="text" name="j_ext_team_org" id="j_ext_team_org" class="form-control" READONLY></input>
+									<input type="hidden" name="j_ext_org_name_id" id="j_ext_org_name_id">
+		                      	</div>
+		                      	<div class="form-group col-4">
+		                      		<label for="j_team_ext_role">Role</label>
+		                      		<select name="j_ext_role" id="j_ext_role" class="form-control">
+		                      			<?php echo $helper->populateCommonRoles(); ?>
+		                      		</select>
+		                      	</div>
+		                    </div>
+	                 	</div>
+                      	
+                      	<br />
+                      	<div class="help-block with-errors"></div>
+                      	<br />
+
+                      	<input type="hidden" name="j_id" id="j_id" value="<?php echo $jid; ?>"/>
+                      	<input type="hidden" name="p_id" id="p_id" value="<?php echo $pid; ?>"/>  
+						<div class="btn-group">
+	                      	<input type="submit" name="j_external_team_add" id="j_external_team_add" value="Add To Team" class="btn btn-success" DISABLED />
+						</div>
+                     </form>  
+                </div>  
+        	</div>  
+      	</div>
+    </div>
+    <!-- END ADD EXTERNAL MODAL -->
 
 
 <?php 

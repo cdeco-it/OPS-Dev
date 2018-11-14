@@ -40,7 +40,9 @@
 			foreach($result as $row){
 				$data[] = array(
 							'value' => $row['addr_fullname'],
-							'id' => $row['addr_id']
+							'id' => $row['addr_id'],
+							'org_id' => $row['addr_org_id'],
+							'org_name' => $row['addr_orgs_name']
 							);
 			}
 			echo json_encode($data);

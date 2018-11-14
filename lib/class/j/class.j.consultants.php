@@ -63,7 +63,7 @@
 		}
 
 		public function getConsultantRole(){
-			reutrn($this->consultant_role);
+			return($this->consultant_role);
 		}
 
 /***** SETTER METHODS *****/
@@ -132,15 +132,15 @@
 							work_j_id,
 							work_id,
 							addr_id,
-							work_j_consultants_role,
-							work_j_team_created,
-							work_j_team_updated)
+							common_roles_id,
+							work_j_consultants_created,
+							work_j_consultants_updated)
 						VALUES (
 							NULL,
 							:work_j_id,
 							:work_id,
 							:addr_id,
-							:work_j_consultants_role,
+							:role,
 							NOW(),
 							NOW()
 						)";
@@ -149,7 +149,7 @@
 				$this->bindParam(':work_j_id', $this->getWorkJID());
 				$this->bindParam(':work_id', $this->getWorkID());
 				$this->bindParam(':addr_id', $this->getAddrId());
-				$this->bindParam(':work_j_consultants_role', $this->getConsultantRole());
+				$this->bindParam(':role', $this->getConsultantRole());
 				$result = $this->execute();
 
 				if($result){
@@ -238,10 +238,12 @@
 							work_j_consultants.addr_id AS "ADDR_ID",
 							CONCAT_WS(" ", view_addr_formal.addr_fname, view_addr_formal.addr_lname) AS "NAME",
 							view_addr_formal.addr_org AS "ORG",
-							work_j_consultants.work_j_consultants_role AS "ROLE"
+							common_roles.common_roles_desc AS "ROLE"
 							FROM work_j_consultants
 							LEFT JOIN view_addr_formal
 								ON work_j_consultants.addr_id = view_addr_formal.addr_id
+							LEFT JOIN common_roles
+								ON work_j_consultants.common_roles_id = common_roles.common_roles_id
 							WHERE work_j_consultants.work_j_id = :value';
 				$this->set($query);
 				$this->bindParam(':value', $value);
