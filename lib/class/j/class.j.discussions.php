@@ -108,8 +108,8 @@
 							work_j_id,
 							work_id,
 							work_j_discussions_entry,
-							work_j_milestones_created,
-							work_j_milestones_updated )
+							work_j_discussions_created,
+							work_j_discussions_updated )
 							VALUES (
 							NULL,
 							:work_j_id,
@@ -207,9 +207,9 @@
 
 		public function getDiscussions($value = NULL){
 			if(!empty($value) && !is_null($value)){
-				$query = "SELECT * FROM work_j_discussions ORDER BY work_j_discussions_created DESC";
+				$query = "SELECT * FROM work_j_discussions WHERE work_j_id = :id ORDER BY work_j_discussions_created DESC";
 				$this->set($query);
-				$this->bindParam(':value', $value);
+				$this->bindParam(':id', $value);
 				$result = $this->execute();
 				if($result){
 					if($this->rowCount() > 0){

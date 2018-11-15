@@ -22,7 +22,7 @@
 
     <style>
     	ul.ui-autocomplete {
-		    z-index: 1100;
+		    z-index: 1500;
 		}
 	</style>
 	<body>
@@ -293,7 +293,7 @@
 								               		</thead>
 								  	         		<tbody>';
 
-							     			$i = 1;	
+							     			// $i = 1;	
 					          				foreach($result['updateInfo'] as $row){
 					          					echo '<tr>
 				      	         						<td class="align-middle">'.$row['NAME'].'</td>
@@ -305,12 +305,12 @@
 				              						}
 				              					echo '<td class="align-middle" align="right">';
 				              						if($level <= 1){
-				              							echo '<button type="button" id="int_team_del_button'.$i.'" class="deleteInternalTeam btn btn-danger btn-xs" value='.$row['ID'].' jid="'.$jid.'"><i class="fas fa-ban"></i></button>';
+				              							echo '<button type="button" class="deleteInternalTeam btn btn-danger btn-xs" value='.$row['ID'].' jid="'.$jid.'"><i class="fas fa-ban"></i></button>';
 					              					}
 						              			echo '			
 					              						</td>
 					              					</tr>';
-					              				$i++;
+					              				// $i++;
 					              			}
 					              		echo '</tbody>
 					              			</table>
@@ -355,7 +355,7 @@
 										                </tr>
 								              		</thead>
 								              		<tbody>';
-							     			$i = 1;	
+
 					          				foreach($result['updateInfo'] as $row){
 					          					echo '
 					          					<tr>
@@ -364,16 +364,15 @@
 			              							<td>'.$row['ROLE'].'</td>';
 			              						
 			              					echo '<td class="align-middle" align="right">';
-			              							echo '<button type="button" id="ext_team_view" class="btn btn-info btn-xs" value='.$row['ADDR_ID'].'><i class="far fa-address-card"></i></button>';
+			              							echo '<button type="button" class="viewExternalTeam btn btn-info btn-xs" value='.$row['ADDR_ID'].'><i class="far fa-address-card"></i></button> ';
 
 			              						if($level <= 1){
 			              							
-			              							echo '<button type="button" id="ext_team_del_button'.$i.'" class="deleteExternalTeam btn btn-danger btn-xs" value='.$row['ID'].' jid="'.$jid.'"><i class="fas fa-ban"></i></button>';
+			              							echo '<button type="button"  class="deleteExternalTeam btn btn-danger btn-xs" value='.$row['ID'].' jid="'.$jid.'"><i class="fas fa-ban"></i></button>';
 				              					}
 					              			echo '			
 				              						</td>
-				              					</tr>';
-				              				$i++;	
+				              					</tr>';	
 					              			}
 					              		echo '</tbody>
 					              			</table>
@@ -389,7 +388,79 @@
 							</div>
 						</div>
 					</div>
+				<!-- DISCUSSIONS -->
+					<div class="tab-pane" id="discussions" role="tabpanel">
+						<div class="col pt-2 pb-2">
+							<div class="row pt-2 pb-2">
+								<div class="col">
+									<h5>Project Discussion Log</h5>
+								</div>
+								<div class="col-12 col-md-auto">
+									<?php
+										if($level <= 1){
+											echo '<a href="#" name="add_discussion" id="add_discussion" data-toggle="modal" data-target="#j_add_discussion" class="btn btn-success">Add</a>';
+										}
+									?>
+								</div>
+							</div>
 
+							<div class="row">
+								<div class="col" id="discussion_entries">
+
+			      					<?php
+
+			      						$result = $jDi->getDiscussions($jid);
+			      						if($result['success']){
+			      							if($result['message'] === SUCCESS){
+			      								$i = count($result['updateInfo']);
+			      								echo '
+												<div class="table-responsive">
+							        				<table class="table table-hover">
+							          					<thead>
+									                		<tr>
+											                  	<th width="5%">#</th>
+											                  	<th width="5%">Date Entered</th>
+											                  	<th width="5%">Last Updated</td>
+											                  	<th width="70%">Discussion</th>';
+											    if($level <= 1){
+											    	echo '<th width="15%"></th>';
+											    }
+											                  	
+											            echo '</tr>
+									              		</thead>
+									              	<tbody>';
+			      								foreach($result['updateInfo'] as $row){
+			      									echo '<tr>
+			      											<td>'.$i.'</td>
+			      											<td>'.$row['work_j_discussions_created'].'</td>
+			      											<td>'.$row['work_j_discussions_updated'].'</td>
+			      											<td>'.$row['work_j_discussions_entry'].'</td>';
+			      									if($level <= 1){
+			      										echo '<td class="align-middle" align="right">
+																<button type="button" class="editDiscussion btn btn-info btn-xs" value='.$row['work_j_discussions_id'].'>
+								<i class="fas fa-edit"></i>
+							</button> 
+
+								<button type="button" class="deleteDiscussion btn btn-danger btn-xs" value='.$row['work_j_discussions_id'].' jid="'.$jid.'"><i class="fas fa-trash-alt"></i></i></button>
+			      												</td>';
+			      									}
+
+			      									echo '</tr>';
+			      									$i--;
+			      								}
+
+			      								echo '</tbody>
+			      									</table>';
+			      							}else{
+			      								echo $result['message'];
+			      							}
+			      						}else{
+			      							echo $result['message'];
+			      						}
+			      					?>
+			      				</div>
+			      			</div>
+						</div>
 
 					
 
@@ -435,7 +506,7 @@
                       	<br />  
 
                       	<label>Scope of Work</label>  
-                      	<textarea type="text" name="j_sow" id="j_sow" class="form-control" required />
+                      	<textarea type="text" name="j_sow" id="j_sow" class="tinymce form-control" required />
 						<?php echo $j->getSOW(); ?>
                       	</textarea>
 
@@ -590,6 +661,34 @@
       	</div>
     </div>
     <!-- END ADD EXTERNAL MODAL -->
+
+    <!-- DISCUSSION MODAL -->
+    <div id="j_add_discussion" class="modal fade">
+    	<div class="modal-dialog modal-lg">  
+           <div class="modal-content">  
+                <div class="modal-header">  
+                     <h4 class="modal-title">Add Disussion to Project</h4>
+                     <a href="#" class="close" data-dismiss="modal">&times;</a>
+                </div>  
+
+                <div class="modal-body">  
+                    <form method="post" id="j_add_discussion_form" data-toggle="validator" role="form">
+
+                      	<textarea type="text" name="j_add_disc" id="j_add_disc" class="tinymce form-control" required />
+
+                      	</textarea>
+                      	<br /> 
+
+                      	<input type="hidden" name="j_id" id="j_id" value="<?php echo $jid; ?>"/><input type="hidden" name="p_id" id="p_id" value="<?php echo $pid; ?>"/>
+
+                      	<input type="submit" name="j_add_disc_btn" id="j_add_disc_btn" value="Insert Discussion" class="btn btn-success" />
+
+                     </form>  
+                </div>  
+        	</div>  
+      	</div>  
+    </div>
+    <!-- END DISCUSSION MODAL -->
 
 
 <?php 

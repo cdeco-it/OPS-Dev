@@ -14,20 +14,21 @@
 				$("#j_ext_name").val(ui.item.value);
 				$("#j_ext_org_name_id").val(ui.item.org_id);
 				$("#j_ext_team_org").val(ui.item.org_name);
-				$("#j_external_team_add").removeAttr('disabled');
+				// $("#j_external_team_add").removeAttr('disabled');
 			},
 			change: function(event, ui){
 				event.preventDefault();
 				if(ui.item == null){
 					$("#j_ext_team_org").val("");
-					$('#j_external_team_add').attr("disabled", "DISABLED");
+					// $('#j_external_team_add').attr("disabled", "DISABLED");
+					$('#j_external_team_add').prop("disabled", true);
 					alert("You must add this person to the master address book before assigning them to a team.");
 				}else{
 					$("#j_ext_member_name_id").val(ui.item.id);
 					$("#j_ext_name").val(ui.item.value);
 					$("#j_ext_org_name_id").val(ui.item.org_id);
 					$("#j_ext_team_org").val(ui.item.org_name);
-					$("j_external_team_add").removeAttr('disabled');
+					// $("j_external_team_add").removeAttr('disabled');
 				}
 			}
 		});
@@ -212,7 +213,7 @@
 	 * END INTERNAL TEAM
 	 * BEGIN EXTERNAL TEAM
 	 */
-		//Add internal team members
+		//Add external team members
 		$('#j_add_external_team_form').on('submit', function(e){
 			e.preventDefault();
 			$.ajax({
@@ -236,22 +237,88 @@
 				}
 			})
 		});
+
+		//Delete external team record
+		$(document).on("click", ".deleteExternalTeam", function(e){
+			e.preventDefault();
+			var etid = $(this).attr('value');
+			var jid = $(this).attr('jid');
+			if(confirm("Are you sure you want to delete this external team member?")){
+				$.ajax({
+					url: "deleteExternalTeam.php",
+					method: "POST",
+					data: '&etid=' + etid + '&jid=' + jid,
+					dataType: "json"
+				})
+				.done(function(data){
+					if(!data.success){
+						$('#error').html(data.message + data.info);
+						$("#error").show();
+					}else{
+						$('#success').html(data.message);
+						$("#success").show().fadeTo(5000,500).slideUp(500, function(){
+		                	$('#success').hide();
+		            	});
+		            	$('#external_team').html(data.updateInfo);
+					}
+				})
+			}
+		});
+
+		$("#j_ext_name").keyup(function(){
+			if($(this).val().length != 0){
+				$("#j_external_team_add").prop('disabled', false);	
+			}else{
+				$("#j_external_team_add").prop('disabled', true);
+				$("#j_ext_member_name_id").val("");
+				$("#j_ext_name").val("");
+				$("#j_ext_org_name_id").val("");
+				$("#j_ext_team_org").val("");
+			}
+		});
+
 	/**
 	 * END EXTERNAL TEAM
-	 * 
+	 * BEGIN DISCUSSION
 	 */
+	
+	//Add new discussion
+		$('#j_add_discussion_form').on('submit', function(e){
+			e.preventDefault();
+			$.ajax({
+				url: 'addDiscussion.php',
+				method: 'POST',
+				data: $('#j_add_discussion_form').serialize(),
+				dataType: 'json'
+			})
+			.done(function(data){
+				if(!data.success){
+					$('#error').html(data.message + data.info);
+					$("#error").show();
+				}else{
+					$('#j_add_discussion').modal('hide');
+					$('#j_add_discussion_form')[0].reset(); 
+					$('#success').html(data.message);
+					$("#success").show().fadeTo(5000,500).slideUp(500, function(){
+	                	$('#success').hide();
+	            	});
+	            	$('#discussion_entries').html(data.updateInfo);
+				}
+			})
+		});
 
 
 	});
 
 
 	tinymce.init({ 
-		selector:'#j_sow',
+		// selector:'#j_sow',
+		selector: '.tinymce',
 		height: 400,
 		branding: false,
 		menubar: false,
-		toolbar: 'undo redo | formatselect | bold italic underline strikethrough backcolor | alignleft aligncenter alignright alignjustify | bullist numlist outdent indent | removeformat',
-		plugins: ['wordcount'] 
+		toolbar: 'undo redo | formatselect | bold italic underline strikethrough forecolor backcolor | alignleft aligncenter alignright alignjustify | bullist numlist outdent indent | removeformat',
+		plugins: 'wordcount textcolor colorpicker' 
 	});
 
 	function resetIntTeamForm(){

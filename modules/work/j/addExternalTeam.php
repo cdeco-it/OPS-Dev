@@ -52,7 +52,7 @@ if(!empty($_POST) || $level > 1){
 										<td  class="align-middle" align="right">
 											<button type="button" id="ext_team_view" class="btn btn-info btn-xs" value='.$row['ADDR_ID'].'>
 												<i class="far fa-address-card"></i>
-											</button>';
+											</button> ';
 						if($level <= 1){
 							$output .= '<button type="button" id="ext_team_del_button'.$i.'" class="deleteExternalTeam btn btn-danger btn-xs" value='.$row['ID'].' jid="'.$jid.'"><i class="fas fa-ban"></i></button>';
 						}
@@ -63,7 +63,7 @@ if(!empty($_POST) || $level > 1){
 					}
 
 					$output .= '</tbody>
-							<table>
+							</table>
 						</div>';
 
 					$result['updateInfo'] = $output;
