@@ -18,7 +18,6 @@
 		private $task;
 		private $comments;
 		private $isComplete;
-
 		private $work_j_id;
 		private $work_id;
 		private $dateCreated;

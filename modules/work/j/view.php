@@ -776,8 +776,7 @@
 
                       	<input type="hidden" name="j_id" id="j_id" value="<?php echo $jid; ?>"/>
                       	<input type="hidden" name="p_id" id="p_id" value="<?php echo $pid; ?>"/>  
-
-                      	<input type="submit" name="j_ms_add" id="j_ms_add" value="Add Milestone" class="btn btn-success" />
+                      	<input type="submit" name="j_add_action_btn" id="j_add_action_btn" value="Add Action Item" class="btn btn-success" />
 
                      </form>  
                 </div>  
@@ -785,7 +784,6 @@
       	</div>  
     </div>
     <!-- END ADD ACTION ITEM MODAL -->
-
 
 <?php 
 	include_once($_SERVER["DOCUMENT_ROOT"].'/lib/includes/inc.footer.php'); 
