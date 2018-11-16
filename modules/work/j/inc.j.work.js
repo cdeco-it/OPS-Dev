@@ -5,6 +5,14 @@
 		 	clearBtn: true
 		});
 
+		$( ".actionDate" ).datepicker({
+			format: "mm-dd-yyyy",
+		 	clearBtn: true
+		});
+
+
+		
+
 		$("#j_ext_name").autocomplete({
 			source: '/lib/assistants/asst.contactlookup.php',
 		 	minLength: 1,
@@ -14,13 +22,11 @@
 				$("#j_ext_name").val(ui.item.value);
 				$("#j_ext_org_name_id").val(ui.item.org_id);
 				$("#j_ext_team_org").val(ui.item.org_name);
-				// $("#j_external_team_add").removeAttr('disabled');
 			},
 			change: function(event, ui){
 				event.preventDefault();
 				if(ui.item == null){
 					$("#j_ext_team_org").val("");
-					// $('#j_external_team_add').attr("disabled", "DISABLED");
 					$('#j_external_team_add').prop("disabled", true);
 					alert("You must add this person to the master address book before assigning them to a team.");
 				}else{
@@ -28,7 +34,6 @@
 					$("#j_ext_name").val(ui.item.value);
 					$("#j_ext_org_name_id").val(ui.item.org_id);
 					$("#j_ext_team_org").val(ui.item.org_name);
-					// $("j_external_team_add").removeAttr('disabled');
 				}
 			}
 		});
@@ -282,7 +287,7 @@
 	 * BEGIN DISCUSSION
 	 */
 	
-	//Add new discussion
+		//Add new discussion
 		$('#j_add_discussion_form').on('submit', function(e){
 			e.preventDefault();
 			$.ajax({
@@ -305,6 +310,89 @@
 	            	$('#discussion_entries').html(data.updateInfo);
 				}
 			})
+		});
+
+		//Load discussion editor in modal
+		$(document).on("click", ".editDiscussion", function(e){
+			e.preventDefault();
+			var loadId = $(this).attr('value');
+			$.ajax({
+				url: 'editorDiscussion.php',
+				method: 'POST',
+				data: '&load_id=' + loadId,
+				dataType: 'json'
+			})
+			.done(function(data){
+				if(!data.success){					
+					$('#error').html(data.message + data.info);
+					$("#error").show();
+				}else{
+					// $('#edit_disc_info').html(data.did);
+					$('#j_edit_discussion_form').append(data.did);
+					$('#j_edit_discussion').modal('show');
+					var editor = tinymce.get('j_edit_disc');
+					editor.setProgressState(1);
+					window.setTimeout(function(){
+						editor.setProgressState(0);
+						editor.setContent(data.updateInfo);
+					}, 1500);
+					
+					
+					
+				}
+			})
+		});
+
+		//Update discussion record
+		$('#j_edit_discussion_form').on('submit', function(e){
+			e.preventDefault();
+			$.ajax({
+				url: 'editDiscussion.php',
+				method: 'POST',
+				data: $('#j_edit_discussion_form').serialize(),
+				dataType: 'json'
+			})
+			.done(function(data){
+				if(!data.success){
+					$('#error').html(data.message + data.info);
+					$("#error").show();
+				}else{
+					$('#j_edit_discussion').modal('hide');
+					$('#j_edit_discussion_form')[0].reset(); 
+					$('#success').html(data.message);
+					$("#success").show().fadeTo(5000,500).slideUp(500, function(){
+	                	$('#success').hide();
+	            	});
+	            	$('#discussion_entries').html(data.updateInfo);
+				}
+			})
+		});
+
+		//Delete external team record
+		$(document).on("click", ".deleteDiscussion", function(e){
+			e.preventDefault();
+			var did = $(this).attr('value');
+			var jid = $(this).attr('jid');
+			if(confirm("Are you sure you want to delete this external discussion entry?")){
+				$.ajax({
+					url: "deleteDiscussion.php",
+					method: "POST",
+					data: '&d_id=' + did + '&j_id=' + jid,
+					dataType: "json"
+				})
+				.done(function(data){
+					if(!data.success){
+						$('#error').html(data.message + data.info);
+						$("#error").show();
+					}else{
+						$('#success').html(data.message);
+						$("#success").show().fadeTo(5000,500).slideUp(500, function(){
+		                	$('#success').hide();
+		            	});
+		            	$('#discussion_entries').html(data.updateInfo);
+					}
+				})
+			}
 		});
 
 

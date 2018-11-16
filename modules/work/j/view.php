@@ -195,7 +195,7 @@
 										echo '
 										<td width="10%" class="align-middle"">
 											<button class="deleteMilestone btn btn-danger btn-xs" name="mid" value="'.$row['UID'].'" jid="'.$jid.'">
-												<i class="fas fa-ban"></i>
+												<i class="fas fa-trash-alt"></i>
 											</button>
 										</td>';
 									}
@@ -257,6 +257,24 @@
 		      			</div>
 					</div>
 
+				<!-- SCOPE --->
+					<div class="tab-pane" id="actions" role="tabpanel">
+						<div class="col pt-2 pb-2">
+							<div class="row pt-2 pb-2">
+								<div class="col">
+									<h5>Action Item Log</h5>
+								</div>
+								<div class="col-12 col-md-auto">
+									<?php
+										if($level <= 1){
+											echo '<a href="#" name="add_discussion" id="add_discussion" data-toggle="modal" data-target="#j_add_action" class="btn btn-success">Add</a>';
+										}
+									?>
+								</div>
+							</div>
+						</div>
+					</div>
+
 				<!-- INTERNAL TEAM -->
 					<div class="tab-pane" id="team" role="tabpanel">
 						<div class="row">
@@ -305,7 +323,7 @@
 				              						}
 				              					echo '<td class="align-middle" align="right">';
 				              						if($level <= 1){
-				              							echo '<button type="button" class="deleteInternalTeam btn btn-danger btn-xs" value='.$row['ID'].' jid="'.$jid.'"><i class="fas fa-ban"></i></button>';
+				              							echo '<button type="button" class="deleteInternalTeam btn btn-danger btn-xs" value='.$row['ID'].' jid="'.$jid.'"><i class="fas fa-trash-alt"></i></button>';
 					              					}
 						              			echo '			
 					              						</td>
@@ -368,7 +386,7 @@
 
 			              						if($level <= 1){
 			              							
-			              							echo '<button type="button"  class="deleteExternalTeam btn btn-danger btn-xs" value='.$row['ID'].' jid="'.$jid.'"><i class="fas fa-ban"></i></button>';
+			              							echo '<button type="button"  class="deleteExternalTeam btn btn-danger btn-xs" value='.$row['ID'].' jid="'.$jid.'"><i class="fas fa-trash-alt"></i></button>';
 				              					}
 					              			echo '			
 				              						</td>
@@ -437,7 +455,7 @@
 			      											<td>'.$row['work_j_discussions_entry'].'</td>';
 			      									if($level <= 1){
 			      										echo '<td class="align-middle" align="right">
-																<button type="button" class="editDiscussion btn btn-info btn-xs" value='.$row['work_j_discussions_id'].'>
+																<button type="button" class="editDiscussion btn btn-info btn-xs" value='.$row['work_j_discussions_id'].' jid='.$jid.'">
 								<i class="fas fa-edit"></i>
 							</button> 
 
@@ -461,13 +479,14 @@
 			      				</div>
 			      			</div>
 						</div>
-
-					
-
-
+					</div>
+				
 
 
 				</div>
+
+		<!-- ^^^END TABS^^^ -->
+
 			</div>
 		</div>
 	</div>
@@ -476,7 +495,7 @@
 
 <script type="text/javascript" src="inc.j.work.js"></script>
 
-<!-- MODALS -->
+<!-- ^^^END PAGE / BEGIN MODALS^^^ -->
 
 	<!-- BASE INFO MODAL -->
     <div id="j_edit" class="modal fade">
@@ -688,7 +707,84 @@
         	</div>  
       	</div>  
     </div>
+
+    <div id="j_edit_discussion" class="modal fade">
+    	<div class="modal-dialog modal-lg">  
+           <div class="modal-content">  
+                <div class="modal-header">  
+                     <h4 class="modal-title">Edit Project Discussion</h4>
+                     <a href="#" class="close" data-dismiss="modal">&times;</a>
+                </div>  
+
+                <div class="modal-body">  
+                    <form method="post" id="j_edit_discussion_form" data-toggle="validator" role="form">
+						
+	                      	<textarea type="text" name="j_edit_disc" id="j_edit_disc" class="tinymce form-control" required />
+
+	                      	</textarea>
+	                      	<br />
+
+                      	<input type="hidden" name="j_id" id="j_id" value="<?php echo $jid; ?>"/>
+                      	<input type="hidden" name="p_id" id="p_id" value="<?php echo $pid; ?>"/>
+
+                      	<input type="submit" name="j_edit_disc_btn" id="j_edit_disc_btn" value="Update Discussion" class="btn btn-success" />
+
+                     </form>  
+                </div>  
+        	</div>  
+      	</div>  
+    </div>
     <!-- END DISCUSSION MODAL -->
+
+    <!-- ADD ACTION ITEM MODAL -->
+	<div id="j_add_action" class="modal fade">
+    	<div class="modal-dialog">  
+           <div class="modal-content">  
+                <div class="modal-header">  
+                     <h4 class="modal-title">Add Action Item</h4>
+                     <a href="#" class="close" data-dismiss="modal">&times;</a>
+                </div>  
+
+                <div class="modal-body">  
+                    <form method="post" id="j_add_action_form" data-toggle="validator" role="form">
+
+                 		<label>Assigned To:</label>
+						<select name="j_action_assignedto" id="j_action_assignedto" class="form-control">
+                  			<?php echo $helper->populateEmployeeNames(); ?>
+                  		</select>
+                      	<br />
+
+                      	<label>Date Assigned</label>  
+                      	<input type="text" name="j_action_date_assigned" id="j_action_date_assigned" class="form-control actionDate"  />  
+                      	<div class="help-block with-errors"></div>
+                      	<br />
+
+                      	<label>Date Due</label>  
+                      	<input type="text" name="j_action_date_due" id="j_action_date_due" class="form-control actionDate"  />  
+                      	<div class="help-block with-errors"></div>
+                      	<br />
+
+                      	<label>Task</label>  
+                      	<input type="text" name="j_action_task" id="j_action_task" class="form-control"  />  
+                      	<div class="help-block with-errors"></div>
+                      	<br />
+
+                      	<label>Comments</label>  
+                      	<input type="text" name="j_action_comments" id="j_action_comments" class="form-control"  />  
+                      	<div class="help-block with-errors"></div>
+                      	<br />
+
+                      	<input type="hidden" name="j_id" id="j_id" value="<?php echo $jid; ?>"/>
+                      	<input type="hidden" name="p_id" id="p_id" value="<?php echo $pid; ?>"/>  
+
+                      	<input type="submit" name="j_ms_add" id="j_ms_add" value="Add Milestone" class="btn btn-success" />
+
+                     </form>  
+                </div>  
+        	</div>  
+      	</div>  
+    </div>
+    <!-- END ADD ACTION ITEM MODAL -->
 
 
 <?php 

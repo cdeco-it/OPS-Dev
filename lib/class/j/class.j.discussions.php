@@ -147,16 +147,19 @@
 		}
 
 		public function updateEntry(){
+
 			$this->startTransaction();
+
 			try{
 				$query = "UPDATE work_j_discussions SET
 					work_j_discussions_entry = :work_j_discussions_entry,
 					work_j_discussions_updated = NOW()
-					WHERE work_j_discussion_id = :id";
+					WHERE work_j_discussions_id = :id";
 
 				$this->set($query);
 				$this->bindParam(':work_j_discussions_entry', $this->getDiscussion());
 				$this->bindParam(':id', $this->getFetchId());
+				
 				$result = $this->execute();
 				if($result){
 					$this->endTransaction();
