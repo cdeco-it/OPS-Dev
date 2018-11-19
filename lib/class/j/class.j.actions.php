@@ -13,8 +13,9 @@
 		
 		private $assignedTo;
 		private $assignedToName;
+		private $assignedDate;
 		private $dueDate;
-		private $actualDate;
+		private $dateComplete;
 		private $task;
 		private $comments;
 		private $isComplete;
@@ -66,8 +67,8 @@
 			return($this->dueDate);
 		}
 
-		public function getActualDate(){
-			return($this->actualDate);
+		public function getCompleteDate(){
+			return($this->dateComplete);
 		}
 
 		public function getTask(){
@@ -80,6 +81,10 @@
 
 		public function getIsComplete(){
 			return($this->isComplete);
+		}
+
+		public function getDateAssigned(){
+			return($this->assignedDate);
 		}
 
 
@@ -102,6 +107,10 @@
 
 		public function setWorkID($value = NULL){
 			$this->work_id = $value;
+		}
+
+		public function setAssignedDate($value = NULL){
+			$this->assignedDate = $value;
 		}
 
 		public function setAssignedTo($value = NULL){
@@ -137,7 +146,7 @@
 
 		public function getEntry($id){
 			if(!empty($id) && !is_null($id)){
-				$query = "SELECT * FROM work_j_consultants WHERE work_j_consultants.work_j_consultants_id = :id";
+				$query = "SELECT * FROM work_j_actions WHERE work_j_actions.work_j_actions_id = :id";
 				$this->set($query);
 				$this->bindParam(":id", $id);
 				$result = $this->returnSingle();
@@ -154,20 +163,30 @@
 		public function addEntry(){
 			$this->startTransaction();
 			try{
-				$query = "INSERT INTO work_j_consultants (
-							work_j_consultants_id,
+				$query = "INSERT INTO work_j_actions (
+							work_j_actions_id,
 							work_j_id,
 							work_id,
-							addr_id,
-							work_j_consultants_role,
-							work_j_team_created,
-							work_j_team_updated)
+							work_j_actions_assignedTo,
+							work_j_actions_assigned,
+							work_j_actions_due,
+							work_j_actions_date_completed,
+							work_j_actions_task,
+							work_j_actions_comments,
+							work_j_actions_is_complete,
+							work_j_actions_created,
+							work_j_actions_updated)
 						VALUES (
 							NULL,
 							:work_j_id,
 							:work_id,
-							:addr_id,
-							:work_j_consultants_role,
+							:assignedTo,
+							:dateAssigned,
+							:dateDue,
+							:dateCompleted,
+							:task,
+							:comments,
+							NULL,
 							NOW(),
 							NOW()
 						)";
@@ -175,8 +194,13 @@
 				$this->set($query);
 				$this->bindParam(':work_j_id', $this->getWorkJID());
 				$this->bindParam(':work_id', $this->getWorkID());
-				$this->bindParam(':addr_id', $this->getAddrId());
-				$this->bindParam(':work_j_consultants_role', $this->getConsultantRole());
+				$this->bindParam(':assignedTo', $this->getAssignedTo());
+				$this->bindParam(':dateAssigned', $this->getDateAssigned());
+				$this->bindParam(':dateDue', $this->getDueDate());
+				$this->bindParam(':dateCompleted', $this->getCompleteDate());
+				$this->bindParam(':task', $this->getTask());
+				$this->bindParam(':comments', $this->getComments());
+
 				$result = $this->execute();
 
 				if($result){
@@ -200,63 +224,63 @@
 			}
 		}
 
-		public function updateEntry(){
-			$this->startTransaction();
-			try{
-				$query = "UPDATE work_j_consultants SET
-					work_j_consultants_role = :role
-					WHERE work_j_consultants_id = :id";
+		// public function updateEntry(){
+		// 	$this->startTransaction();
+		// 	try{
+		// 		$query = "UPDATE work_j_consultants SET
+		// 			work_j_consultants_role = :role
+		// 			WHERE work_j_consultants_id = :id";
 
-				$this->set($query);
-				$this->bindParam(':role', $this->getConsultantRole());
-				$this->bindParam(':id', $this->getFetchId());
-				$result = $this->execute();
-				if($result){
-					$this->endTransaction();
-					$this->retData['success'] = true;
-					$this->retData['message'] = SUCCESS;
-					return($this->retData);
-				}else{
-					$this->cancelTransaction();
-					$this->retData['success'] = FALSE;
-					$this->retData['message'] = FAIL_TRANSACTION.' - '.$this->getError();
-					$this->retData['updateInfo'] = $this->getError();
-					return($this->retData);
-				}
-			}catch(Exception $e){
-				$this->cancelTransaction();
-				$this->retData['success'] = false;
-				$this->retData['message'] = FAIL_TRANSACTION.' '.$e->getMessage();
-				return($this->retData);
-			}
-		}
+		// 		$this->set($query);
+		// 		$this->bindParam(':role', $this->getConsultantRole());
+		// 		$this->bindParam(':id', $this->getFetchId());
+		// 		$result = $this->execute();
+		// 		if($result){
+		// 			$this->endTransaction();
+		// 			$this->retData['success'] = true;
+		// 			$this->retData['message'] = SUCCESS;
+		// 			return($this->retData);
+		// 		}else{
+		// 			$this->cancelTransaction();
+		// 			$this->retData['success'] = FALSE;
+		// 			$this->retData['message'] = FAIL_TRANSACTION.' - '.$this->getError();
+		// 			$this->retData['updateInfo'] = $this->getError();
+		// 			return($this->retData);
+		// 		}
+		// 	}catch(Exception $e){
+		// 		$this->cancelTransaction();
+		// 		$this->retData['success'] = false;
+		// 		$this->retData['message'] = FAIL_TRANSACTION.' '.$e->getMessage();
+		// 		return($this->retData);
+		// 	}
+		// }
 
-		public function deleteEntry($id){
-			$this->startTransaction();
-			try{
-				$query = "DELETE FROM work_j_consultants WHERE work_j_consultants_id =:id";
-				$this->set($query);
-				$this->bindParam(":id", $id);
-				$result = $this->execute();
-				if($result){
-					$this->endTransaction();
-					$this->retData['success'] = TRUE;
-					$this->retData['message'] = SUCCESS;
-					return($this->retData);
-				}else{
-					$this->cancelTransaction();
-					$this->retData['success'] = FALSE;
-					$this->retData['message'] = FAIL_TRANSACTION.' - '.$this->getError();
-					$this->retData['updateInfo'] = $this->getError();
-					return($this->retData);
-				}
-			}catch(Exception $e){
-				$this->cancelTransaction();
-				$this->retData['success'] = false;
-				$this->retData['message'] = CRITICAL_ERROR.' '.$e->getMessage();
-				return($this->retData);
-			}
-		}
+		// public function deleteEntry($id){
+		// 	$this->startTransaction();
+		// 	try{
+		// 		$query = "DELETE FROM work_j_consultants WHERE work_j_consultants_id =:id";
+		// 		$this->set($query);
+		// 		$this->bindParam(":id", $id);
+		// 		$result = $this->execute();
+		// 		if($result){
+		// 			$this->endTransaction();
+		// 			$this->retData['success'] = TRUE;
+		// 			$this->retData['message'] = SUCCESS;
+		// 			return($this->retData);
+		// 		}else{
+		// 			$this->cancelTransaction();
+		// 			$this->retData['success'] = FALSE;
+		// 			$this->retData['message'] = FAIL_TRANSACTION.' - '.$this->getError();
+		// 			$this->retData['updateInfo'] = $this->getError();
+		// 			return($this->retData);
+		// 		}
+		// 	}catch(Exception $e){
+		// 		$this->cancelTransaction();
+		// 		$this->retData['success'] = false;
+		// 		$this->retData['message'] = CRITICAL_ERROR.' '.$e->getMessage();
+		// 		return($this->retData);
+		// 	}
+		// }
 
 		public function getActions($value = NULL){
 			if(!empty($value) && !is_null($value)){

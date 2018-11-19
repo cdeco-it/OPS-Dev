@@ -43,7 +43,7 @@
 	$(document).ready(function(){
 
 /**
- * START BASE INFOR EDIT
+ * START BASE INFORMATION EDIT
  */
 		//Deal with editing of the base J info
 		$('#j_edit_form').on("submit", function(e){
@@ -394,6 +394,39 @@
 				})
 			}
 		});
+
+
+	/**
+	 * END DISCUSION
+	 * BEGIN ACTIONS
+	 */
+	
+	//Add new discussion
+		$('#j_add_action_form').on('submit', function(e){
+			e.preventDefault();
+			$.ajax({
+				url: 'addAction.php',
+				method: 'POST',
+				data: $('#j_add_action_form').serialize(),
+				dataType: 'json'
+			})
+			.done(function(data){
+				if(!data.success){
+					$('#error').html(data.message + data.info);
+					$("#error").show();
+				}else{
+					$('#j_add_action').modal('hide');
+					$('#j_add_action_form')[0].reset(); 
+					$('#success').html(data.message);
+					$("#success").show().fadeTo(5000,500).slideUp(500, function(){
+	                	$('#success').hide();
+	            	});
+	            	$('#action_items').html(data.updateInfo);
+				}
+			})
+		});
+	
+
 
 
 	});

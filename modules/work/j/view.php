@@ -272,6 +272,42 @@
 									?>
 								</div>
 							</div>
+							<div class="action_items">
+								<div class="table-responsive">
+			        				<table class="table table-sm table-hover">
+			           					<thead>
+						               		<tr>
+							                  	<th width="15%">To</th>
+							                   	<th width="5%">Assigned</th>
+							                   	<th width="5%">Due</th>
+							                   	<th width="30%">Task</th>
+							                   	<th width="30%">Comments</th>
+							                   	<th width="5%">Done</th>
+							                   	<th width="10%">Actions</th>
+							                </tr>
+										</thead>
+										<tbody>
+												<tr>
+													<td>Kannan Rengarajan</td>
+													<td>01-01-2019</td>
+													<td>01-05-2019</td>
+													<td>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Quisque tincidunt lacus non tincidunt gravida. Nam sollicitudin velit velit, ac pellentesque nunc aliquet sollicitudin.</td>
+													<td>None.</td>
+													<td><i class="fas fa-check"></i></td>
+													<td>
+														<button type="button" class="editAction btn btn-info btn-xs" value='.$row['work_j_discussions_id'].' jid='.$jid.'">
+														<i class="fas fa-edit"></i>
+														</button> 
+														
+														<button type="button" class="deleteAction btn btn-danger btn-xs" value='.$row['ID'].' jid="'.$jid.'"><i class="fas fa-trash-alt"></i></button>
+													
+
+													</td>
+												</tr>
+										</tbody>
+									</table>
+								</div>
+							</div>
 						</div>
 					</div>
 
