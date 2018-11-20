@@ -10,40 +10,63 @@ ob_start();
 if(!empty($_POST) || $level > 1){
 
 	//Set the post results
-	$assignedTo = $_POST['j_add_action_assignedto'];
-	$dateAssigned = $_POST['j_add_action_date_assigned'];
-	$dateDue = $_POST['j_add_action_date_due'];
-	$task = $_POST['j_add_action_task'];
-	$comments = $_POST['j_add_action_comments'];
+
 	$jid = $_POST['j_id'];
 	$pid = $_POST['p_id'];
+	$aid = $_POST['a_id'];
+	$assignedTo = $_POST['j_edit_action_assignedto'];
 
-	
+	$dateAssigned = $_POST['j_edit_action_date_assigned'];
+	// error_log("DA PRE=".$dateAssigned);
+
+	$dateDue = $_POST['j_edit_action_date_due'];
+	// error_log("DD PRE=".$dateDue);
+
+	$dateComplete = $_POST['j_edit_action_date_complete'];
+	// error_log("DC PRE=".$dateComplete);
+
+	$task = $_POST['j_edit_action_task'];
+	$comments = $_POST['j_edit_action_comments'];
+
 	//Create a new class
 	$a = new j_WorkActions();
 	$helper = new Helper();
 
-	//Set the values
-	$a->setWorkJID($jid);
-	$a->setWorkID($pid);
+	//Load existing record
+	$a->getEntry($aid);
+
+	//Update changes
 	$a->setAssignedTo($assignedTo);
 	$a->setDateAssigned($helper->date_toSQL($dateAssigned));
+	// error_log("DA POST=".$a->getDateAssigned());
 	$a->setDueDate($helper->date_toSQL($dateDue));
+	// error_log("DD POST=".$a->getDueDate());
 	$a->setTask($task);
 	$a->setComments($comments);
 
-	//Add the entry
-	$result = $a->addEntry();
+	if(!is_null($dateComplete) && !empty($dateComplete)){
+		$a->setDateComplete($helper->date_toSQL($dateComplete));
+		// error_log("DC POST=".$a->getDateComplete());
+		$a->setIsComplete(1);
+	}else{
+		$a->setIsComplete(NULL);
+		$a->setDateComplete(NULL);
+	}
+
+	//Update the entry
+	$result = $a->updateEntry();
+
 	if($result['success']){
 		if($result['message'] === SUCCESS){
 			//If we get success, let's process the new addition and add it to the ret data
+			error_log("SUCCESS...now update tables");
 			$x = $a->getActions($jid);
 			if($x['success']){
 				if($x['message'] === SUCCESS){
 					$output = '<div class="table-responsive">
-									<table class="table table-sm table-hover">
-										<thead>
-											<tr>
+			        				<table class="table table-sm table-hover">
+			           					<thead>
+						               		<tr>
 							                  	<th width="15%">To</th>
 							                   	<th width="5%">Assigned</th>
 							                   	<th width="5%">Due</th>
@@ -58,7 +81,7 @@ if(!empty($_POST) || $level > 1){
 		              		</thead>
 		              	<tbody>';
 
-					// $i = count($x['updateInfo']);
+					$i = count($x['updateInfo']);
 					foreach($x['updateInfo'] as $row){
 						$output .= '<tr>
 										<td>'.$row['EMP_NAME'].'</td>
@@ -70,8 +93,7 @@ if(!empty($_POST) || $level > 1){
 											if($row['COMPLETE'] == 1){
 												$output .= '<i class="fas fa-check"></i>';
 											}
-						$output .=		'</td>';
-
+						$output .= '</td>';
 						if($level <= 1){
 							$output .= '
 							<td class="align-middle" align="right">
@@ -79,12 +101,14 @@ if(!empty($_POST) || $level > 1){
 									<i class="fas fa-edit"></i>
 								</button> 
 
-								<button type="button" class="deleteAction btn btn-danger btn-xs" value='.$row['ACT_ID'].' jid="'.$jid.'"><i class="fas fa-trash-alt"></i></i></button>
+								<button type="button" class="deleteAction btn btn-danger btn-xs" value='.$row['ACT_ID'].' jid="'.$jid.'">
+								<i class="fas fa-trash-alt"></i>
+								</button>
 							</td>';
 						}
 
 						$output .= '</tr>';
-						// $i--;
+						$i--;
 					}
 
 					$output .= '</tbody>
@@ -115,7 +139,7 @@ if(!empty($_POST) || $level > 1){
 		}
 	}else{
 		ob_end_clean();
-		unset($a);
+		unset($d);
 		echo json_encode($result);
 		die();
 	}

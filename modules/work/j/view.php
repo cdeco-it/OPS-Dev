@@ -272,7 +272,12 @@
 									?>
 								</div>
 							</div>
-							<div class="action_items">
+							<div id="action_items">
+								<?php
+									$result = $jA->getActions($jid);
+									if($result['success']){
+										if($result['message'] === SUCCESS){
+											echo '
 								<div class="table-responsive">
 			        				<table class="table table-sm table-hover">
 			           					<thead>
@@ -282,31 +287,58 @@
 							                   	<th width="5%">Due</th>
 							                   	<th width="30%">Task</th>
 							                   	<th width="30%">Comments</th>
-							                   	<th width="5%">Done</th>
-							                   	<th width="10%">Actions</th>
-							                </tr>
-										</thead>
-										<tbody>
-												<tr>
-													<td>Kannan Rengarajan</td>
-													<td>01-01-2019</td>
-													<td>01-05-2019</td>
-													<td>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Quisque tincidunt lacus non tincidunt gravida. Nam sollicitudin velit velit, ac pellentesque nunc aliquet sollicitudin.</td>
-													<td>None.</td>
-													<td><i class="fas fa-check"></i></td>
-													<td>
-														<button type="button" class="editAction btn btn-info btn-xs" value='.$row['work_j_discussions_id'].' jid='.$jid.'">
-														<i class="fas fa-edit"></i>
-														</button> 
-														
-														<button type="button" class="deleteAction btn btn-danger btn-xs" value='.$row['ID'].' jid="'.$jid.'"><i class="fas fa-trash-alt"></i></button>
-													
+							                   	<th width="5%">Done</th>';
+							        		if($level <= 1){
+							        			echo '<th width="10%"></th>';
+							        		}
 
-													</td>
-												</tr>
-										</tbody>
-									</table>
-								</div>
+							        		echo'
+							        		</tr>
+		              					</thead>
+		              				<tbody>';
+			              					foreach($result['updateInfo'] as $row){
+			              						echo '
+			              						<tr>
+													<td>'.$row['EMP_NAME'].'</td>
+													<td>'.$row['DATE_ASSIGNED'].'</td>
+													<td title="'.$row['REMAIN'].' days remain">'.$row['DATE_DUE'].'</td>
+													<td>'.$row['TASK'].'</td>
+													<td>'.$row['COMMENTS'].'</td>
+													<td>';
+														if($row['COMPLETE'] == 1){
+															echo '<i class="fas fa-check"></i>';
+														}
+												echo '
+													</td>';
+												if($level <= 1){
+													echo '
+													<td class="align-middle" align="right">
+														<button type="button" class="editAction btn btn-info btn-xs" value='.$row['ACT_ID'].'>
+															<i class="fas fa-edit"></i>
+														</button> 
+
+														<button type="button" class="deleteAction btn btn-danger btn-xs" value='.$row['ACT_ID'].' jid="'.$jid.'">
+														<i class="fas fa-trash-alt"></i>
+														</button>
+													</td>';	
+												}
+
+												echo '</tr>';
+			              					}
+
+			              					echo '</tbody>
+			              					</table>
+			              				</div>';
+
+										}else{
+											echo $result['message'];
+										}
+
+									}else{
+										echo $result['message'];
+									}
+								?>
+								
 							</div>
 						</div>
 					</div>
@@ -785,29 +817,33 @@
                     <form method="post" id="j_add_action_form" data-toggle="validator" role="form">
 
                  		<label>Assigned To:</label>
-						<select name="j_action_assignedto" id="j_action_assignedto" class="form-control">
+						<select name="j_add_action_assignedto" id="j_add_action_assignedto" class="form-control">
                   			<?php echo $helper->populateEmployeeNames(); ?>
                   		</select>
                       	<br />
 
                       	<label>Date Assigned</label>  
-                      	<input type="text" name="j_action_date_assigned" id="j_action_date_assigned" class="form-control actionDate"  />  
+                      	<input type="text" name="j_add_action_date_assigned" id="j_add_action_date_assigned" class="form-control actionDate"  />  
                       	<div class="help-block with-errors"></div>
                       	<br />
 
                       	<label>Date Due</label>  
-                      	<input type="text" name="j_action_date_due" id="j_action_date_due" class="form-control actionDate"  />  
+                      	<input type="text" name="j_add_action_date_due" id="j_add_action_date_due" class="form-control actionDate"  />  
                       	<div class="help-block with-errors"></div>
                       	<br />
 
-                      	<label>Task</label>  
-                      	<input type="text" name="j_action_task" id="j_action_task" class="form-control"  />  
-                      	<div class="help-block with-errors"></div>
+                      	<label>Task</label>
+                      	<textarea class="tinymce_mini form-control" name="j_add_action_task" id="j_add_action_task">
+                      	</textarea>
+                      <!--	<input type="text" name="j_action_task" id="j_action_task" class="form-control"  />  
+                      	<div class="help-block with-errors"></div>-->
                       	<br />
 
-                      	<label>Comments</label>  
-                      	<input type="text" name="j_action_comments" id="j_action_comments" class="form-control"  />  
-                      	<div class="help-block with-errors"></div>
+                      	<label>Comments</label>
+                      	<textarea class="tinymce_mini form-control" name="j_add_action_comments" id="j_add_action_comments">
+                      	</textarea>
+                      	<!-- <input type="text" name="j_action_comments" id="j_action_comments" class="form-control"  />  
+                      	<div class="help-block with-errors"></div> -->
                       	<br />
 
                       	<input type="hidden" name="j_id" id="j_id" value="<?php echo $jid; ?>"/>
@@ -815,6 +851,58 @@
                       	<input type="submit" name="j_add_action_btn" id="j_add_action_btn" value="Add Action Item" class="btn btn-success" />
 
                      </form>  
+                </div>  
+        	</div>  
+      	</div>  
+    </div>
+
+    <div id="j_edit_action" class="modal fade">
+    	<div class="modal-dialog">  
+           <div class="modal-content">  
+                <div class="modal-header">  
+                     <h4 class="modal-title">Edit Action Item</h4>
+                     <a href="#" class="close" data-dismiss="modal">&times;</a>
+                </div>  
+
+                <div class="modal-body">  
+                     <form method="post" id="j_edit_action_form" data-toggle="validator" role="form">
+
+                 		<label>Assigned To:</label>
+						<select name="j_edit_action_assignedto" id="j_edit_action_assignedto" class="form-control">
+                  		</select>
+                      	<br />
+
+                      	<label>Date Assigned</label>  
+                      	<input type="text" name="j_edit_action_date_assigned" id="j_edit_action_date_assigned" class="form-control actionDate"  />  
+                      	<div class="help-block with-errors"></div>
+                      	<br />
+
+                      	<label>Date Due</label>  
+                      	<input type="text" name="j_edit_action_date_due" id="j_edit_action_date_due" class="form-control actionDate"  />  
+                      	<div class="help-block with-errors"></div>
+                      	<br />
+
+                      	<label>Date Complete</label>  
+                      	<input type="text" name="j_edit_action_date_complete" id="j_edit_action_date_complete" class="form-control actionDate"  />  
+                      	<div class="help-block with-errors"></div>
+                      	<br />
+
+                      	<label>Task</label>
+                      	<textarea class="tinymce_mini form-control" name="j_edit_action_task" id="j_edit_action_task">
+                      	</textarea>
+                      	<br />
+
+                      	<label>Comments</label>
+                      	<textarea class="tinymce_mini form-control" name="j_edit_action_comments" id="j_edit_action_comments">
+                      	</textarea>
+
+                      	<br />
+						<input type="hidden" name="a_id" id="a_id">
+                      	<input type="hidden" name="j_id" id="j_id" value="<?php echo $jid; ?>"/>
+                      	<input type="hidden" name="p_id" id="p_id" value="<?php echo $pid; ?>"/>  
+                      	<input type="submit" name="j_edit_action_btn" id="j_edit_action_btn" value="Update Action Item" class="btn btn-success" />
+
+                     </form>   
                 </div>  
         	</div>  
       	</div>  

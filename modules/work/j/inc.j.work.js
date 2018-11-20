@@ -368,7 +368,7 @@
 			})
 		});
 
-		//Delete external team record
+		//Delete discussion record
 		$(document).on("click", ".deleteDiscussion", function(e){
 			e.preventDefault();
 			var did = $(this).attr('value');
@@ -401,7 +401,7 @@
 	 * BEGIN ACTIONS
 	 */
 	
-	//Add new discussion
+	//Add new actions
 		$('#j_add_action_form').on('submit', function(e){
 			e.preventDefault();
 			$.ajax({
@@ -425,8 +425,100 @@
 				}
 			})
 		});
-	
 
+	//Load action editor in modal
+		$(document).on("click", ".editAction", function(e){
+			e.preventDefault();
+			var loadId = $(this).attr('value');
+			$.ajax({
+				url: 'editorAction.php',
+				method: 'POST',
+				data: '&load_id=' + loadId,
+				dataType: 'json'
+			})
+			.done(function(data){
+				if(!data.success){					
+					$('#error').html(data.message + data.info);
+					$("#error").show();
+				}else{
+
+					//Update date selectors
+					$('#j_edit_action_date_assigned').val(data.updateInfo.dateAssigned);
+					$('#j_edit_action_date_due').val(data.updateInfo.dueDate);
+					$('#j_edit_action_date_complete').val(data.updateInfo.dateComplete);
+
+					//Load emnployee selector
+					$.ajax({
+						url: '/lib/assistants/asst.selectemployee.php',
+						method: 'POST',
+						dataType: 'json',
+						success: function(response){
+							$('#j_edit_action_assignedto').empty();
+							var len = response.length;
+							for(var i = 0; i < len; i++){
+								var id = response[i]['id'];
+								var name = response[i]['name'];
+								if(id == data.updateInfo.assignedTo){
+									var opt = '<option value="'+id+'" selected="SELECTED">'+name+'</option>';
+								}else{
+									var opt = '<option value="'+id+'">'+name+'</option>';
+								}
+								
+								$('#j_edit_action_assignedto').append(opt);
+							}
+						},
+						error: function(response){
+							alert("ERROR");
+						}
+					});
+
+					//Update hidden aid value
+					$('#a_id').val(data.updateInfo.id);
+					
+					//Load content to task
+					var task = tinymce.get('j_edit_action_task');
+					task.setProgressState(1);
+					window.setTimeout(function(){
+						task.setProgressState(0);
+						task.setContent(data.updateInfo.task);
+					}, 500);
+
+					//Load content to comment
+					var comment = tinymce.get('j_edit_action_comments');
+					comment.setProgressState(1);
+					window.setTimeout(function(){
+						comment.setProgressState(0);
+						comment.setContent(data.updateInfo.comments);
+					}, 500);
+
+					$('#j_edit_action').modal('show');
+				}
+			})
+		});
+	//Update action record
+		$('#j_edit_action_form').on('submit', function(e){
+			e.preventDefault();
+			$.ajax({
+				url: 'editAction.php',
+				method: 'POST',
+				data: $('#j_edit_action_form').serialize(),
+				dataType: 'json'
+			})
+			.done(function(data){
+				if(!data.success){
+					$('#error').html(data.message + data.info);
+					$("#error").show();
+				}else{
+					$('#j_edit_action').modal('hide');
+					$('#j_edit_action_form')[0].reset(); 
+					$('#success').html(data.message);
+					$("#success").show().fadeTo(5000,500).slideUp(500, function(){
+	                	$('#success').hide();
+	            	});
+	            	$('#action_items').html(data.updateInfo);
+				}
+			})
+		});
 
 
 	});
@@ -442,6 +534,20 @@
 		plugins: 'wordcount textcolor colorpicker' 
 	});
 
+	tinymce.init({ 
+		// selector:'#j_sow',
+		selector: '.tinymce_mini',
+		height: 100,
+		branding: false,
+		menubar: false,
+		toolbar: 'bold italic underline strikethrough forecolor backcolor ',
+		plugins: 'textcolor colorpicker' 
+	});
+
 	function resetIntTeamForm(){
 		("div.intTeamAddOn").remove();
+	}
+
+	function populateEmployee(){
+
 	}

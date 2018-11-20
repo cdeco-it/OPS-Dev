@@ -4,6 +4,7 @@
 	require_once($_SERVER["DOCUMENT_ROOT"].'/lib/includes/inc.messages.php');
 
 
+
 	/**
 	 * Class handles j Work Actions
 	 * Writte: 6/1/2018
@@ -67,7 +68,11 @@
 			return($this->dueDate);
 		}
 
-		public function getCompleteDate(){
+		public function getDateAssigned(){
+			return($this->assignedDate);
+		}
+
+		public function getDateComplete(){
 			return($this->dateComplete);
 		}
 
@@ -83,10 +88,6 @@
 			return($this->isComplete);
 		}
 
-		public function getDateAssigned(){
-			return($this->assignedDate);
-		}
-
 
 /***** SETTER METHODS *****/
 		public function setFetchId($value = NULL){
@@ -97,7 +98,7 @@
 			$this->dateCreated = $value;
 		}
 
-		public function setDateUpdated($value = NULL){
+		public function setDateModified($value = NULL){
 			$this->dateModified = $value;
 		}
 
@@ -107,10 +108,6 @@
 
 		public function setWorkID($value = NULL){
 			$this->work_id = $value;
-		}
-
-		public function setAssignedDate($value = NULL){
-			$this->assignedDate = $value;
 		}
 
 		public function setAssignedTo($value = NULL){
@@ -125,8 +122,12 @@
 			$this->dueDate = $value;
 		}
 
-		public function setActualDate($value = NULL){
-			$this->actualDate = $value;
+		public function setDateAssigned($value = NULL){
+			$this->assignedDate = $value;
+		}
+
+		public function setDateComplete($value = NULL){
+			$this->dateComplete = $value;
 		}
 
 		public function setTask($value = NULL){
@@ -150,6 +151,19 @@
 				$this->set($query);
 				$this->bindParam(":id", $id);
 				$result = $this->returnSingle();
+
+				$this->setFetchId($result['work_j_actions_id']);
+				$this->setWorkID($result['work_id']);
+				$this->setWorkJID($result['work_j_id']);
+ 				$this->setAssignedTo($result['work_j_actions_assignedto']);
+ 				$this->setDateAssigned($result['work_j_actions_assigned']);
+ 				$this->setDueDate($result['work_j_actions_due']);
+ 				$this->setDateComplete($result['work_j_actions_date_completed']);
+ 				$this->setTask($result['work_j_actions_task']);
+ 				$this->setComments($result['work_j_actions_comments']);
+ 				$this->setIsComplete($result['work_j_actions_is_complete']);
+ 				$this->setDateModified($result['work_j_actions_updated']);
+ 				$this->setDateCreated($result['work_j_actions_created']);
 				$this->retData['success'] = true;
 				$this->retData['message'] = SUCCESS;
 				return($this->retData);
@@ -197,7 +211,7 @@
 				$this->bindParam(':assignedTo', $this->getAssignedTo());
 				$this->bindParam(':dateAssigned', $this->getDateAssigned());
 				$this->bindParam(':dateDue', $this->getDueDate());
-				$this->bindParam(':dateCompleted', $this->getCompleteDate());
+				$this->bindParam(':dateCompleted', $this->getDateComplete());
 				$this->bindParam(':task', $this->getTask());
 				$this->bindParam(':comments', $this->getComments());
 
@@ -224,36 +238,48 @@
 			}
 		}
 
-		// public function updateEntry(){
-		// 	$this->startTransaction();
-		// 	try{
-		// 		$query = "UPDATE work_j_consultants SET
-		// 			work_j_consultants_role = :role
-		// 			WHERE work_j_consultants_id = :id";
+		public function updateEntry(){
+			$this->startTransaction();
+			try{
+				$query = "UPDATE work_j_actions SET
+					work_j_actions_assignedto = :assignedTo,
+					work_j_actions_assigned = :dateAssigned,
+					work_j_actions_due = :dateDue,
+					work_j_actions_date_completed = :dateCompleted,
+					work_j_actions_task = :task,
+					work_j_actions_comments = :comments,
+					work_j_actions_is_complete = :isComplete
+					WHERE work_j_actions_id = :id";
 
-		// 		$this->set($query);
-		// 		$this->bindParam(':role', $this->getConsultantRole());
-		// 		$this->bindParam(':id', $this->getFetchId());
-		// 		$result = $this->execute();
-		// 		if($result){
-		// 			$this->endTransaction();
-		// 			$this->retData['success'] = true;
-		// 			$this->retData['message'] = SUCCESS;
-		// 			return($this->retData);
-		// 		}else{
-		// 			$this->cancelTransaction();
-		// 			$this->retData['success'] = FALSE;
-		// 			$this->retData['message'] = FAIL_TRANSACTION.' - '.$this->getError();
-		// 			$this->retData['updateInfo'] = $this->getError();
-		// 			return($this->retData);
-		// 		}
-		// 	}catch(Exception $e){
-		// 		$this->cancelTransaction();
-		// 		$this->retData['success'] = false;
-		// 		$this->retData['message'] = FAIL_TRANSACTION.' '.$e->getMessage();
-		// 		return($this->retData);
-		// 	}
-		// }
+				$this->set($query);
+				$this->bindParam(':assignedTo', $this->getAssignedTo());
+				$this->bindParam(':dateAssigned', $this->getDateAssigned());
+				$this->bindParam(':dateDue', $this->getDueDate());
+				$this->bindParam(':dateCompleted', $this->getDateComplete());
+				$this->bindParam(':task', $this->getTask());
+				$this->bindParam(':comments', $this->getComments());
+				$this->bindParam(':isComplete', $this->getIsComplete());
+				$this->bindParam(':id', $this->getFetchId());
+				$result = $this->execute();
+				if($result){
+					$this->endTransaction();
+					$this->retData['success'] = true;
+					$this->retData['message'] = SUCCESS;
+					return($this->retData);
+				}else{
+					$this->cancelTransaction();
+					$this->retData['success'] = FALSE;
+					$this->retData['message'] = FAIL_TRANSACTION.' - '.$this->getError();
+					$this->retData['updateInfo'] = $this->getError();
+					return($this->retData);
+				}
+			}catch(Exception $e){
+				$this->cancelTransaction();
+				$this->retData['success'] = false;
+				$this->retData['message'] = FAIL_TRANSACTION.' '.$e->getMessage();
+				return($this->retData);
+			}
+		}
 
 		// public function deleteEntry($id){
 		// 	$this->startTransaction();
