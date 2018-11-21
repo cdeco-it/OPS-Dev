@@ -281,32 +281,32 @@
 			}
 		}
 
-		// public function deleteEntry($id){
-		// 	$this->startTransaction();
-		// 	try{
-		// 		$query = "DELETE FROM work_j_consultants WHERE work_j_consultants_id =:id";
-		// 		$this->set($query);
-		// 		$this->bindParam(":id", $id);
-		// 		$result = $this->execute();
-		// 		if($result){
-		// 			$this->endTransaction();
-		// 			$this->retData['success'] = TRUE;
-		// 			$this->retData['message'] = SUCCESS;
-		// 			return($this->retData);
-		// 		}else{
-		// 			$this->cancelTransaction();
-		// 			$this->retData['success'] = FALSE;
-		// 			$this->retData['message'] = FAIL_TRANSACTION.' - '.$this->getError();
-		// 			$this->retData['updateInfo'] = $this->getError();
-		// 			return($this->retData);
-		// 		}
-		// 	}catch(Exception $e){
-		// 		$this->cancelTransaction();
-		// 		$this->retData['success'] = false;
-		// 		$this->retData['message'] = CRITICAL_ERROR.' '.$e->getMessage();
-		// 		return($this->retData);
-		// 	}
-		// }
+		public function deleteEntry($id){
+			$this->startTransaction();
+			try{
+				$query = "DELETE FROM work_j_actions WHERE work_j_actions_id =:id";
+				$this->set($query);
+				$this->bindParam(":id", $id);
+				$result = $this->execute();
+				if($result){
+					$this->endTransaction();
+					$this->retData['success'] = TRUE;
+					$this->retData['message'] = SUCCESS;
+					return($this->retData);
+				}else{
+					$this->cancelTransaction();
+					$this->retData['success'] = FALSE;
+					$this->retData['message'] = FAIL_TRANSACTION.' - '.$this->getError();
+					$this->retData['updateInfo'] = $this->getError();
+					return($this->retData);
+				}
+			}catch(Exception $e){
+				$this->cancelTransaction();
+				$this->retData['success'] = false;
+				$this->retData['message'] = CRITICAL_ERROR.' '.$e->getMessage();
+				return($this->retData);
+			}
+		}
 
 		public function getActions($value = NULL){
 			if(!empty($value) && !is_null($value)){

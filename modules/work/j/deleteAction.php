@@ -2,7 +2,6 @@
 
 require_once($_SERVER["DOCUMENT_ROOT"].'/lib/includes/inc.authenticator.php');
 require_once($_SERVER["DOCUMENT_ROOT"].'/lib/class/j/class.j.actions.php');
-require_once($_SERVER["DOCUMENT_ROOT"].'/lib/class/class.helper.php');
 
 ob_start();
 
@@ -10,55 +9,16 @@ ob_start();
 if(!empty($_POST) || $level > 1){
 
 	//Set the post results
-
 	$jid = $_POST['j_id'];
-	$pid = $_POST['p_id'];
 	$aid = $_POST['a_id'];
-	$assignedTo = $_POST['j_edit_action_assignedto'];
-
-	$dateAssigned = $_POST['j_edit_action_date_assigned'];
-	// error_log("DA PRE=".$dateAssigned);
-
-	$dateDue = $_POST['j_edit_action_date_due'];
-	// error_log("DD PRE=".$dateDue);
-
-	$dateComplete = $_POST['j_edit_action_date_complete'];
-	// error_log("DC PRE=".$dateComplete);
-
-	$task = $_POST['j_edit_action_task'];
-	$comments = $_POST['j_edit_action_comments'];
 
 	//Create a new class
 	$a = new j_WorkActions();
-	$helper = new Helper();
 
-	//Load existing record
-	$a->getEntry($aid);
-
-	//Update changes
-	$a->setAssignedTo($assignedTo);
-	$a->setDateAssigned($helper->date_toSQL($dateAssigned));
-	// error_log("DA POST=".$a->getDateAssigned());
-	$a->setDueDate($helper->date_toSQL($dateDue));
-	// error_log("DD POST=".$a->getDueDate());
-	$a->setTask($task);
-	$a->setComments($comments);
-
-	if(!is_null($dateComplete) && !empty($dateComplete)){
-		$a->setDateComplete($helper->date_toSQL($dateComplete));
-		// error_log("DC POST=".$a->getDateComplete());
-		$a->setIsComplete(1);
-	}else{
-		$a->setIsComplete(NULL);
-		$a->setDateComplete(NULL);
-	}
-
-	//Update the entry
-	$result = $a->updateEntry();
-
+	//Delete the entry
+	$result = $a->deleteEntry($aid);
 	if($result['success']){
 		if($result['message'] === SUCCESS){
-			
 			//If we get success, let's process the new addition and add it to the ret data
 			$x = $a->getActions($jid);
 			if($x['success']){
@@ -139,7 +99,7 @@ if(!empty($_POST) || $level > 1){
 		}
 	}else{
 		ob_end_clean();
-		unset($d);
+		unset($a);
 		echo json_encode($result);
 		die();
 	}

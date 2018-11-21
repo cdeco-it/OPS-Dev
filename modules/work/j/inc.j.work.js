@@ -520,6 +520,33 @@
 			})
 		});
 
+	//Delete action record
+		$(document).on("click", ".deleteAction", function(e){
+			e.preventDefault();
+			var aid = $(this).attr('value');
+			var jid = $(this).attr('jid');
+			if(confirm("Are you sure you want to delete this action item?")){
+				$.ajax({
+					url: "deleteAction.php",
+					method: "POST",
+					data: '&a_id=' + aid + '&j_id=' + jid,
+					dataType: "json"
+				})
+				.done(function(data){
+					if(!data.success){
+						$('#error').html(data.message + data.info);
+						$("#error").show();
+					}else{
+						$('#success').html(data.message);
+						$("#success").show().fadeTo(5000,500).slideUp(500, function(){
+		                	$('#success').hide();
+		            	});
+		            	$('#action_items').html(data.updateInfo);
+					}
+				})
+			}
+		});
+
 
 	});
 

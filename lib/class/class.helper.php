@@ -216,6 +216,14 @@
 			}
 		}
 
+		public function populateSubOrRFI($value = NULL){
+			if($value == 0 || is_null($value)){
+				echo '<option value="0" selected=SELECTED>Submittal</option><option value="1">RFI</option>';
+			}else{
+				echo '<option value="0">Submittal</option><option value="1" selected=SELECTED>RFI</option>';
+			}
+		}
+
 		public function populateDelayCause($value = NULL){
 			if($value == 0 || is_null($value)){
 				echo '<option value="0" selected=SELECTED>Internal Issues</option><option value="1">External Issues</option>';
@@ -312,6 +320,92 @@
 				}else{
 					echo '<option value="'.$row['work_year'].'">'.$row['work_year'].'</option>';
 				}
+			}
+		}
+
+		public function populateRelevantConsultants($value = NULL, $inputs = NULL){
+			if(!is_null($value)){
+				$query = "SELECT 
+						work_j_consultants.work_j_consultants_id AS 'id',
+						CONCAT(addr.addr_fname, ' ', addr.addr_lname) AS 'name'
+						FROM work_j_consultants
+						LEFT JOIN addr
+						ON work_j_consultants.addr_id = addr.addr_id
+						WHERE work_j_consultants.work_j_id = :id
+						ORDER BY addr.addr_lname ASC";
+				$this->set($query);
+				$this->bindParam(':id', $value);
+				$this->execute();
+
+				//Get size of inputs array
+				$len = count($input);
+				//Process thru each row returned
+				foreach($this->returnSet() as $row){
+					//Let's make sure input isn't null, if it i
+					if(!empty($input)){
+						//Cycle thru all options in the input array
+						for($i = 0; $i < $len; $i++){
+							//Look for mataches
+							if($inputs[$i] == $row['id']){
+								echo '<option value="'.$row['id'].'" selected="SELECTED">'.$row['name'].'</option>';
+							//No matches
+							}else{
+								echo '<option value="'.$row['id'].'">'.$row['name'].'</option>';
+							}
+						}
+					//If input is null, just create all options without selctions
+					}else{
+						echo '<option value="'.$row['id'].'">'.$row['name'].'</option>';
+					}
+				}
+			//If no JID, then we cannot process the request.  Provide a empty option.
+			//May need to revisit this soon....
+			}else{
+				echo '<option>No consultants available</option>';
+			}
+		}
+
+		public function populateRelevantEmployees($value = NULL, $inputs = NULL){
+			error_log("VAL = ".$value." ::: IPNUTS = ".$ipnuts);
+
+			if(!is_null($value)){
+				$query = "SELECT 
+						work_j_team.work_j_team_id AS 'id',
+						CONCAT(employee.employee_fname, ' ', employee.employee_lname) AS 'name'
+						FROM work_j_team
+						LEFT JOIN employee
+						ON work_j_team.employee_id = employee.employee_id
+						WHERE work_j_team.work_j_id = :id
+						ORDER BY employee.employee_lname ASC";
+				$this->set($query);
+				$this->bindParam(':id', $value);
+				$this->execute();
+
+				//Get size of inputs array
+				$len = count($input);
+				//Process thru each row returned
+				foreach($this->returnSet() as $row){
+					//Let's make sure input isn't null, if it i
+					if(!empty($input)){
+						//Cycle thru all options in the input array
+						for($i = 0; $i < $len; $i++){
+							//Look for mataches
+							if($inputs[$i] == $row['id']){
+								echo '<option value="'.$row['id'].'" selected="SELECTED">'.$row['name'].'</option>';
+							//No matches
+							}else{
+								echo '<option value="'.$row['id'].'">'.$row['name'].'</option>';
+							}
+						}
+					//If input is null, just create all options without selctions
+					}else{
+						echo '<option value="'.$row['id'].'">'.$row['name'].'</option>';
+					}
+				}
+			//If no JID, then we cannot process the request.  Provide a empty option.
+			//May need to revisit this soon....
+			}else{
+				echo '<option>No consultants available</option>';
 			}
 		}
 

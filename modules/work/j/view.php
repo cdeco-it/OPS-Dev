@@ -185,7 +185,7 @@
 											<td width="30%"  class="align-middle"  title="';
 											if($row['REMAINING'] < 0){
 												echo abs($row['REMAINING']).' days ago.">'.$helper->date_toStandard($row['VALUE']).'</td>';
-											}if($row['REMAINING'] > 0){
+											}else if($row['REMAINING'] > 0){
 												echo $row['REMAINING'].' days remain">'.$helper->date_toStandard($row['VALUE']).'</td>';
 											}else{
 												echo 'Due today">'.$helper->date_toStandard($row['VALUE']).'</td>';
@@ -257,7 +257,29 @@
 		      			</div>
 					</div>
 
-				<!-- SCOPE --->
+				<!-- SUBS/RFI --->
+					<div class="tab-pane" id="subsrfi" role="tabpanel">
+						<div class="col pt-2 pb-2">
+							<div class="row pt-2 pb-2">
+								<div class="col">
+									<h5>Submittals & RFI's Log</h5>
+								</div>
+								<div class="col-12 col-md-auto">
+									<?php
+										if($level <= 1){
+											echo '<a href="#" name="add_sub" id="add_sub" data-toggle="modal" data-target="#j_add_sub" class="btn btn-success">Add</a>';
+										}
+									?>
+								</div>
+							</div>
+							<div id="subs_rfis">
+
+
+							</div>
+						</div>
+					</div>
+
+				<!-- ACTTIONS --->
 					<div class="tab-pane" id="actions" role="tabpanel">
 						<div class="col pt-2 pb-2">
 							<div class="row pt-2 pb-2">
@@ -474,6 +496,7 @@
 							</div>
 						</div>
 					</div>
+
 				<!-- DISCUSSIONS -->
 					<div class="tab-pane" id="discussions" role="tabpanel">
 						<div class="col pt-2 pb-2">
@@ -835,15 +858,11 @@
                       	<label>Task</label>
                       	<textarea class="tinymce_mini form-control" name="j_add_action_task" id="j_add_action_task">
                       	</textarea>
-                      <!--	<input type="text" name="j_action_task" id="j_action_task" class="form-control"  />  
-                      	<div class="help-block with-errors"></div>-->
                       	<br />
 
                       	<label>Comments</label>
                       	<textarea class="tinymce_mini form-control" name="j_add_action_comments" id="j_add_action_comments">
                       	</textarea>
-                      	<!-- <input type="text" name="j_action_comments" id="j_action_comments" class="form-control"  />  
-                      	<div class="help-block with-errors"></div> -->
                       	<br />
 
                       	<input type="hidden" name="j_id" id="j_id" value="<?php echo $jid; ?>"/>
@@ -908,6 +927,99 @@
       	</div>  
     </div>
     <!-- END ADD ACTION ITEM MODAL -->
+
+    <!-- ADD SUBSRFI MODAL -->
+	<div id="j_add_sub" class="modal fade">
+    	<div class="modal-dialog modal-lg">  
+           <div class="modal-content">  
+                <div class="modal-header">  
+                     <h4 class="modal-title">Add Submittal or RFI</h4>
+                     <a href="#" class="close" data-dismiss="modal">&times;</a>
+                </div>  
+
+                <div class="modal-body">  
+                    <form method="post" id="j_add_subrfi_form" data-toggle="validator" role="form">
+                    	<div class="row">
+                    		<div class="col-6">
+                    			<label>Type</label>
+								<select name="j_add_subrfi_type" id="j_add_subrfi_type" class="form-control">
+		                  			<?php echo $helper->populateSubOrRFI(); ?>
+		                  		</select>
+		                      	<br />
+
+		                      	<label>Internal Tracking Number</label>  
+		                      	<input type="text" name="j_add_subrfi_int_track" id="j_add_subrfi_int_track" class="form-control"  />  
+		                      	<div class="help-block with-errors"></div>
+		                      	<br />
+
+		                      	<label>External Tracking Number</label>  
+		                      	<input type="text" name="j_add_subrfi_ext_track" id="j_add_subrfi_ext_track" class="form-control"  />  
+		                      	<div class="help-block with-errors"></div>
+		                      	<br />
+
+		                      	<label>Subject</label>  
+		                      	<input type="text" name="j_add_subrfi_subject" id="j_add_subrfi_subject" class="form-control"  />  
+		                      	<div class="help-block with-errors"></div>
+		                      	<br />
+
+		                      	<label>Recieved By</label>
+								<select name="j_add_subrfi_rcvd_by" id="j_add_subrfi_rcvd_by" class="form-control">
+		                  			<?php echo $helper->populateEmployeeNames(); ?>
+		                  		</select>
+		                      	<br />
+
+		                      	<label>Date Recieved</label>  
+		                      	<input type="text" name="j_add_subrfi_rcvd_date" id="j_add_subrfi_rcvd_date" class="form-control actionDate"  />  
+		                      	<div class="help-block with-errors"></div>
+		                      	<br />
+
+		                      	<label>Quantity Recieved</label>  
+		                      	<input type="text" name="j_add_subrfi_qty_rcvd" id="j_add_subrfi_qty_rcvd" class="form-control"  />  
+		                      	<div class="help-block with-errors"></div>
+		                      	<br />
+
+		                      	<label>Date Due</label>  
+		                      	<input type="text" name="j_add_subrfi_due_date" id="j_add_subrfi_due_date" class="form-control actionDate"  />  
+		                      	<div class="help-block with-errors"></div>
+		                      	<br />
+
+                    		</div>
+                    		<div class="col-6">
+                    			<p><strong>NOTE:</strong> Multiple reviewers are possible. Use the CTRL button while clicking multiple selections. Reviewers are limited too members on the project team.</p>
+                    			<label>Internal Reviewers</label>
+								<select name="j_add_subrfi_int_reviewer[]" id="j_add_subrfi_int_reviewer[]" class="form-control" multiple>
+		                  			<?php echo $helper->populateRelevantEmployees($jid, NULL); ?>
+		                  		</select>
+		                      	<br />
+
+		                      	<label>Consultant Reviewers</label>
+								<select name="j_add_subrfi_ext_reviewer[]" id="j_add_subrfi_ext_reviewer[]" class="form-control" multiple>
+		                  			<?php echo $helper->populateRelevantConsultants($jid, NULL); ?>
+		                  		</select>
+		                      	<br />
+
+		                      	<label>Comments</label>
+		                      	<textarea class="tinymce_mini form-control" name="j_add_subrfi_comments" id="j_add_subrfi_comments">
+		                      	</textarea>
+		                      	<br />
+
+
+                    		</div>
+                    	</div>
+               
+                      	<input type="hidden" name="j_id" id="j_id" value="<?php echo $jid; ?>"/>
+                      	<input type="hidden" name="p_id" id="p_id" value="<?php echo $pid; ?>"/>  
+                      	<input type="submit" name="j_add_subrfi_btn" id="j_add_subrfi_btn" value="Add" class="btn btn-success" />
+
+                     </form>  
+                </div>  
+        	</div>  
+      	</div>  
+
+		<!-- END SUBSRFI MODAL -->
+
+
+    </div>
 
 <?php 
 	include_once($_SERVER["DOCUMENT_ROOT"].'/lib/includes/inc.footer.php'); 
