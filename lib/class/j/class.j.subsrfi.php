@@ -475,5 +475,15 @@
 				return($this->retData);
 			}
 		}
+
+		public function addReviewer($value = NULL){
+
+		}
+
+		public function deleteReviewer($value = NULL){
+
+		}
+
+		
 	}
 ?>
