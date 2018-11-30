@@ -26,6 +26,7 @@
 		private $notes;
 		private $dateReturned;
 		private $qtyReturned;
+		private $reviewers;
 
 		private $work_j_id;
 		private $work_id;
@@ -123,6 +124,10 @@
 			return($this->qtyReturned);
 		}
 
+		public function getReviewers(){
+			return($this->reviewers);
+		}
+
 /***** SETTER METHODS *****/
 		public function setFetchId($value = NULL){
 			$this->fetchid = $value;
@@ -176,6 +181,10 @@
 			$this->subject = $value;
 		}
 
+		public function setLogType($value = NULL){
+			$this->logtype = $value;
+		}
+
 		public function setDisposition($value = NULL){
 			$this->disposition = $value;
 		}
@@ -196,8 +205,14 @@
 			$this->qtyReturned = $value;
 		}
 
+		public function setReviewers($value = NULL){
+			$this->reviewers = $value;
+		}
+
 
 /***** TRANSACTIONAL METHODS *****/
+
+		public function new_addEntry($reviewer, )
 
 		public function getEntry($id){
 			if(!empty($id) && !is_null($id)){
@@ -266,7 +281,7 @@
 				$this->bindParam(':addr_id', $this->getAddrId());
 				$this->bindParam(':work_j_rfisub_log_type', $this->getLogType());
 				$this->bindParam(':work_j_rfisub_log_status', $this->getStatus());
-				$this->bindParam(':work_j_rfisub_log_internal_track', $this->getInternalTrackingNUmber());
+				$this->bindParam(':work_j_rfisub_log_internal_track', $this->getInternalTrackingNumber());
 				$this->bindParam(':work_j_rfisub_log_external_track', $this->getExternalTrackingNumber());
 				$this->bindParam(':work_j_rfisub_log_receivedby', $this->getReceivedBy());
 				$this->bindParam(':work_j_rfisub_log_date_received', $this->getDateReceived());
@@ -476,7 +491,46 @@
 			}
 		}
 
-		public function addReviewer($value = NULL){
+		public function addReviewer($value = NULL, $inputs = NULL){
+			$this->startTransaction();
+			try{
+				$query = "INSERT INTO work_j_rfisub_log_reviewers (
+							work_j_rfisub_log_reviewers_id,
+							work_j_rfisub_log_id,
+							work_j_rfisub_log_reviewers_employee,
+							work_j_rfisub_log_reviewers_consultants)
+						VALUES (
+							NULL,
+							:log_id,
+							:emp,
+							:con
+						)";
+
+				$this->set($query);
+				$this->bindParam(':log_id', $value);
+				$this->bindParam(':emp', $inputs['emp']);
+				$this->bindParam(':con', $inputs['con']);
+				$result = $this->execute();
+
+				if($result){
+					$this->endTransaction();
+					$this->retData['success'] = TRUE;
+					$this->retData['message'] = SUCCESS;
+					return($this->retData);
+				}else{
+					$this->cancelTransaction();
+					$this->retData['success'] = FALSE;
+					$this->retData['message'] = FAIL_TRANSACTION.' - '.$this->getError();
+					$this->retData['updateInfo'] = $this->getError();
+					return($this->retData);
+				}
+
+			}catch(Exception $e){
+				$this->cancelTransaction();
+				$this->retData['success'] = FALSE;
+				$this->retData['message'] = FAIL_TRANSACTION.' *** '.$e->getMessage();
+				return($this->retData);
+			}
 
 		}
 

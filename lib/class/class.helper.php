@@ -338,11 +338,11 @@
 				$this->execute();
 
 				//Get size of inputs array
-				$len = count($input);
+				$len = count($inputs);
 				//Process thru each row returned
 				foreach($this->returnSet() as $row){
 					//Let's make sure input isn't null, if it i
-					if(!empty($input)){
+					if(!empty($inputs)){
 						//Cycle thru all options in the input array
 						for($i = 0; $i < $len; $i++){
 							//Look for mataches
@@ -366,8 +366,7 @@
 		}
 
 		public function populateRelevantEmployees($value = NULL, $inputs = NULL){
-			error_log("VAL = ".$value." ::: IPNUTS = ".$ipnuts);
-
+			
 			if(!is_null($value)){
 				$query = "SELECT 
 						work_j_team.work_j_team_id AS 'id',
@@ -382,11 +381,11 @@
 				$this->execute();
 
 				//Get size of inputs array
-				$len = count($input);
+				$len = count($inputs);
 				//Process thru each row returned
 				foreach($this->returnSet() as $row){
 					//Let's make sure input isn't null, if it i
-					if(!empty($input)){
+					if(!empty($inputs)){
 						//Cycle thru all options in the input array
 						for($i = 0; $i < $len; $i++){
 							//Look for mataches
