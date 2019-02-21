@@ -74,6 +74,7 @@ if(!empty($_POST) || $level > 1){
 	
 		//END INT/EXT REVIEWER INSERTION BEGIN RETURN
 		if($result['message'] === SUCCESS){
+			
 			//If we get success, let's process the new addition and add it to the ret data
 			$x = $a->getActions($jid);
 			if($x['success']){

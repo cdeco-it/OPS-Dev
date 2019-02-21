@@ -212,7 +212,23 @@
 
 /***** TRANSACTIONAL METHODS *****/
 
-		public function new_addEntry($reviewer, )
+		public function new_addEntry(){
+			/**
+			 * This is a new method i am trying..I want to make sure all queries are covered under the same transaction to ensure that there is no race condition or lock.  Below is my overall plan of attack.
+			 *
+			 * 1 Create the entry into the RFISUBS table
+			 * 2 Get LAST insert ID
+			 * 3 Iterate over the reviewers array and insert each into a row in REVIWERS
+			 * 4 
+			 *
+			 * 
+			 */
+
+
+
+
+
+		}
 
 		public function getEntry($id){
 			if(!empty($id) && !is_null($id)){

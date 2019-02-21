@@ -214,10 +214,10 @@
 			}
 		});
 		
-	/**
-	 * END INTERNAL TEAM
-	 * BEGIN EXTERNAL TEAM
-	 */
+/**
+ * END INTERNAL TEAM
+ * BEGIN EXTERNAL TEAM
+ */
 		//Add external team members
 		$('#j_add_external_team_form').on('submit', function(e){
 			e.preventDefault();
@@ -282,10 +282,10 @@
 			}
 		});
 
-	/**
-	 * END EXTERNAL TEAM
-	 * BEGIN DISCUSSION
-	 */
+/**
+ * END EXTERNAL TEAM
+ * BEGIN DISCUSSION
+ */
 	
 		//Add new discussion
 		$('#j_add_discussion_form').on('submit', function(e){
@@ -396,10 +396,10 @@
 		});
 
 
-	/**
-	 * END DISCUSION
-	 * BEGIN ACTIONS
-	 */
+/**
+ * END DISCUSION
+ * BEGIN ACTIONS
+ */
 	
 	//Add new actions
 		$('#j_add_action_form').on('submit', function(e){
@@ -546,6 +546,10 @@
 				})
 			}
 		});
+/**
+ * END ACTIONS
+ * BEGIN RFISUBS
+ */
 
 
 	});

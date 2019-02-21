@@ -314,12 +314,18 @@
 			$query = "SELECT DISTINCT work.work_year FROM work ORDER BY work.work_year DESC";
 			$this->set($query);
 			$this->execute();
+			$match = 0;
 			foreach($this->returnSet() as $row){
 				if($row['work_year'] == $value){
 					echo '<option value="'.$row['work_year'].'" selected="SELECTED">'.$row['work_year'].'</option>';
+					$match = 1;
 				}else{
 					echo '<option value="'.$row['work_year'].'">'.$row['work_year'].'</option>';
 				}
+			}
+
+			if(!$match){
+				echo '<option value="'.$value.'" selected="SELECTED">'.$value.'</option>';
 			}
 		}
 

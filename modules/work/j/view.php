@@ -16,7 +16,22 @@
     <link rel="stylesheet" href="http://code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
     <script src="http://code.jquery.com/ui/1.12.1/jquery-ui.min.js" integrity="sha256-VazP97ZCwtekAsvgPBSUwPFKdrwD3unUfSGVYrahUqU=" crossorigin="anonymous"></script>
 
-    <script src="https://cloud.tinymce.com/stable/tinymce.min.js?apiKey=s4dkk47wxltlkoe91dill48cz6m4a3ttnhpntfa3lt5gpjk0"></script> 
+    <script src="https://cloud.tinymce.com/stable/tinymce.min.js?apiKey=s4dkk47wxltlkoe91dill48cz6m4a3ttnhpntfa3lt5gpjk0"></script>
+
+	<!-- USED TO TRACK CURRENT TAB -->
+    <script type="text/javascript">
+		$(document).ready(function(){
+			$('a[data-toggle="tab"]').on('show.bs.tab', function(e) {
+				localStorage.setItem('activeTab', $(e.target).attr('href'));
+			 });
+
+    		var activeTab = localStorage.getItem('activeTab');
+
+	    	if(activeTab){
+		        $('#myTab a[href="' + activeTab + '"]').tab('show');
+		    }
+		});
+	</script> 
 
     </head>
 
@@ -220,8 +235,7 @@
 			</div>
 			
 			<div class="col-10">
-				<ul class="nav nav-tabs">
-					
+				<ul class="nav nav-tabs" id="myTab">
 				  	<li class="nav-item">
 				 		<a class="nav-link active" data-toggle="tab" role="tab" href="#scope">Scope of Work</a>
 				  	</li>
